@@ -1,0 +1,31 @@
+使用包：
+flask
+flask-sqlalchemy flask-cors werkzeug
+        pip install flask flask-sqlalchemy flask-cors werkzeug  # werkzeug用于密码加密
+pymysql
+        pip install flask flask-sqlalchemy flask-cors werkzeug pymysql  # 新增pymysql用于连接MySQL
+pyjwt（用于处理 JWT 令牌）
+        pip install pyjwt
+
+数据库信息：
+用户名：root
+密码：root
+数据库名：s_of_p_information
+
+表名：admin_info
+序号：不能为空/自动生成
+账号：不能为空
+密码：不能为空
+用户名：不能为空
+手机号：不能为空
+
+    #管理员登录相关信息
+    id = db.Column(db.Integer, primary_key=True)
+    account = db.Column(db.String(80), unique=True, nullable=False)  # 登录用户名
+    password_hash = db.Column(db.String(255), nullable=False)  # 密码哈希
+    # 其他管理员信息字段
+    username = db.Column(db.String(120), unique=True, nullable=False)  # 账号（可与username相同）
+    phone = db.Column(db.String(20))  # 电话
+    email = db.Column(db.String(50))  # 邮箱
+    avatar = db.Column(db.String(200))  # 头像
+    role = db.Column(db.String(20))  # 角色
