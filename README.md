@@ -1,2 +1,2 @@
 # S_of_p_information_python
-基于vue3和flask框架的前后端项目
+基于vue3和flask框架的后端项目
