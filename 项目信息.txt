@@ -20,12 +20,15 @@ pyjwt（用于处理 JWT 令牌）
 手机号：不能为空
 
     #管理员登录相关信息
-    id = db.Column(db.Integer, primary_key=True)
-    account = db.Column(db.String(80), unique=True, nullable=False)  # 登录用户名
-    password_hash = db.Column(db.String(255), nullable=False)  # 密码哈希
+    id = db.Column(db.Integer, primary_key=True) #不能为空/自动生成
+    account = db.Column(db.String(80), unique=True, nullable=False)  # 登录用户名 不能为空
+    password_hash = db.Column(db.String(255), nullable=False)  # 密码哈希 不能为空
     # 其他管理员信息字段
-    username = db.Column(db.String(120), unique=True, nullable=False)  # 账号（可与username相同）
-    phone = db.Column(db.String(20))  # 电话
+    username = db.Column(db.String(120), unique=True, nullable=False)  # 账号（可与username相同） 不能为空
+    phone = db.Column(db.String(20))  # 电话 不能为空
     email = db.Column(db.String(50))  # 邮箱
     avatar = db.Column(db.String(200))  # 头像
     role = db.Column(db.String(20))  # 角色
+
+小心生成后首次传出令牌错误。
+
