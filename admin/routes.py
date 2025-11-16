@@ -1,10 +1,12 @@
+import os
 import jwt
 from datetime import datetime, timedelta
 from flask import request, jsonify
 from config import Config
-from components import db, token_required  # 引用公共组件
+from components import db, token_required, LocalImageStorage  # 引用公共组件
 from components.models import Admin  # 引用公共模型
 from admin import admin_bp  # 导入当前模块蓝图
+
 
 # 管理员登录接口（无需前缀，单独注册在/admin/login）
 @admin_bp.route('/login', methods=['POST'])
@@ -97,6 +99,7 @@ def get_admin_list(current_user):
             'data': None
         }), 500
 
+
 # 管理员数据增删改查接口（通用操作）
 @admin_bp.route('/operate', methods=['POST'])
 @token_required
@@ -105,7 +108,6 @@ def db_operate(current_user):
         data = request.get_json()
         print(f"【接收操作请求】用户: {current_user.account}, 参数: {data}")
 
-        # 校验参数
         required = ['table_name', 'operate_type']
         for param in required:
             if param not in data:
@@ -114,40 +116,67 @@ def db_operate(current_user):
         table_name = data['table_name']
         operate_type = data['operate_type'].lower()
         kwargs = data.get('kwargs', {})
-
-        # 支持的表（仅管理员可操作）
         supported_tables = {'admin_info': Admin}
+
         if table_name not in supported_tables:
             return jsonify({'success': False, 'message': f'不支持表：{table_name}', 'data': None}), 400
         model = supported_tables[table_name]
         result = None
 
-        # 新增
+        # 新增：正常接收avatar URL并存储（前端需先调用公共上传接口获取URL）
         if operate_type == 'add':
-            # 先从kwargs中移除password，再创建实例
-            password = kwargs.pop('password', None)  # 取出密码并删除原参数
-            new_record = model(**kwargs)  # 此时kwargs中已无password，不会触发无效参数错误
-            if table_name == 'admin_info' and password:  # 有密码则加密
+            password = kwargs.pop('password', None)
+            new_record = model(** kwargs)  # avatar字段直接存储图片URL
+            print(f"【新增记录】{new_record}")
+            if table_name == 'admin_info' and password:
                 new_record.set_password(password)
             db.session.add(new_record)
             db.session.commit()
             result = {'id': new_record.id, 'message': '新增成功'}
 
-        # 删除
+        # 删除：若删除整条记录，同步删除关联的头像图片
         elif operate_type == 'delete':
+            # 先查询要删除的记录，获取avatar URL
+            records = model.query.filter_by(**kwargs).all()
+            if records and table_name == 'admin_info':
+                # 遍历记录，删除关联的本地图片
+                image_storage = LocalImageStorage()
+                for record in records:
+                    if record.avatar:
+                        # 从URL中提取文件名
+                        filename = record.avatar.split('/')[-1]
+                        image_storage.delete_image(filename)
+                        print(f"【删除关联头像】文件名: {filename}")
+            # 执行数据库删除
             deleted_count = model.query.filter_by(**kwargs).delete()
             db.session.commit()
             result = {'deleted_count': deleted_count, 'message': f'删除{deleted_count}条'}
 
-        # 更新
+        # 更新：若更新avatar为null/空，同步删除原本地图片
         elif operate_type == 'update':
             query_kwargs = data.get('query_kwargs', {})
             update_kwargs = data.get('update_kwargs', {})
+
+            # 检查是否需要删除原头像（update_kwargs中avatar为null/空字符串）
+            if table_name == 'admin_info' and 'avatar' in update_kwargs:
+                new_avatar = update_kwargs['avatar']
+                # 当新头像为null/空时，删除原头像图片
+                if not new_avatar or new_avatar.strip() == '':
+                    # 查询原记录的avatar URL
+                    old_record = model.query.filter_by(**query_kwargs).first()
+                    if old_record and old_record.avatar:
+                        # 提取文件名并删除本地图片
+                        filename = old_record.avatar.split('/')[-1]
+                        image_storage = LocalImageStorage()
+                        image_storage.delete_image(filename)
+                        print(f"【更新时删除原头像】文件名: {filename}")
+
+            # 执行数据库更新（新avatar URL直接存储）
             updated_count = model.query.filter_by(** query_kwargs).update(update_kwargs)
             db.session.commit()
             result = {'updated_count': updated_count, 'message': f'更新{updated_count}条'}
 
-        # 查询
+        # 查询：正常返回avatar URL
         elif operate_type == 'query':
             page = data.get('page', 1)
             size = data.get('size', 10)
@@ -164,6 +193,6 @@ def db_operate(current_user):
     except Exception as e:
         db.session.rollback()
         print(f"【传出查询响应】{current_user}")
-        # print(f"原始数据：{request.data}")
+        print(f"原始数据：{request.data}")
         print(f"【操作异常】{str(e)}")
         return jsonify({'success': False, 'message': f'操作失败：{str(e)}', 'data': None}), 500

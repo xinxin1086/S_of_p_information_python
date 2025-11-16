@@ -6,3 +6,11 @@ class Config:
     # JWT配置
     JWT_SECRET_KEY = 'your-secret-key-123'  # 生产环境需更换
     JWT_EXPIRATION_DELTA = 3600  # 令牌有效期（秒）
+
+    # 图片存储相关配置（供LocalImageStorage读取）图片存储目录（项目根目录下）
+    IMAGE_STORAGE_DIR = 'static/images'
+    ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+    ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    # 最大5MB
+    MAX_IMAGE_SIZE = 5 * 1024 * 1024
+

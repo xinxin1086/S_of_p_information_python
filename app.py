@@ -1,9 +1,13 @@
 from flask import Flask
+import os
 from flask_cors import CORS
 from config import Config
 from components import db  # 引用公共数据库
 from admin import admin_bp  # 导入管理员蓝图
 from user import user_bp  # 导入用户蓝图
+from common import common_bp  # 导入公共蓝图
+from flask import send_from_directory  # 导入图片静态路由
+
 
 # 初始化Flask应用
 app = Flask(__name__)
@@ -21,9 +25,18 @@ CORS(app, resources={
 # 初始化数据库
 db.init_app(app)
 
-# 注册蓝图（管理员和用户接口）
+# 注册蓝图（管理员接口）
 app.register_blueprint(admin_bp)
+# 注册蓝图（用户接口）
 app.register_blueprint(user_bp)
+# 注册蓝图（公共接口）
+app.register_blueprint(common_bp)
+
+# 图片静态路由
+@app.route('/static/images/<filename>')
+def serve_image(filename):
+    image_dir = app.config['IMAGE_STORAGE_DIR']
+    return send_from_directory(os.path.abspath(image_dir), filename)
 
 # 初始化数据库表和测试数据
 with app.app_context():
