@@ -80,17 +80,16 @@ def delete_image(current_user):
 
 
 # 头像上传接口（仅用户创建成功后调用）
+# 公共头像上传接口（修复旧头像删除）
 @common_bp.route('/upload/avatar', methods=['POST'])
 @token_required
 def upload_user_avatar(current_user):
     try:
         print(f"【头像上传请求】用户: {current_user.account}")
-        # 接收前端参数：表名、记录ID、图片文件
-        table_name = request.form.get('table_name')  # 必选：admin_info / user_info
-        record_id = request.form.get('record_id')    # 必选：创建成功返回的ID
-        avatar_file = request.files.get('avatar')    # 必选：头像文件
+        table_name = request.form.get('table_name')
+        record_id = request.form.get('record_id')
+        avatar_file = request.files.get('avatar')
 
-        # 参数校验
         if not table_name or not record_id or not avatar_file:
             return jsonify({
                 'success': False,
@@ -98,7 +97,6 @@ def upload_user_avatar(current_user):
                 'data': None
             }), 400
 
-        # 映射表名到模型
         supported_tables = {'admin_info': Admin, 'user_info': User}
         if table_name not in supported_tables:
             return jsonify({
@@ -108,16 +106,22 @@ def upload_user_avatar(current_user):
             }), 400
         model = supported_tables[table_name]
 
-        # 校验记录是否存在（确保用户已创建）
-        record = model.query.get(int(record_id))
-        if not record:
+        # 查询旧记录（关键：获取旧头像URL）
+        old_record = model.query.get(int(record_id))
+        if not old_record:
             return jsonify({
                 'success': False,
-                'message': f'ID为{record_id}的{table_name}记录不存在，无法上传头像',
+                'message': f'ID为{record_id}的{table_name}记录不存在',
                 'data': None
             }), 404
 
-        # 保存图片并生成URL
+        # 修复点2：上传新头像前，先删除旧头像
+        if old_record.avatar:
+            old_filename = old_record.avatar.split('/')[-1]
+            LocalImageStorage().delete_image(old_filename)
+            print(f"【上传新头像】删除旧头像：{old_filename}")
+
+        # 保存新头像
         image_storage = LocalImageStorage()
         save_result = image_storage.save_image(avatar_file)
         if save_result['status'] != 'success':
@@ -127,14 +131,14 @@ def upload_user_avatar(current_user):
                 'data': None
             }), 400
 
-        # 更新数据库的avatar字段
-        record.avatar = save_result['url']
+        # 更新新头像URL
+        old_record.avatar = save_result['url']
         db.session.commit()
-        print(f"【头像上传成功】{table_name} ID: {record_id}, 头像URL: {save_result['url']}")
+        print(f"【头像上传成功】{table_name} ID: {record_id}, 新头像URL: {save_result['url']}")
 
         return jsonify({
             'success': True,
-            'message': '头像上传并关联成功',
+            'message': '头像上传并关联成功（旧头像已删除）',
             'data': {
                 'avatar_url': save_result['url'],
                 'filename': save_result['filename']
@@ -149,3 +153,72 @@ def upload_user_avatar(current_user):
             'message': f'头像上传失败：{str(e)}',
             'data': None
         }), 500
+# @common_bp.route('/upload/avatar', methods=['POST'])
+# @token_required
+# def upload_user_avatar(current_user):
+#     try:
+#         print(f"【头像上传请求】用户: {current_user.account}")
+#         # 接收前端参数：表名、记录ID、图片文件
+#         table_name = request.form.get('table_name')  # 必选：admin_info / user_info
+#         record_id = request.form.get('record_id')    # 必选：创建成功返回的ID
+#         avatar_file = request.files.get('avatar')    # 必选：头像文件
+#
+#         # 参数校验
+#         if not table_name or not record_id or not avatar_file:
+#             return jsonify({
+#                 'success': False,
+#                 'message': '缺少参数：table_name、record_id或avatar文件',
+#                 'data': None
+#             }), 400
+#
+#         # 映射表名到模型
+#         supported_tables = {'admin_info': Admin, 'user_info': User}
+#         if table_name not in supported_tables:
+#             return jsonify({
+#                 'success': False,
+#                 'message': f'不支持的表：{table_name}，仅允许admin_info或user_info',
+#                 'data': None
+#             }), 400
+#         model = supported_tables[table_name]
+#
+#         # 校验记录是否存在（确保用户已创建）
+#         record = model.query.get(int(record_id))
+#         if not record:
+#             return jsonify({
+#                 'success': False,
+#                 'message': f'ID为{record_id}的{table_name}记录不存在，无法上传头像',
+#                 'data': None
+#             }), 404
+#
+#         # 保存图片并生成URL
+#         image_storage = LocalImageStorage()
+#         save_result = image_storage.save_image(avatar_file)
+#         if save_result['status'] != 'success':
+#             return jsonify({
+#                 'success': False,
+#                 'message': f'图片上传失败：{save_result["message"]}',
+#                 'data': None
+#             }), 400
+#
+#         # 更新数据库的avatar字段
+#         record.avatar = save_result['url']
+#         db.session.commit()
+#         print(f"【头像上传成功】{table_name} ID: {record_id}, 头像URL: {save_result['url']}")
+#
+#         return jsonify({
+#             'success': True,
+#             'message': '头像上传并关联成功',
+#             'data': {
+#                 'avatar_url': save_result['url'],
+#                 'filename': save_result['filename']
+#             }
+#         }), 200
+#
+#     except Exception as e:
+#         db.session.rollback()
+#         print(f"【头像上传异常】错误: {str(e)}")
+#         return jsonify({
+#             'success': False,
+#             'message': f'头像上传失败：{str(e)}',
+#             'data': None
+#         }), 500
