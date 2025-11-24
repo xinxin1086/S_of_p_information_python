@@ -1,8 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 # 初始化数据库（所有模块共享）
 db = SQLAlchemy()
+
 
 # 基类模型，包含密码加密与验证的方法
 class BaseUser(db.Model):
@@ -67,4 +69,25 @@ class User(BaseUser):
             'email': {'label': '邮箱', 'type': 'string'},
             'avatar': {'label': '头像', 'type': 'string'},
             'role': {'label': '角色', 'type': 'string'}
+        }
+
+
+# 新增公告模型（对应notice表）
+class Notice(db.Model):
+    __tablename__ = 'notice'  # 数据库表名
+    release_time = db.Column(db.DateTime, nullable=False, primary_key=True, comment='公告发布时间')  # 主键
+    release_title = db.Column(db.String(150), nullable=False, comment='公告发布标题')
+    release_notice = db.Column(db.String(255), nullable=False, comment='发布公告内容')
+    expiration = db.Column(db.DateTime, comment='公到期时间')
+    notice_type = db.Column(db.String(25), comment='公告类型')
+
+    # 动态字段信息（供前端表格生成）
+    @classmethod
+    def get_fields_info(cls):
+        return {
+            'release_time': {'label': '发布时间', 'type': 'datetime'},
+            'release_title': {'label': '公告标题', 'type': 'string'},
+            'release_notice': {'label': '公告内容', 'type': 'string'},
+            'expiration': {'label': '到期时间', 'type': 'datetime'},
+            'notice_type': {'label': '公告类型', 'type': 'string'}
         }

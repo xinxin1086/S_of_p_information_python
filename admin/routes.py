@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from flask import request, jsonify
 from config import Config
 from components import db, token_required, LocalImageStorage  # 引用公共组件
-from components.models import Admin, User  # 引用公共模型
+from components.models import Admin, User, Notice  # 新增Notice模型引用
 from admin import admin_bp  # 导入当前模块蓝图
 
 
@@ -46,7 +46,7 @@ def login():
             'message': '登录成功',
             'data': {
                 'token': token,
-                'user': {'id': user.id, 'account': user.account},
+                'user': {'id': user.id, 'account': user.account, 'name': user.username},
                 'status': 'success'
             }
         }
@@ -100,8 +100,7 @@ def get_admin_list(current_user):
         }), 500
 
 
-# 管理员数据增删改查接口（通用操作）
-# 管理员数据增删改查接口（修复旧头像删除）
+# 管理员数据增删改查接口（整合公告增删改功能）
 @admin_bp.route('/operate', methods=['POST'])
 @token_required
 def db_operate(current_user):
@@ -117,87 +116,150 @@ def db_operate(current_user):
         table_name = data['table_name']
         operate_type = data['operate_type'].lower()
         kwargs = data.get('kwargs', {})
-        supported_tables = {'admin_info': Admin, 'user_info': User}
+        # 新增notice表支持
+        supported_tables = {'admin_info': Admin, 'user_info': User, 'notice': Notice}
 
         if table_name not in supported_tables:
             return jsonify({'success': False, 'message': f'不支持表：{table_name}', 'data': None}), 400
         model = supported_tables[table_name]
         result = None
 
-        # 新增操作（保持不变）
+        # 新增操作（支持用户和公告）
         if operate_type == 'add':
-            required_fields = ['account', 'username', 'phone', 'password']
-            for field in required_fields:
-                if field not in kwargs or not str(kwargs[field]).strip():
-                    return jsonify({'success': False, 'message': f'缺少必填字段：{field}', 'data': None}), 400
+            # 按表名区分必填字段
+            if table_name in ['admin_info', 'user_info']:
+                required_fields = ['account', 'username', 'phone', 'password']
+                for field in required_fields:
+                    if field not in kwargs or not str(kwargs[field]).strip():
+                        return jsonify({'success': False, 'message': f'缺少必填字段：{field}', 'data': None}), 400
 
-            password = kwargs.pop('password')
-            new_record = model(** kwargs)
-            new_record.set_password(password)
-            db.session.add(new_record)
-            db.session.commit()
+                password = kwargs.pop('password')
+                new_record = model(** kwargs)
+                new_record.set_password(password)
+                db.session.add(new_record)
+                db.session.commit()
 
-            result = {
-                'id': new_record.id,
-                'table_name': table_name,
-                'message': '用户创建成功，请上传头像'
-            }
-            print(f"【用户创建成功】{table_name} ID: {new_record.id}")
+                result = {
+                    'id': new_record.id,
+                    'table_name': table_name,
+                    'message': '用户创建成功，请上传头像'
+                }
+                print(f"【用户创建成功】{table_name} ID: {new_record.id}")
 
-        # 删除操作（保持不变）
+            elif table_name == 'notice':
+                required_fields = ['release_title', 'release_notice', 'notice_type']
+                for field in required_fields:
+                    if field not in kwargs or not str(kwargs[field]).strip():
+                        return jsonify({'success': False, 'message': f'缺少必填字段：{field}', 'data': None}), 400
+
+                # 处理时间字段
+                release_time = kwargs.get('release_time') or datetime.now()
+                expiration = kwargs.get('expiration')
+
+                new_record = Notice(
+                    release_time=datetime.fromisoformat(release_time) if isinstance(release_time, str) else release_time,
+                    release_title=kwargs['release_title'],
+                    release_notice=kwargs['release_notice'],
+                    expiration=datetime.fromisoformat(expiration) if expiration else None,
+                    notice_type=kwargs['notice_type']
+                )
+                db.session.add(new_record)
+                db.session.commit()
+                result = {'id': new_record.release_time.isoformat(), 'message': '公告新增成功'}
+                print(f"【公告创建成功】发布时间: {new_record.release_time.isoformat()}")
+
+        # 删除操作（支持用户和公告）
         elif operate_type == 'delete':
-            records = model.query.filter_by(**kwargs).all()
-            if records and table_name in ['admin_info', 'user_info']:
-                image_storage = LocalImageStorage()
-                for record in records:
-                    if record.avatar:
-                        filename = record.avatar.split('/')[-1]
-                        image_storage.delete_image(filename)
-                        print(f"【删除关联头像】文件名: {filename}")
-            deleted_count = model.query.filter_by(**kwargs).delete()
-            db.session.commit()
-            result = {'deleted_count': deleted_count, 'message': f'删除{deleted_count}条'}
+            if table_name in ['admin_info', 'user_info']:
+                records = model.query.filter_by(**kwargs).all()
+                if records:
+                    image_storage = LocalImageStorage()
+                    for record in records:
+                        if record.avatar:
+                            filename = record.avatar.split('/')[-1]
+                            image_storage.delete_image(filename)
+                            print(f"【删除关联头像】文件名: {filename}")
+                deleted_count = model.query.filter_by(**kwargs).delete()
+                db.session.commit()
+                result = {'deleted_count': deleted_count, 'message': f'删除{deleted_count}条用户记录'}
 
-        # 核心修复：edit/update 时删除旧头像
+            elif table_name == 'notice':
+                # 处理时间条件格式转换
+                if 'release_time' in kwargs:
+                    kwargs['release_time'] = datetime.fromisoformat(kwargs['release_time'])
+                deleted_count = Notice.query.filter_by(**kwargs).delete()
+                db.session.commit()
+                result = {'deleted_count': deleted_count, 'message': f'删除{deleted_count}条公告记录'}
+
+        # 更新操作（支持用户和公告，兼容edit/update类型）
         elif operate_type in ['update', 'edit']:
-            record_id = data.get('id')
-            update_kwargs = data.get('kwargs', {})
+            if table_name in ['admin_info', 'user_info']:
+                record_id = data.get('id')
+                update_kwargs = data.get('kwargs', {}).copy()  # 复制避免修改原数据
 
-            if not record_id:
-                return jsonify({'success': False, 'message': '缺少更新条件：id', 'data': None}), 400
-            if not update_kwargs:
-                return jsonify({'success': False, 'message': '缺少更新内容：kwargs', 'data': None}), 400
+                if not record_id:
+                    return jsonify({'success': False, 'message': '缺少更新条件：id', 'data': None}), 400
+                if not update_kwargs:
+                    return jsonify({'success': False, 'message': '缺少更新内容：kwargs', 'data': None}), 400
 
-            query_kwargs = {'id': int(record_id)}
-            old_record = model.query.filter_by(**query_kwargs).first()  # 查询旧记录
+                query_kwargs = {'id': int(record_id)}
+                old_record = model.query.filter_by(**query_kwargs).first()
 
-            # 修复点1：如果更新了avatar（新URL非空），删除旧头像
-            if table_name in ['admin_info', 'user_info'] and 'avatar' in update_kwargs:
-                new_avatar = update_kwargs['avatar']
-                # 情况1：新头像为空 → 删除旧头像（原有逻辑保留）
-                if not new_avatar or new_avatar.strip() == '':
-                    if old_record and old_record.avatar:
-                        filename = old_record.avatar.split('/')[-1]
-                        LocalImageStorage().delete_image(filename)
-                        print(f"【更新为空】删除旧头像：{filename}")
-                # 情况2：新头像不为空 → 先删旧头像，再保存新头像
-                else:
-                    if old_record and old_record.avatar:
-                        old_filename = old_record.avatar.split('/')[-1]
-                        LocalImageStorage().delete_image(old_filename)
-                        print(f"【更新新头像】删除旧头像：{old_filename}")
+                # 处理密码更新：单独提取password字段，调用set_password生成哈希
+                if 'password' in update_kwargs:
+                    new_password = update_kwargs.pop('password')
+                    if new_password and new_password.strip():
+                        old_record.set_password(new_password)
+                        print(f"【更新密码】用户ID: {record_id} 的密码已更新")
 
-            updated_count = model.query.filter_by(** query_kwargs).update(update_kwargs)
-            db.session.commit()
-            result = {'updated_count': updated_count, 'message': f'更新{updated_count}条'}
+                # 处理头像更新逻辑
+                if 'avatar' in update_kwargs:
+                    new_avatar = update_kwargs['avatar']
+                    if not new_avatar or new_avatar.strip() == '':
+                        if old_record and old_record.avatar:
+                            filename = old_record.avatar.split('/')[-1]
+                            LocalImageStorage().delete_image(filename)
+                            print(f"【更新为空】删除旧头像：{filename}")
+                    else:
+                        if old_record and old_record.avatar:
+                            old_filename = old_record.avatar.split('/')[-1]
+                            LocalImageStorage().delete_image(old_filename)
+                            print(f"【更新新头像】删除旧头像：{old_filename}")
 
-        # 查询操作（保持不变）
+                # 执行更新（此时update_kwargs中已无password字段）
+                updated_count = model.query.filter_by(** query_kwargs).update(update_kwargs)
+                db.session.commit()
+                result = {'updated_count': updated_count, 'message': f'更新{updated_count}条用户记录'}
+
+            elif table_name == 'notice':
+                query_kwargs = data.get('query_kwargs', {})
+                update_kwargs = data.get('update_kwargs', {})
+
+                if not query_kwargs or not update_kwargs:
+                    return jsonify({'success': False, 'message': '需同时提供查询条件和更新内容', 'data': None}), 400
+
+                # 处理时间字段格式转换
+                if 'release_time' in query_kwargs:
+                    query_kwargs['release_time'] = datetime.fromisoformat(query_kwargs['release_time'])
+                if 'release_time' in update_kwargs:
+                    update_kwargs['release_time'] = datetime.fromisoformat(update_kwargs['release_time'])
+                if 'expiration' in update_kwargs:
+                    update_kwargs['expiration'] = datetime.fromisoformat(update_kwargs['expiration']) if update_kwargs['expiration'] else None
+
+                updated_count = Notice.query.filter_by(**query_kwargs).update(update_kwargs)
+                db.session.commit()
+                result = {'updated_count': updated_count, 'message': f'更新{updated_count}条公告记录'}
+
+        # 查询操作：仅保留用户查询，公告查询使用公共接口
         elif operate_type == 'query':
-            page = data.get('page', 1)
-            size = data.get('size', 10)
-            pagination = model.query.filter_by(**kwargs).paginate(page=page, per_page=size)
-            items = [{col.name: getattr(item, col.name) for col in item.__table__.columns} for item in pagination.items]
-            result = {'total': pagination.total, 'page': page, 'items': items}
+            if table_name in ['admin_info', 'user_info']:
+                page = data.get('page', 1)
+                size = data.get('size', 10)
+                pagination = model.query.filter_by(**kwargs).paginate(page=page, per_page=size)
+                items = [{col.name: getattr(item, col.name) for col in item.__table__.columns} for item in pagination.items]
+                result = {'total': pagination.total, 'page': page, 'items': items}
+            else:
+                return jsonify({'success': False, 'message': '公告查询请使用公共接口：/api/visit/notice', 'data': None}), 400
 
         else:
             return jsonify({'success': False, 'message': '操作类型错误', 'data': None}), 400

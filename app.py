@@ -7,6 +7,7 @@ from admin import admin_bp  # 导入管理员蓝图
 from user import user_bp  # 导入用户蓝图
 from common import common_bp  # 导入公共蓝图
 from flask import send_from_directory  # 导入图片静态路由
+from visit import visit_bp  # 导入visit蓝图
 
 
 # 初始化Flask应用
@@ -31,6 +32,9 @@ app.register_blueprint(admin_bp)
 app.register_blueprint(user_bp)
 # 注册蓝图（公共接口）
 app.register_blueprint(common_bp)
+# 注册visit蓝图（访问接口）
+app.register_blueprint(visit_bp)
+
 
 # 图片静态路由
 @app.route('/static/images/<filename>')
