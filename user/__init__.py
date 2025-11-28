@@ -1,3 +1,5 @@
+# ./user/__init__.py
+
 from flask import Blueprint
 
 # 创建用户蓝图（前缀为/api/user）

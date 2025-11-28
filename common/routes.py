@@ -1,3 +1,5 @@
+# ./common/routes.py
+
 from flask import request, jsonify
 from components import token_required, LocalImageStorage, db  # 新增db导入
 from components.models import Admin, User  # 导入模型

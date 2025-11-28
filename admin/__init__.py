@@ -1,3 +1,5 @@
+# ./admin/__init__.py
+
 from flask import Blueprint
 
 # 创建管理员蓝图（前缀为/api/admin）

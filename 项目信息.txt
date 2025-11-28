@@ -1,34 +1,519 @@
-使用包：
-flask
-flask-sqlalchemy flask-cors werkzeug
-        pip install flask flask-sqlalchemy flask-cors werkzeug  # werkzeug用于密码加密
-pymysql
-        pip install flask flask-sqlalchemy flask-cors werkzeug pymysql  # 新增pymysql用于连接MySQL
-pyjwt（用于处理 JWT 令牌）
-        pip install pyjwt
+# 社区活动平台项目信息文档（后端版本）
 
-数据库信息：
-用户名：root
-密码：root
-数据库名：s_of_p_information
+## 一、项目概述
 
-表名：admin_info
-序号：不能为空/自动生成
-账号：不能为空
-密码：不能为空
-用户名：不能为空
-手机号：不能为空
+### 1.1 项目简介
+社区活动平台是一个集成了公告管理、科普文章、活动管理、论坛功能于一体的综合性社区服务平台。采用前后端分离架构，后端使用 Flask 框架提供 RESTful API 服务。
 
-    #管理员登录相关信息
-    id = db.Column(db.Integer, primary_key=True) #不能为空/自动生成
-    account = db.Column(db.String(80), unique=True, nullable=False)  # 登录用户名 不能为空
-    password_hash = db.Column(db.String(255), nullable=False)  # 密码哈希 不能为空
-    # 其他管理员信息字段
-    username = db.Column(db.String(120), unique=True, nullable=False)  # 账号（可与username相同） 不能为空
-    phone = db.Column(db.String(20))  # 电话 不能为空
-    email = db.Column(db.String(50))  # 邮箱
-    avatar = db.Column(db.String(200))  # 头像
-    role = db.Column(db.String(20))  # 角色
+### 1.2 项目特性
+- **前后端分离**：纯后端API服务，前端由独立项目负责
+- **模块化设计**：采用蓝图(Blueprint)架构，各功能模块独立开发
+- **JWT认证**：基于JWT的用户认证和权限控制
+- **RESTful API**：提供标准化的REST API接口
+- **文件管理**：支持图片上传和文件管理功能
+- **跨域支持**：配置CORS支持前端跨域访问
 
-小心生成后首次传出令牌错误。
+### 1.3 核心功能模块
+1. **管理员认证系统**：管理员登录、权限管理
+2. **公告管理系统**：公告发布、编辑、分类管理、公开查询
+3. **用户管理系统**：用户信息管理、权限分配
+4. **图片管理系统**：图片上传、删除、头像管理
+5. **科普文章系统**：文章创建、编辑、状态管理、点赞功能
+6. **活动管理系统**：活动创建、预约、评论、参与者管理
+7. **论坛系统**：帖子发布、评论、点赞、分类管理
+8. **用户互动系统**：统一点赞功能、附件管理
+9. **公开访问接口**：无需认证的公告查询功能
 
+## 二、技术架构
+
+### 2.1 后端技术栈
+**核心框架：**
+- Flask (2.3.3): Web框架主体，提供路由、请求处理等基础功能
+- Flask-SQLAlchemy (3.0.5): SQLAlchemy数据库ORM扩展，简化数据库操作
+- Flask-CORS (4.0.0): 跨域资源共享支持，解决前后端分离跨域问题
+- Werkzeug (2.3.7): WSGI工具库，提供密码哈希、安全性工具等
+
+**数据库驱动：**
+- PyMySQL (1.1.0): MySQL数据库连接驱动
+- SQLAlchemy (2.0.21): 数据库ORM框架
+
+**身份认证和安全：**
+- PyJWT (2.8.0): JWT令牌生成和验证
+- Werkzeug.security: 密码哈希和验证功能
+
+### 2.2 项目结构
+```
+项目根目录/
+├── app.py                 # Flask应用入口文件
+├── config.py             # 配置文件（数据库、JWT等）
+├── static/               # 静态文件目录
+│   └── images/          # 图片存储目录
+├── admin/               # 管理员模块
+│   ├── __init__.py      # 蓝图注册
+│   ├── routes.py        # 管理员路由
+│   └── views.py         # 管理员视图
+├── user/                # 普通用户模块
+│   ├── __init__.py      # 蓝图注册
+│   └── routes.py        # 用户路由
+├── common/              # 公共模块
+│   ├── __init__.py      # 蓝图注册
+│   └── routes.py        # 公共路由（图片上传等）
+├── components/          # 组件模块
+│   ├── __init__.py      # 组件初始化
+│   ├── models.py        # 数据模型
+│   ├── token_required.py # JWT认证装饰器
+│   └── image_storage.py # 图片存储工具
+└── visit/               # 访问模块（无需认证）
+    ├── __init__.py      # 蓝图注册
+    └── routes.py        # 公开访问路由
+```
+
+## 三、数据库配置
+
+### 3.1 数据库连接信息
+- **数据库类型**: MySQL
+- **连接地址**: localhost:3306
+- **数据库名**: s_of_p_information
+- **用户名**: root
+- **密码**: root
+- **字符集**: utf8mb4
+
+### 3.2 数据表结构
+
+#### 现有核心表
+**管理员表 (admin_info)**
+- id: 主键，自增
+- account: 管理员账号（唯一）
+- username: 用户名（唯一）
+- password_hash: 密码哈希
+- phone: 电话号码（唯一）
+- email: 邮箱
+- avatar: 头像URL
+- role: 角色
+
+**普通用户表 (user_info)**
+- id: 主键，自增
+- account: 用户账号（唯一）
+- username: 用户名（唯一）
+- password_hash: 密码哈希
+- phone: 电话号码（唯一）
+- email: 邮箱
+- avatar: 头像URL
+- role: 角色
+
+**公告表 (notice)**
+- id: 主键，自增（BigInteger）
+- release_time: 发布时间（不可变更）
+- update_time: 更新时间
+- release_title: 公告标题（150字符）
+- release_notice: 公告内容（255字符）
+- expiration: 到期时间
+- notice_type: 公告类型（25字符）
+
+#### 新增功能表
+
+**科普文章表 (science_articles)**
+- id: 主键，自增
+- title: 文章标题（200字符）
+- content: 文章内容（Text）
+- author_account: 作者账号（外键 → user_info.account）
+- cover_image: 封面图片URL
+- status: 文章状态（enum: draft/pending/published/rejected）
+- like_count: 点赞次数（默认0）
+- view_count: 浏览次数（默认0）
+- published_at: 发布时间
+- created_at: 创建时间
+- updated_at: 更新时间
+
+**活动表 (activities)**
+- id: 主键，自增
+- title: 活动标题（200字符）
+- description: 活动描述（Text）
+- organizer_account: 组织者账号（外键 → user_info.account）
+- location: 活动地点（200字符）
+- start_time: 开始时间
+- end_time: 结束时间
+- max_participants: 最大参与人数
+- current_participants: 当前参与人数（默认0）
+- status: 活动状态（enum: draft/published/ongoing/completed/cancelled）
+- created_at: 创建时间
+- updated_at: 更新时间
+
+**活动预约表 (activity_bookings)**
+- id: 主键，自增
+- activity_id: 活动ID（外键 → activities.id，CASCADE删除）
+- user_account: 用户账号（外键 → user_info.account）
+- booking_time: 预约时间
+- status: 预约状态（enum: booked/cancelled/attended）
+- notes: 备注（Text）
+- created_at: 创建时间
+- updated_at: 更新时间
+- 唯一约束: (activity_id, user_account)
+
+**活动评论表 (activity_comments)**
+- id: 主键，自增
+- activity_id: 活动ID（外键 → activities.id，CASCADE删除）
+- user_account: 用户账号（外键 → user_info.account）
+- content: 评论内容（Text）
+- rating: 评分（1-5）
+- created_at: 创建时间
+- updated_at: 更新时间
+
+**论坛帖子表 (forum_posts)**
+- id: 主键，自增
+- title: 帖子标题（200字符）
+- content: 帖子内容（Text）
+- author_account: 作者账号（外键 → user_info.account）
+- category: 分类（默认'default'）
+- view_count: 浏览次数（默认0）
+- like_count: 点赞次数（默认0）
+- comment_count: 评论次数（默认0）
+- status: 帖子状态（enum: published/draft/deleted）
+- created_at: 创建时间
+- updated_at: 更新时间
+
+**论坛评论表 (forum_comments)**
+- id: 主键，自增
+- post_id: 帖子ID（外键 → forum_posts.id，CASCADE删除）
+- author_account: 评论者账号（外键 → user_info.account）
+- content: 评论内容（Text）
+- parent_id: 父评论ID（自关联 → forum_comments.id）
+- status: 评论状态（enum: published/deleted）
+- created_at: 创建时间
+
+**用户点赞表 (user_likes)**
+- id: 主键，自增
+- user_account: 用户账号（外键 → user_info.account）
+- target_type: 目标类型（enum: post/article/comment）
+- target_id: 目标ID
+- created_at: 创建时间
+- 唯一约束: (user_account, target_type, target_id)
+
+**附件表 (attachments)**
+- id: 主键，自增
+- uploader_account: 上传者账号（外键 → user_info.account）
+- file_name: 文件名（255字符）
+- file_path: 文件路径（500字符）
+- file_size: 文件大小
+- file_type: 文件类型（50字符）
+- usage_type: 用途类型（enum: avatar/cover/attachment）
+- created_at: 创建时间
+
+## 四、API接口文档
+
+### 4.1 管理员接口 (/api/admin)
+**登录接口**
+- POST `/api/admin/login`
+- 参数: account, password
+- 返回: JWT token, 用户信息
+
+**管理员列表查询**
+- GET `/api/admin/list`
+- 需要认证: 是
+- 返回: 管理员列表
+
+**数据操作接口**
+- POST `/api/admin/operate`
+- 需要认证: 是
+- 参数: table_name, operate_type, kwargs
+- 功能: 支持增删改查操作
+
+### 4.2 用户接口 (/api/user)
+**用户信息查询**
+- GET `/api/user/info`
+- 需要认证: 是
+- 返回: 当前用户信息
+
+**用户信息更新**
+- POST `/api/user/update`
+- 需要认证: 是
+- 参数: kwargs (更新字段)
+- 功能: 更新用户个人信息
+
+### 4.3 公共接口 (/api/common)
+**图片上传**
+- POST `/api/common/upload/image`
+- 需要认证: 是
+- 参数: image (文件)
+- 返回: 图片URL
+
+**图片删除**
+- POST `/api/common/delete/image`
+- 需要认证: 是
+- 参数: filename 或 image_url
+
+**头像上传**
+- POST `/api/common/upload/avatar`
+- 需要认证: 是
+- 参数: table_name, record_id, avatar (文件)
+- 功能: 上传并关联用户头像
+
+### 4.4 公开访问接口 (/api/visit)
+**公告查询**
+- GET `/api/visit/notice`
+- 需要认证: 否
+- 参数: notice_type, release_title, page, size等
+- 返回: 公告列表（分页）
+
+### 4.5 科普文章接口 (/api/science)
+**文章列表查询**
+- GET `/api/science/articles`
+- 需要认证: 否
+- 参数: status, author_account, page, size
+- 返回: 文章列表（分页）
+
+**文章详情查询**
+- GET `/api/science/articles/{id}`
+- 需要认证: 否
+- 返回: 文章详细信息
+
+**文章发布（需要权限）**
+- POST `/api/science/articles`
+- 需要认证: 是
+- 参数: title, content, cover_image等
+- 返回: 创建结果
+
+**文章状态更新**
+- PUT `/api/science/articles/{id}/status`
+- 需要认证: 是
+- 参数: status
+- 返回: 更新结果
+
+**文章点赞**
+- POST `/api/science/articles/{id}/like`
+- 需要认证: 是
+- 返回: 点赞结果
+
+**文章浏览计数**
+- POST `/api/science/articles/{id}/view`
+- 需要认证: 否
+- 返回: 浏览计数结果
+
+### 4.6 活动接口 (/api/activities)
+**活动列表查询**
+- GET `/api/activities`
+- 需要认证: 否
+- 参数: status, organizer_account, start_time_range等
+- 返回: 活动列表（分页）
+
+**活动详情查询**
+- GET `/api/activities/{id}`
+- 需要认证: 否
+- 返回: 活动详细信息
+
+**活动创建**
+- POST `/api/activities`
+- 需要认证: 是
+- 参数: title, description, start_time, end_time等
+- 返回: 创建结果
+
+**活动预约**
+- POST `/api/activities/{id}/booking`
+- 需要认证: 是
+- 参数: notes（可选）
+- 返回: 预约结果
+
+**取消预约**
+- DELETE `/api/activities/{id}/booking`
+- 需要认证: 是
+- 返回: 取消结果
+
+**活动评论**
+- POST `/api/activities/{id}/comments`
+- 需要认证: 是
+- 参数: content, rating（可选）
+- 返回: 评论结果
+
+**活动状态更新**
+- PUT `/api/activities/{id}/status`
+- 需要认证: 是
+- 参数: status
+- 返回: 更新结果
+
+### 4.7 论坛接口 (/api/forum)
+**帖子列表查询**
+- GET `/api/forum/posts`
+- 需要认证: 否
+- 参数: category, status, author_account, page, size
+- 返回: 帖子列表（分页）
+
+**帖子详情查询**
+- GET `/api/forum/posts/{id}`
+- 需要认证: 否
+- 返回: 帖子详细信息和评论列表
+
+**发布帖子**
+- POST `/api/forum/posts`
+- 需要认证: 是
+- 参数: title, content, category（可选）
+- 返回: 创建结果
+
+**帖子评论**
+- POST `/api/forum/posts/{id}/comments`
+- 需要认证: 是
+- 参数: content, parent_id（可选，回复评论）
+- 返回: 评论结果
+
+**帖子点赞**
+- POST `/api/forum/posts/{id}/like`
+- 需要认证: 是
+- 返回: 点赞结果
+
+**帖子搜索**
+- GET `/api/forum/search`
+- 需要认证: 否
+- 参数: keyword, category, page, size
+- 返回: 搜索结果
+
+### 4.8 用户互动接口 (/api/likes)
+**通用点赞**
+- POST `/api/likes`
+- 需要认证: 是
+- 参数: target_type (post/article/comment), target_id
+- 返回: 点赞结果
+
+**取消点赞**
+- DELETE `/api/likes`
+- 需要认证: 是
+- 参数: target_type (post/article/comment), target_id
+- 返回: 取消结果
+
+**用户点赞列表**
+- GET `/api/likes/user`
+- 需要认证: 是
+- 参数: target_type（可选）
+- 返回: 用户点赞列表
+
+### 4.9 附件接口 (/api/attachments)
+**文件上传**
+- POST `/api/attachments/upload`
+- 需要认证: 是
+- 参数: file, usage_type (avatar/cover/attachment)
+- 返回: 上传结果和文件信息
+
+**文件信息查询**
+- GET `/api/attachments/{id}`
+- 需要认证: 是
+- 返回: 文件详细信息
+
+**用户文件列表**
+- GET `/api/attachments/user`
+- 需要认证: 是
+- 参数: usage_type（可选）
+- 返回: 用户上传的文件列表
+
+## 五、启动和部署
+
+### 5.1 环境要求
+- Python 3.7+
+- MySQL 5.7+
+- 操作系统: Linux/Windows/macOS
+
+### 5.2 依赖安装
+```bash
+pip install flask==2.3.3 flask-sqlalchemy==3.0.5 flask-cors==4.0.0 werkzeug==2.3.7 pymysql==1.1.0 pyjwt==2.8.0
+```
+
+### 5.3 配置说明
+修改 `config.py` 文件中的以下配置：
+- 数据库连接信息
+- JWT密钥和过期时间
+- 图片存储路径和文件大小限制
+
+### 5.4 启动方式
+```bash
+python app.py
+```
+默认启动端口: 5000
+
+### 5.5 初始化说明
+首次启动时会自动：
+- 创建数据表
+- 添加默认管理员账号 (admin/admin123)
+
+## 六、前端对接说明
+
+### 6.1 API基础信息
+- **基础URL**: `http://localhost:5000`
+- **认证方式**: JWT Bearer Token
+- **跨域配置**: 已配置允许所有域名访问
+
+### 6.2 认证流程
+1. 调用 `/api/admin/login` 获取JWT token
+2. 在请求头中添加 `Authorization: Bearer <token>`
+3. 所有需要认证的接口都需要携带此token
+
+### 6.3 数据格式
+**请求格式**
+- Content-Type: application/json
+- GET请求使用query参数
+- POST请求使用JSON body
+
+**响应格式**
+```json
+{
+  "success": true,
+  "message": "操作成功",
+  "data": {}
+}
+```
+
+### 6.4 图片资源访问
+- 图片上传通过 `/api/common/upload/image` 接口
+- 图片访问通过静态文件路由: `/static/images/<filename>`
+- 支持常见图片格式: .jpg, .jpeg, .png, .gif, .webp
+- 单个图片最大5MB
+
+### 6.5 分页参数
+对于列表查询接口，支持以下分页参数：
+- page: 页码（从1开始）
+- size: 每页大小（默认10）
+
+### 6.6 时间格式
+- 所有时间字段使用ISO 8601格式
+- 示例: "2023-12-01T10:00:00Z"
+
+## 七、开发注意事项
+
+### 7.1 安全配置
+- 生产环境需要修改JWT密钥
+- 建议配置HTTPS
+- 定期更新依赖包版本
+
+### 7.2 图片存储
+- 图片存储在 `static/images/` 目录
+- 支持自动删除旧头像功能
+- 文件名自动生成，避免冲突
+
+### 7.3 数据库操作
+- 使用SQLAlchemy ORM进行数据库操作
+- 支持事务回滚
+- 所有密码使用哈希存储
+
+### 7.4 错误处理
+- 统一异常处理和日志记录
+- 返回标准化的错误响应
+- 支持详细的错误信息调试
+
+## 八、扩展开发指南
+
+### 8.1 新增模块
+1. 在对应目录下创建模块文件夹
+2. 创建 `__init__.py` 注册蓝图
+3. 创建 `routes.py` 定义路由
+4. 在 `app.py` 中注册新蓝图
+
+### 8.2 数据模型扩展
+1. 在 `components/models.py` 中添加新模型
+2. 定义字段和关系
+3. 在数据库操作接口中集成新模型
+
+### 8.3 API接口扩展
+1. 在对应模块的 `routes.py` 中添加新路由
+2. 遵循RESTful设计原则
+3. 添加适当的认证和权限检查
+4. 统一响应格式
+
+---
+
+**注意**: 本项目已完成前后端分离，前端功能由独立项目负责开发。后端仅提供API服务，不包含任何前端页面。

@@ -1,0 +1,12 @@
+{
+  "name": "后端",
+  "description": "后端",
+  "icon": "",
+  "coverImg": null,
+  "coverImgSourceType": null,
+  "needLogin": true,
+  "proxyConfigs": null,
+  "pageArgConfigs": null,
+  "dataSourcePlugins": null,
+  "dataSourceWorkflows": null
+}

@@ -1,3 +1,5 @@
+# ./config.py
+
 class Config:
     # 数据库配置（所有模块共享）
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@localhost:3306/s_of_p_information?charset=utf8mb4'
