@@ -56,7 +56,8 @@ def get_notices():
                 'release_time': notice.release_time.isoformat().replace('+00:00', 'Z'),  # 还原 Z 后缀
                 'update_time': notice.update_time.isoformat().replace('+00:00', 'Z') if notice.update_time else None,
                 'release_title': notice.release_title,
-                'release_notice': notice.release_notice,
+                # 列表页不返回公告内容，减少数据传输量
+                # 'release_notice': notice.release_notice,  # 移除此字段
                 'expiration': notice.expiration.isoformat().replace('+00:00', 'Z') if notice.expiration else None,
                 'notice_type': notice.notice_type
             })
