@@ -3,7 +3,7 @@
 
 from typing import Dict, Any
 from components import db
-from components.models import ForumPost, ForumComment, ActivityBooking, ActivityComment, UserLike, Attachment
+from components.models import ForumPost, ForumComment, ActivityBooking, UserLike, Attachment, ActivityRating
 from .base_service import BaseService, TimeFieldMixin
 
 
@@ -172,52 +172,6 @@ class ActivityBookingService(BaseService, TimeFieldMixin):
             raise Exception(f'查询活动预约列表失败：{str(e)}')
 
 
-class ActivityCommentService(BaseService, TimeFieldMixin):
-    """活动评论管理服务类"""
-
-    def __init__(self):
-        super().__init__(ActivityComment)
-
-    def create_activity_comment(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """创建活动评论"""
-        # 验证必填字段
-        required_fields = ['activity_id', 'user_account', 'content']
-        for field in required_fields:
-            if field not in data or not str(data[field]).strip():
-                raise Exception(f'缺少必填字段：{field}')
-
-        try:
-            # 处理数字字段
-            numeric_fields = ['activity_id', 'rating']
-            processed_data = self.process_numeric_fields(data, numeric_fields)
-
-            new_record = ActivityComment(**processed_data)
-            db.session.add(new_record)
-            db.session.commit()
-
-            result = {'id': new_record.id, 'message': 'activity_comments新增成功'}
-            print(f"【{ActivityComment.__tablename__}创建成功】ID: {new_record.id}")
-            return result
-        except Exception as e:
-            db.session.rollback()
-            raise Exception(f'创建活动评论失败：{str(e)}')
-
-    def get_activity_comment_list(self, page: int = 1, size: int = 10,
-                                 filters: Dict[str, Any] = None) -> Dict[str, Any]:
-        """获取活动评论列表"""
-        try:
-            query = ActivityComment.query
-
-            # 活动评论筛选
-            if filters:
-                if 'activity_id' in filters:
-                    query = query.filter(ActivityComment.activity_id == int(filters['activity_id']))
-                if 'user_account' in filters:
-                    query = query.filter(ActivityComment.user_account == filters['user_account'])
-
-            return self.get_paginated_list(page, size, None, 'id')
-        except Exception as e:
-            raise Exception(f'查询活动评论列表失败：{str(e)}')
 
 
 class UserLikeService(BaseService, TimeFieldMixin):
@@ -316,3 +270,73 @@ class AttachmentService(BaseService, TimeFieldMixin):
             return self.get_paginated_list(page, size, None, 'id')
         except Exception as e:
             raise Exception(f'查询附件列表失败：{str(e)}')
+
+
+class ActivityRatingService(BaseService, TimeFieldMixin):
+    """活动评分管理服务类"""
+
+    def __init__(self):
+        super().__init__(ActivityRating)
+
+    def create_activity_rating(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """创建活动评分"""
+        # 验证必填字段
+        required_fields = ['activity_id', 'rater_user_id', 'score']
+        for field in required_fields:
+            if field not in data or not str(data[field]).strip():
+                raise Exception(f'缺少必填字段：{field}')
+
+        try:
+            # 处理数字字段
+            numeric_fields = ['activity_id', 'rater_user_id', 'score']
+            processed_data = self.process_numeric_fields(data, numeric_fields)
+
+            # 验证评分范围
+            score = processed_data.get('score', 0)
+            if not (1 <= score <= 5):
+                raise Exception('评分值必须在1-5之间')
+
+            # 检查用户是否已经评分过该活动
+            existing_rating = ActivityRating.query.filter_by(
+                activity_id=processed_data['activity_id'],
+                rater_user_id=processed_data['rater_user_id']
+            ).first()
+
+            if existing_rating:
+                raise Exception('用户已经对该活动进行过评分')
+
+            # 设置默认显示名
+            if 'rater_display' not in processed_data:
+                processed_data['rater_display'] = f"用户{processed_data['rater_user_id']}"
+
+            new_record = ActivityRating(**processed_data)
+            db.session.add(new_record)
+            db.session.commit()
+
+            result = {'id': new_record.id, 'message': 'activity_rating新增成功'}
+            print(f"【{ActivityRating.__tablename__}创建成功】ID: {new_record.id}")
+            return result
+        except Exception as e:
+            db.session.rollback()
+            raise Exception(f'创建活动评分失败：{str(e)}')
+
+    def get_activity_rating_list(self, page: int = 1, size: int = 10,
+                               filters: Dict[str, Any] = None) -> Dict[str, Any]:
+        """获取活动评分列表"""
+        try:
+            query = ActivityRating.query
+
+            # 活动评分筛选
+            if filters:
+                if 'activity_id' in filters:
+                    query = query.filter(ActivityRating.activity_id == int(filters['activity_id']))
+                if 'rater_user_id' in filters:
+                    query = query.filter(ActivityRating.rater_user_id == int(filters['rater_user_id']))
+                if 'score' in filters:
+                    query = query.filter(ActivityRating.score == int(filters['score']))
+                if 'rater_display' in filters:
+                    query = query.filter(ActivityRating.rater_display.like(f"%{filters['rater_display']}%"))
+
+            return self.get_paginated_list(page, size, None, 'id')
+        except Exception as e:
+            raise Exception(f'查询活动评分列表失败：{str(e)}')

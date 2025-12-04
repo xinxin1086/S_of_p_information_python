@@ -3,7 +3,7 @@
 
 from typing import Dict, Any
 from components import db
-from components.models import ScienceArticle, Activity
+from components.models import ScienceArticle, Activity, User
 from .base_service import BaseService, TimeFieldMixin
 
 
@@ -88,7 +88,7 @@ class ActivityService(BaseService, TimeFieldMixin):
     def create_activity(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """创建活动"""
         # 验证必填字段
-        required_fields = ['title', 'description', 'organizer_account', 'start_time', 'end_time']
+        required_fields = ['title', 'start_time', 'end_time']
         for field in required_fields:
             if field not in data or not str(data[field]).strip():
                 raise Exception(f'缺少必填字段：{field}')
@@ -98,14 +98,31 @@ class ActivityService(BaseService, TimeFieldMixin):
             time_fields = ['start_time', 'end_time']
             processed_data = self.process_time_fields(data, time_fields)
 
+            # 处理组织者信息
+            organizer_user_id = None
+            organizer_display = "用户已注销"
+
+            if 'organizer_user_id' in processed_data and processed_data['organizer_user_id']:
+                # 通过用户ID查找用户
+                user = User.query.filter_by(
+                    id=processed_data['organizer_user_id'],
+                    is_deleted=0
+                ).first()
+                if user:
+                    organizer_user_id = user.id
+                    organizer_display = user.account
+                else:
+                    print(f"【活动创建警告】用户ID {processed_data['organizer_user_id']} 不存在或已注销，将显示为匿名")
+
             new_record = Activity(
                 title=processed_data['title'],
-                description=processed_data['description'],
-                organizer_account=processed_data['organizer_account'],
-                location=processed_data.get('location'),
+                description=processed_data.get('description'),
                 start_time=processed_data['start_time'],
                 end_time=processed_data['end_time'],
+                location=processed_data.get('location'),
                 max_participants=processed_data.get('max_participants'),
+                organizer_user_id=organizer_user_id,
+                organizer_display=organizer_display,
                 status=processed_data.get('status', 'draft')
             )
             db.session.add(new_record)
@@ -135,9 +152,18 @@ class ActivityService(BaseService, TimeFieldMixin):
         time_fields = ['start_time', 'end_time']
         update_kwargs = self.process_time_fields(update_kwargs, time_fields)
 
-        # 处理数字字段
-        numeric_fields = ['max_participants']
-        update_kwargs = self.process_numeric_fields(update_kwargs, numeric_fields)
+        # 处理组织者信息更新
+        if 'organizer_user_id' in update_kwargs and update_kwargs['organizer_user_id']:
+            user = User.query.filter_by(
+                id=update_kwargs['organizer_user_id'],
+                is_deleted=0
+            ).first()
+            if user:
+                update_kwargs['organizer_user_id'] = user.id
+                update_kwargs['organizer_display'] = user.account
+            else:
+                update_kwargs['organizer_user_id'] = None
+                update_kwargs['organizer_display'] = "用户已注销"
 
         return self.update_record(query_kwargs, update_kwargs)
 
@@ -153,6 +179,31 @@ class ActivityService(BaseService, TimeFieldMixin):
 
         return self.delete_record(processed_kwargs)
 
+    def update_activities_organizer_display(self) -> Dict[str, Any]:
+        """批量更新所有活动的组织者显示信息（处理用户注销情况）"""
+        try:
+            activities = Activity.query.filter(
+                Activity.organizer_user_id.isnot(None)
+            ).all()
+
+            updated_count = 0
+            for activity in activities:
+                old_display = activity.organizer_display
+                activity.update_organizer_display()
+                if old_display != activity.organizer_display:
+                    updated_count += 1
+                    print(f"【活动组织者更新】活动ID: {activity.id}, 显示名: {old_display} -> {activity.organizer_display}")
+
+            db.session.commit()
+            return {
+                'total_activities': len(activities),
+                'updated_count': updated_count,
+                'message': f'成功检查 {len(activities)} 个活动，更新了 {updated_count} 个组织者显示信息'
+            }
+        except Exception as e:
+            db.session.rollback()
+            raise Exception(f'更新活动组织者信息失败：{str(e)}')
+
     def get_activity_list(self, page: int = 1, size: int = 10,
                          filters: Dict[str, Any] = None) -> Dict[str, Any]:
         """获取活动列表"""
@@ -161,13 +212,44 @@ class ActivityService(BaseService, TimeFieldMixin):
 
             # 活动筛选
             if filters:
-                if 'organizer_account' in filters:
-                    query = query.filter(Activity.organizer_account == filters['organizer_account'])
-                if 'status' in filters:
-                    query = query.filter(Activity.status == filters['status'])
+                if 'organizer_user_id' in filters:
+                    query = query.filter(Activity.organizer_user_id == filters['organizer_user_id'])
+                if 'organizer_display' in filters:
+                    query = query.filter(Activity.organizer_display.like(f"%{filters['organizer_display']}%"))
                 if 'title' in filters:
                     query = query.filter(Activity.title.like(f"%{filters['title']}%"))
+                if 'description' in filters:
+                    query = query.filter(Activity.description.like(f"%{filters['description']}%"))
+                if 'location' in filters:
+                    query = query.filter(Activity.location.like(f"%{filters['location']}%"))
+                if 'max_participants' in filters:
+                    query = query.filter(Activity.max_participants == filters['max_participants'])
+                if 'status' in filters:
+                    query = query.filter(Activity.status == filters['status'])
 
-            return self.get_paginated_list(page, size, None, 'id')
+            # 获取分页数据
+            result = self.get_paginated_list(page, size, None, 'id')
+
+            # 格式化返回数据以适应正确的字段结构
+            formatted_items = []
+            for item in result['items']:
+                formatted_items.append({
+                    'id': item['id'],
+                    'title': item['title'],
+                    'description': item.get('description', ''),
+                    'start_time': item.get('start_time', '无'),
+                    'end_time': item.get('end_time', '无'),
+                    'location': item.get('location', ''),
+                    'max_participants': item.get('max_participants'),
+                    'organizer_user_id': item.get('organizer_user_id'),
+                    'organizer_display': item.get('organizer_display', '用户已注销'),
+                    'status': item.get('status', 'draft'),
+                    'created_at': item.get('created_at', '无'),
+                    'updated_at': item.get('updated_at', '无')
+                })
+
+            result['items'] = formatted_items
+            result['message'] = '活动列表查询成功'
+            return result
         except Exception as e:
             raise Exception(f'查询活动列表失败：{str(e)}')

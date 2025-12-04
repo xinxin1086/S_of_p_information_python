@@ -37,12 +37,21 @@ def token_required(f):
                 algorithms=['HS256']
             )
             print(f"【令牌解码成功】payload: {payload}")
-            # 验证用户存在（管理员/用户通用）
-            current_user = Admin.query.get(payload['user_id']) or User.query.get(payload['user_id'])
-            # current_user = Admin.query.get(payload['user_id'])  # 若用户模块需单独验证，可扩展
+            # 根据角色查询对应的用户表
+            current_user = None
+            if payload.get('role') == 'admin':
+                current_user = Admin.query.get(payload['user_id'])
+            elif payload.get('role') == 'user':
+                current_user = User.query.get(payload['user_id'])
+            else:
+                # 兼容旧逻辑，按顺序查找
+                current_user = Admin.query.get(payload['user_id'])
+                if not current_user:
+                    current_user = User.query.get(payload['user_id'])
+
             if not current_user:
                 raise Exception('用户不存在')
-            print(f"【验证通过】当前登录用户: {current_user.account}")
+            print(f"【验证通过】当前登录用户: {current_user.account} (角色: {payload.get('role', 'unknown')})")
         except jwt.ExpiredSignatureError:
             print("【令牌验证失败】令牌已过期")
             return jsonify({

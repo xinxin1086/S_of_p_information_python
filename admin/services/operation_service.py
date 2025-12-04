@@ -8,7 +8,7 @@ from .notice_service import NoticeService
 from .content_service import ScienceArticleService, ActivityService
 from .forum_service import (
     ForumPostService, ForumCommentService, ActivityBookingService,
-    ActivityCommentService, UserLikeService, AttachmentService
+    UserLikeService, AttachmentService, ActivityRatingService
 )
 
 
@@ -25,10 +25,10 @@ class OperationService:
             'activity': ActivityService(),  # 支持单数形式
             'forum_posts': ForumPostService(),
             'activity_bookings': ActivityBookingService(),
-            'activity_comments': ActivityCommentService(),
             'forum_comments': ForumCommentService(),
             'user_likes': UserLikeService(),
-            'attachments': AttachmentService()
+            'attachments': AttachmentService(),
+            'activity_rating': ActivityRatingService()
         }
 
     def get_service(self, table_name: str):
@@ -90,14 +90,14 @@ class OperationService:
             return service.create_forum_post(kwargs)
         elif table_name == 'activity_bookings':
             return service.create_activity_booking(kwargs)
-        elif table_name == 'activity_comments':
-            return service.create_activity_comment(kwargs)
         elif table_name == 'forum_comments':
             return service.create_forum_comment(kwargs)
         elif table_name == 'user_likes':
             return service.create_user_like(kwargs)
         elif table_name == 'attachments':
             return service.create_attachment(kwargs)
+        elif table_name == 'activity_rating':
+            return service.create_activity_rating(kwargs)
         else:
             return service.create_record(kwargs)
 
@@ -170,9 +170,6 @@ class OperationService:
         elif table_name == 'activity_bookings':
             filters = kwargs.copy() if kwargs else {}
             return service.get_activity_booking_list(page, size, filters)
-        elif table_name == 'activity_comments':
-            filters = kwargs.copy() if kwargs else {}
-            return service.get_activity_comment_list(page, size, filters)
         elif table_name == 'forum_comments':
             filters = kwargs.copy() if kwargs else {}
             return service.get_forum_comment_list(page, size, filters)
@@ -182,6 +179,9 @@ class OperationService:
         elif table_name == 'attachments':
             filters = kwargs.copy() if kwargs else {}
             return service.get_attachment_list(page, size, filters)
+        elif table_name == 'activity_rating':
+            filters = kwargs.copy() if kwargs else {}
+            return service.get_activity_rating_list(page, size, filters)
         else:
             # 通用查询逻辑
             filter_kwargs = {}

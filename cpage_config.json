@@ -4,7 +4,7 @@
   "icon": "",
   "coverImg": null,
   "coverImgSourceType": null,
-  "needLogin": true,
+  "needLogin": false,
   "proxyConfigs": null,
   "pageArgConfigs": null,
   "dataSourcePlugins": null,

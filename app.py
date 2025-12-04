@@ -10,6 +10,7 @@ from user import user_bp  # 导入用户蓝图
 from common import common_bp  # 导入公共蓝图
 from flask import send_from_directory  # 导入图片静态路由
 from visit import visit_bp  # 导入visit蓝图
+from activities import activities_bp  # 导入活动蓝图
 
 
 # 初始化Flask应用
@@ -19,9 +20,10 @@ app.config.from_object(Config)
 # 配置CORS（允许跨域）
 CORS(app, resources={
     r"/api/*": {
-        "origins": "*",
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "origins": ["https://testagent.xspaceagi.com", "http://localhost:3000", "http://127.0.0.1:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
     }
 })
 
@@ -36,6 +38,8 @@ app.register_blueprint(user_bp)
 app.register_blueprint(common_bp)
 # 注册visit蓝图（访问接口）
 app.register_blueprint(visit_bp)
+# 注册activities蓝图（活动接口）
+app.register_blueprint(activities_bp)
 
 
 # 图片静态路由
