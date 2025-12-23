@@ -12,7 +12,7 @@ from components.response_service import ResponseService
 from API_science.common.utils import format_article_data, build_article_query
 
 # 创建科普业务蓝图
-bp_science_category = Blueprint('bp_science_category', __name__)
+bp_science_category = Blueprint('bp_science_category', __name__, url_prefix='/api/science')
 
 
 @bp_science_category.route('/articles/popular', methods=['GET'])

@@ -15,7 +15,7 @@ from components import db  # 引用公共数据库
 from API_admin import register_admin_blueprints  # 导入重构后的管理员模块
 from API_user import api_user_bp, bp_user_public  # 导入重构后的用户模块
 from common import common_bp  # 导入公共蓝图
-from API_science import bp_science_public
+from API_science import bp_science_public, bp_science_user, bp_science_admin, bp_science_category
 from API_forum import register_forum_blueprints
 from API_notice import register_blueprints as register_notice_blueprints
 from API_activities import register_api_activities_blueprints
@@ -61,6 +61,11 @@ def create_app(config_object=None):
     # 注册公开访问接口蓝图
     app.register_blueprint(bp_science_public)  # 科普文章公开访问
     app.register_blueprint(bp_user_public)     # 用户信息公开访问
+
+    # 注册科普业务接口蓝图
+    app.register_blueprint(bp_science_user)
+    app.register_blueprint(bp_science_admin)
+    app.register_blueprint(bp_science_category)
 
     # 注册子模块蓝图（包含其他公开访问接口）
     register_admin_blueprints(app)        # 管理员子模块
@@ -127,5 +132,4 @@ if __name__ == '__main__':
 
     # 运行应用
     app.run(debug=True, host='0.0.0.0', port=5000)
-
 
