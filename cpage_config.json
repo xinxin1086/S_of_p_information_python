@@ -1,9 +1,9 @@
 {
   "name": "后端",
-  "description": "后端",
+  "description": "flask后端",
   "icon": "",
-  "coverImg": null,
-  "coverImgSourceType": null,
+  "coverImg": "",
+  "coverImgSourceType": "SYSTEM",
   "needLogin": false,
   "proxyConfigs": null,
   "pageArgConfigs": null,

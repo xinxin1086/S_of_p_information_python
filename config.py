@@ -16,3 +16,6 @@ class Config:
     # 最大5MB
     MAX_IMAGE_SIZE = 5 * 1024 * 1024
 
+    #   ========== 数据库初始化开关 ==========
+    AUTO_CREATE_TABLES = True  # 开发环境自动建表，生产环境设为False
+    INIT_TEST_DATA = True  # 开发环境初始化测试数据，生产环境设为False
