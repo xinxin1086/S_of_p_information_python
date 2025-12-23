@@ -43,8 +43,15 @@ class ResponseService:
         return jsonify(response), status_code
 
     @staticmethod
-    def paginated_success(items: List[Any], total: int, page: int, size: int,
-                        message: str = "查询成功", status_code: int = 200) -> tuple:
+    def paginated_success(
+        items: List[Any],
+        total: int,
+        page: int,
+        size: int,
+        message: str = "查询成功",
+        status_code: int = 200,
+        extra_fields: Optional[Dict[str, Any]] = None
+    ) -> tuple:
         """分页响应"""
         data = {
             'total': total,
@@ -52,6 +59,8 @@ class ResponseService:
             'size': size,
             'items': items
         }
+        if extra_fields:
+            data.update(extra_fields)
         return ResponseService.success(data=data, message=message, status_code=status_code)
 
 

@@ -52,9 +52,14 @@ def get_replies_by_floor(floor_id):
             reply_to_dict
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='回复列表查询成功' if replies_pagination.total > 0 else '暂无回复'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='回复列表查询成功' if replies_pagination.total > 0 else '暂无回复',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -328,9 +333,14 @@ def get_replies_by_user(user_id):
             'items': replies_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='用户回复列表查询成功' if pagination.total > 0 else '暂无回复'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='用户回复列表查询成功' if pagination.total > 0 else '暂无回复',
+            extra_fields=extra_fields
         )
 
     except Exception as e:

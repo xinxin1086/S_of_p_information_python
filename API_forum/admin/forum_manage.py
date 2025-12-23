@@ -183,9 +183,14 @@ def get_all_posts():
             'items': posts_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='帖子列表查询成功' if total > 0 else '无匹配数据'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='帖子列表查询成功' if total > 0 else '无匹配数据',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -345,9 +350,14 @@ def get_all_floors():
             lambda floor: floor_to_dict(floor, include_user_info=True)
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='楼层列表查询成功' if pagination.total > 0 else '无匹配数据'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='楼层列表查询成功' if pagination.total > 0 else '无匹配数据',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -417,9 +427,14 @@ def get_all_replies():
             lambda reply: reply_to_dict(reply, include_user_info=True)
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='回复列表查询成功' if pagination.total > 0 else '无匹配数据'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='回复列表查询成功' if pagination.total > 0 else '无匹配数据',
+            extra_fields=extra_fields
         )
 
     except Exception as e:

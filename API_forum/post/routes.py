@@ -88,9 +88,14 @@ def get_posts():
             post_to_dict
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='查询成功' if total > 0 else '无匹配数据'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='查询成功' if total > 0 else '无匹配数据',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -334,9 +339,14 @@ def search_posts():
             lambda post: post_to_dict(post, include_content=False)
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='搜索成功' if pagination.total > 0 else '无搜索结果'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='搜索成功' if pagination.total > 0 else '无搜索结果',
+            extra_fields=extra_fields
         )
 
     except Exception as e:

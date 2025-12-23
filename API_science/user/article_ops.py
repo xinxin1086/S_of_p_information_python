@@ -21,7 +21,7 @@ from API_science.common.utils import (
 )
 
 # 创建用户端科普蓝图
-bp_science_user = Blueprint('bp_science_user', __name__)
+bp_science_user = Blueprint('bp_science_user', __name__, url_prefix='/api/science')
 
 
 @bp_science_user.route('/articles', methods=['GET'])

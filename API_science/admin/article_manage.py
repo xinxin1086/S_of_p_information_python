@@ -20,7 +20,7 @@ from API_science.common.utils import (
 from datetime import datetime
 
 # 创建管理员科普蓝图
-bp_science_admin = Blueprint('bp_science_admin', __name__)
+bp_science_admin = Blueprint('bp_science_admin', __name__, url_prefix='/api/science/admin')
 
 
 def admin_required(f):

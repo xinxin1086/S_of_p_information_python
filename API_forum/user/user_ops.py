@@ -110,9 +110,14 @@ def get_my_posts(current_user):
             lambda post: post_to_dict(post)
         )
 
-        return ResponseService.success(
-            data=response_data,
-            message='我的帖子列表查询成功'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='我的帖子列表查询成功',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -169,9 +174,14 @@ def get_my_floors(current_user):
             'items': floors_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='我的楼层列表查询成功'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='我的楼层列表查询成功',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -233,9 +243,14 @@ def get_my_replies(current_user):
             'items': replies_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='我的回复列表查询成功'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='我的回复列表查询成功',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -612,9 +627,14 @@ def get_my_likes(current_user):
             'items': likes_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='我的点赞列表查询成功'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='我的点赞列表查询成功',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
@@ -715,9 +735,14 @@ def get_my_visits(current_user):
             'items': visits_data
         }
 
-        return ResponseService.success(
-            data=response_data,
-            message='浏览记录查询成功'
+        extra_fields = {key: value for key, value in response_data.items() if key not in {'total', 'page', 'size', 'items'}}
+        return ResponseService.paginated_success(
+            items=response_data['items'],
+            total=response_data['total'],
+            page=response_data['page'],
+            size=response_data['size'],
+            message='浏览记录查询成功',
+            extra_fields=extra_fields
         )
 
     except Exception as e:
