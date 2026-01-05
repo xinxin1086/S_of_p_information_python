@@ -15,6 +15,7 @@ def register_api_activities_blueprints(app):
     # 导入各子模块蓝图
     from .user import user_ops_bp
     from .admin import admin_manage_bp
+    from .root import root_bp
     from .booking import booking_bp
     from .discussion import discussion_bp
     from .public import bp_activities_public
@@ -22,6 +23,7 @@ def register_api_activities_blueprints(app):
     # 注册子模块蓝图到Flask应用
     app.register_blueprint(user_ops_bp)
     app.register_blueprint(admin_manage_bp)
+    app.register_blueprint(root_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(discussion_bp)
     app.register_blueprint(bp_activities_public)  # 注册公开访问模块

@@ -17,9 +17,16 @@ def token_required(f):
             print("------------")
             auth_header = request.headers['Authorization']
             if auth_header.startswith('Bearer '):
-                print(f"【原始Authorization头】{auth_header}")
+                # 使用repr以避免控制台编码引起的UnicodeEncodeError
+                try:
+                    print(f"【原始Authorization头】{repr(auth_header)}")
+                except Exception:
+                    print("【原始Authorization头】(内容无法显示)")
                 token = auth_header.split(' ')[1]
-                print(f"【接收令牌】token: {token}")
+                try:
+                    print(f"【接收令牌】token: {repr(token)}")
+                except Exception:
+                    print("【接收令牌】(内容无法显示)")
 
         if not token:
             print(f"{request.headers}")

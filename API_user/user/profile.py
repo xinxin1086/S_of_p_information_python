@@ -8,7 +8,7 @@ from components.response_service import ResponseService, UserInfoService, handle
 from . import user_bp
 from ..common.utils import UserDataProcessor, UserValidator, validate_user_data
 
-@user_bp.route('/info', methods=['GET'])
+@user_bp.route('/user/info', methods=['GET'])
 @token_required
 @handle_api_exception
 def get_current_user_info(current_user):
@@ -27,7 +27,7 @@ def get_current_user_info(current_user):
     print(f"【当前用户信息查询成功】用户: {current_user.account}, 用户类型: {user_info['user_type']}")
     return ResponseService.success(data=user_info, message="用户信息查询成功")
 
-@user_bp.route('/info/<account>', methods=['GET'])
+@user_bp.route('/user/info/<account>', methods=['GET'])
 @token_required
 @handle_api_exception
 def get_user_info_by_account(current_user, account):
@@ -46,7 +46,7 @@ def get_user_info_by_account(current_user, account):
     print(f"【指定用户信息查询成功】目标用户: {account}, 用户类型: {user_info['user_type']}")
     return ResponseService.success(data=user_info, message="用户信息查询成功")
 
-@user_bp.route('/update', methods=['POST'])
+@user_bp.route('/user/update', methods=['POST'])
 @token_required
 @handle_api_exception
 def update_user_info(current_user):
@@ -150,7 +150,7 @@ def update_user_info(current_user):
         db.session.rollback()
         raise db_error
 
-@user_bp.route('/activities', methods=['GET'])
+@user_bp.route('/user/activities', methods=['GET'])
 @token_required
 @handle_api_exception
 def get_user_activities(current_user):
@@ -221,7 +221,58 @@ def get_user_activities(current_user):
         print(f"【用户活动记录查询异常】错误: {str(e)}")
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
-@user_bp.route('/delete-account', methods=['POST'])
+
+@user_bp.route('/user/activities/stats', methods=['GET'])
+@token_required
+def get_user_activities_stats(current_user):
+    """
+    获取当前用户相关活动统计（我的活动统计）
+    接口：GET /api/user/activities/stats
+    需要认证
+    """
+    try:
+        from components.models import Activity, ActivityBooking
+        from sqlalchemy import func
+
+        # 用户发布的活动统计
+        total_published = Activity.query.filter_by(organizer_user_id=current_user.id).count()
+
+        now = datetime.utcnow()
+        upcoming = Activity.query.filter(
+            Activity.organizer_user_id == current_user.id,
+            Activity.start_time > now,
+            Activity.status == 'published'
+        ).count()
+        ongoing = Activity.query.filter(
+            Activity.organizer_user_id == current_user.id,
+            Activity.start_time <= now,
+            Activity.end_time >= now,
+            Activity.status == 'published'
+        ).count()
+        completed = Activity.query.filter(
+            Activity.organizer_user_id == current_user.id,
+            Activity.end_time < now,
+            Activity.status == 'published'
+        ).count()
+
+        # 用户参与/预约统计
+        total_bookings = ActivityBooking.query.filter_by(user_account=current_user.account).count()
+
+        stats = {
+            'total_published': total_published,
+            'upcoming': upcoming,
+            'ongoing': ongoing,
+            'completed': completed,
+            'total_bookings': total_bookings
+        }
+
+        return ResponseService.success(data=stats, message='用户活动统计查询成功')
+
+    except Exception as e:
+        print(f"【用户活动统计查询异常】错误: {str(e)}")
+        return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
+
+@user_bp.route('/user/delete-account', methods=['POST'])
 @token_required
 @handle_api_exception
 def delete_user_account(current_user):

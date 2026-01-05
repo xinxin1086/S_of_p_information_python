@@ -15,6 +15,7 @@ from components import db  # 引用公共数据库
 from API_admin import register_admin_blueprints  # 导入重构后的管理员模块
 from API_user import api_user_bp, bp_user_public  # 导入重构后的用户模块
 from common import common_bp  # 导入公共蓝图
+from common.compat import compat_bp
 from API_science import bp_science_public
 from API_forum import register_forum_blueprints
 from API_notice import register_blueprints as register_notice_blueprints
@@ -57,6 +58,7 @@ def create_app(config_object=None):
     # 注册主要蓝图
     app.register_blueprint(api_user_bp)   # 重构后的用户接口
     app.register_blueprint(common_bp)     # 公共接口
+    app.register_blueprint(compat_bp)     # 兼容旧前端路径
 
     # 注册公开访问接口蓝图
     app.register_blueprint(bp_science_public)  # 科普文章公开访问

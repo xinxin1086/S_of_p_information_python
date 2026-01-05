@@ -8,7 +8,7 @@ from components.response_service import ResponseService, UserInfoService, handle
 from . import user_bp
 from ..common.utils import UserDataProcessor, UserValidator
 
-@user_bp.route('/avatar', methods=['POST'])
+@user_bp.route('/user/avatar', methods=['POST'])
 @token_required
 def upload_avatar(current_user):
     """
@@ -70,7 +70,7 @@ def upload_avatar(current_user):
         print(f"【头像上传异常】错误: {str(e)}")
         return ResponseService.error(f'头像上传失败：{str(e)}', status_code=500)
 
-@user_bp.route('/avatar', methods=['DELETE'])
+@user_bp.route('/user/avatar', methods=['DELETE'])
 @token_required
 def delete_avatar(current_user):
     """

@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# 屏蔽整个 docs 文件夹
+docs/
+# 屏蔽整个 tests 文件夹
+tests/
