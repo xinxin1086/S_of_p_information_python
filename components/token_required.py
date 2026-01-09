@@ -6,6 +6,9 @@ from functools import wraps
 from flask import request, jsonify
 from config import Config
 from components.models import Admin ,User  # 引用公共模型
+import logging
+
+logger = logging.getLogger(__name__)
 
 # JWT验证装饰器（管理员和用户模块共享）
 def token_required(f):
@@ -13,24 +16,23 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         if 'Authorization' in request.headers:
-            # print(f"{request.headers}")
-            print("------------")
+            logger.debug("------------")
             auth_header = request.headers['Authorization']
             if auth_header.startswith('Bearer '):
                 # 使用repr以避免控制台编码引起的UnicodeEncodeError
                 try:
-                    print(f"【原始Authorization头】{repr(auth_header)}")
+                    logger.debug("【原始Authorization头】%s", repr(auth_header))
                 except Exception:
-                    print("【原始Authorization头】(内容无法显示)")
+                    logger.debug("【原始Authorization头】(内容无法显示)")
                 token = auth_header.split(' ')[1]
                 try:
-                    print(f"【接收令牌】token: {repr(token)}")
+                    logger.debug("【接收令牌】(redacted)")
                 except Exception:
-                    print("【接收令牌】(内容无法显示)")
+                    logger.debug("【接收令牌】(内容无法显示)")
 
         if not token:
-            print(f"{request.headers}")
-            print("【令牌验证失败】缺少令牌")
+            logger.debug(repr(request.headers))
+            logger.warning("【令牌验证失败】缺少令牌")
             return jsonify({
                 'success': False,
                 'message': '缺少令牌，请先登录',
@@ -43,7 +45,7 @@ def token_required(f):
                 Config.JWT_SECRET_KEY,
                 algorithms=['HS256']
             )
-            print(f"【令牌解码成功】payload: {payload}")
+            logger.debug("【令牌解码成功】payload: %s", repr(payload))
             # 根据角色查询对应的用户表
             current_user = None
             if payload.get('role') == 'admin':
@@ -58,23 +60,23 @@ def token_required(f):
 
             if not current_user:
                 raise Exception('用户不存在')
-            print(f"【验证通过】当前登录用户: {current_user.account} (角色: {payload.get('role', 'unknown')})")
+            logger.info("【验证通过】当前登录用户: %s (角色: %s)", current_user.account, payload.get('role', 'unknown'))
         except jwt.ExpiredSignatureError:
-            print("【令牌验证失败】令牌已过期")
+            logger.warning("【令牌验证失败】令牌已过期")
             return jsonify({
                 'success': False,
                 'message': '令牌已过期，请重新登录',
                 'data': None
             }), 401
         except jwt.InvalidTokenError as e:
-            print(f"【令牌验证失败】令牌格式错误: {str(e)}")
+            logger.warning("【令牌验证失败】令牌格式错误: %s", str(e))
             return jsonify({
                 'success': False,
                 'message': '令牌格式无效，请重新登录',
                 'data': None
             }), 401
         except Exception as e:
-            print(f"【令牌验证失败】错误: {str(e)}")
+            logger.exception("【令牌验证失败】错误")
             return jsonify({
                 'success': False,
                 'message': f'令牌无效：{str(e)}',

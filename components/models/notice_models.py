@@ -1,6 +1,9 @@
 # 公告相关模型
+# 时间策略：所有 DateTime 字段均使用 UTC naive datetime（无时区信息）
+# 数据库存储的是 UTC 时间，前端接收/发送时应使用 ISO 8601 格式（Z 后缀表示 UTC）
 
 from datetime import datetime
+import logging
 from .base import db, get_table_comment_args
 from .user_models import User
 
@@ -16,7 +19,7 @@ class Notice(db.Model):
     release_title = db.Column(db.String(150), nullable=False, comment='公告标题')
     release_notice = db.Column(db.Text, nullable=False, comment='公告内容')
     expiration = db.Column(db.DateTime, comment='公告到期时间')
-    notice_type = db.Column(db.Enum('SYSTEM', 'ADMIN', 'GENERAL'), nullable=False, default='GENERAL', comment='公告类型（SYSTEM系统公告/ADMIN管理员公告/GENERAL一般公告）')
+    notice_type = db.Column(db.Enum('SYSTEM', 'ACTIVITY', 'GENERAL'), nullable=False, default='GENERAL', comment='公告类型（SYSTEM系统通知/ACTIVITY活动公告/GENERAL其他公告）')
 
     # 置顶和状态系统
     is_top = db.Column(db.Boolean, nullable=False, default=False, comment='是否置顶（置顶公告在列表中优先显示）')
@@ -52,8 +55,12 @@ class Notice(db.Model):
             self.author_user_id = None
 
     def check_expiration(self):
-        """检查公告是否到期，更新is_expired字段"""
-        if self.expiration and datetime.now() >= self.expiration:
+        """检查公告是否到期，更新is_expired字段
+        
+        注意：使用 datetime.utcnow() 而非 datetime.now() 以保证时间一致性（UTC naive）
+        """
+        current_utc = datetime.utcnow()  # 使用 UTC naive time
+        if self.expiration and current_utc >= self.expiration:
             if not self.is_expired or self.status != 'EXPIRED':
                 self.is_expired = True
                 self.status = 'EXPIRED'
@@ -104,10 +111,12 @@ class Notice(db.Model):
             for notice_read in notice_reads:
                 notice_read.anonymize_for_notice_deletion()
 
-            print(f"【公告删除匿名化完成】公告ID: {self.id}, 匿名化已读记录数: {len(notice_reads)}")
+            logger = logging.getLogger(__name__)
+            logger.info(f"【公告删除匿名化完成】公告ID: {self.id}, 匿名化已读记录数: {len(notice_reads)}")
 
-        except Exception as e:
-            print(f"【公告删除匿名化异常】公告ID: {self.id}, 错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception(f"【公告删除匿名化异常】公告ID: {self.id}")
 
     # 动态字段信息（供前端表格生成）
     @classmethod
@@ -119,7 +128,7 @@ class Notice(db.Model):
             'release_title': {'label': '公告标题', 'type': 'string'},
             'release_notice': {'label': '公告内容', 'type': 'string'},
             'expiration': {'label': '到期时间', 'type': 'datetime'},
-            'notice_type': {'label': '公告类型', 'type': 'enum', 'options': ['SYSTEM', 'ADMIN', 'GENERAL']},
+            'notice_type': {'label': '公告类型', 'type': 'enum', 'options': ['SYSTEM', 'ACTIVITY', 'GENERAL']},
             'is_top': {'label': '是否置顶', 'type': 'boolean'},
             'status': {'label': '公告状态', 'type': 'enum', 'options': ['DRAFT', 'PENDING', 'APPROVED', 'REJECTED', 'EXPIRED']},
             'is_expired': {'label': '是否已到期', 'type': 'boolean', 'readonly': True},
@@ -206,7 +215,8 @@ class NoticeRead(db.Model):
             self.anonymized_at = datetime.now()
             self.anonymize_reason = 'user_delete'
 
-            print(f"【公告已读记录匿名化】用户: {self.anonymized_user_account}, 公告ID: {self.notice_id}")
+            logger = logging.getLogger(__name__)
+            logger.info(f"【公告已读记录匿名化】用户: {self.anonymized_user_account}, 公告ID: {self.notice_id}")
 
     def anonymize_for_notice_deletion(self):
         """公告删除时的匿名化处理"""
@@ -221,7 +231,8 @@ class NoticeRead(db.Model):
             self.anonymized_at = datetime.now()
             self.anonymize_reason = 'notice_delete'
 
-            print(f"【公告删除匿名化】{notice_info}, 用户: {self.anonymized_user_account}")
+            logger = logging.getLogger(__name__)
+            logger.info(f"【公告删除匿名化】{notice_info}, 用户: {self.anonymized_user_account}")
 
     def get_effective_user_display(self):
         """获取有效的用户显示名"""

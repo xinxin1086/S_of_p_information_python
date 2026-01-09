@@ -10,6 +10,9 @@ from typing import Dict, Any, Optional, Union, List
 from functools import wraps
 from .models import Admin, User
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ResponseService:
@@ -189,7 +192,7 @@ def handle_api_exception(func):
         except FileNotFoundError as e:
             return ResponseService.error(str(e), status_code=404)
         except Exception as e:
-            print(f"【API异常】{func.__name__}: {str(e)}")
+            logger.exception("【API异常】%s: %s", func.__name__, str(e))
             return ResponseService.error(f"服务器内部错误: {str(e)}", status_code=500)
 
     return wrapper

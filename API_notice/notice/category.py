@@ -1,9 +1,13 @@
 # 公告分类管理接口
 # 包含：公告类型管理、模板管理、推送规则等功能
+# 时间策略说明：所有时间均使用 UTC naive datetime（datetime.utcnow()），前端应传递 ISO 8601 格式（Z 后缀表示 UTC）
 
 from flask import Blueprint, request, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 from components import db, token_required
+import logging
+
+logger = logging.getLogger(__name__)
 from components.models.notice_models import Notice, NoticeAttachment
 from components.models.user_models import Admin
 from API_notice.common.utils import NoticePermissionUtils, NoticeQueryUtils
@@ -33,24 +37,24 @@ bp_notice_category = Blueprint('notice_category', __name__, url_prefix='/api/not
 # 公告类型配置
 NOTICE_TYPES = {
     'SYSTEM': {
-        'name': '系统公告',
-        'description': '系统级重要公告，所有用户可见',
+        'name': '系统通知',
+        'description': '系统级重要通知，所有用户可见',
         'color': '#ff4d4f',
         'icon': 'system',
         'target_users': ['ALL'],
         'priority': 1
     },
-    'ADMIN': {
-        'name': '管理员公告',
-        'description': '管理员内部公告，仅管理员可见',
-        'color': '#1890ff',
-        'icon': 'admin',
-        'target_users': ['ADMIN'],
+    'ACTIVITY': {
+        'name': '活动公告',
+        'description': '活动类公告，普通用户可见',
+        'color': '#faad14',
+        'icon': 'activity',
+        'target_users': ['USER'],
         'priority': 2
     },
     'GENERAL': {
-        'name': '一般公告',
-        'description': '一般性公告，普通用户可见',
+        'name': '其他公告',
+        'description': '其他类型的公告，普通用户可见',
         'color': '#52c41a',
         'icon': 'general',
         'target_users': ['USER'],
@@ -167,41 +171,51 @@ NOTICE_TEMPLATES = [
         ]
     },
     {
-        'id': 'admin_meeting',
-        'name': '管理员会议通知',
-        'type': 'ADMIN',
-        'template': '''管理员会议通知
+        'id': 'activity_announcement',
+        'name': '活动发布公告',
+        'type': 'ACTIVITY',
+        'template': '''活动发布公告
 
-各位管理员：
+亲爱的用户：
 
-兹定于以下时间召开管理员会议，请准时参加：
+我们很高兴地为您呈现一场精彩的活动！
 
-【会议时间】
-{meeting_time}
+【活动名称】
+{activity_name}
 
-【会议地点】
-{meeting_location}
+【活动时间】
+{activity_time}
 
-【参会人员】
-{attendees}
+【活动地点】
+{activity_location}
 
-【会议议程】
-{meeting_agenda}
+【活动内容】
+{activity_content}
 
-【会议材料】
-{meeting_materials}
+【报名方式】
+{signup_method}
 
-请提前安排好工作，确保参会。
+【活动亮点】
+{highlights}
 
-{organizer}
+参加本活动无需额外费用，欢迎所有感兴趣的用户踊跃报名！
+
+如有任何疑问，请联系：
+{contact_info}
+
+期待与您相见！
+
+{company_name}
 {date}''',
         'variables': [
-            {'name': 'meeting_time', 'label': '会议时间', 'required': True},
-            {'name': 'meeting_location', 'label': '会议地点', 'required': True},
-            {'name': 'attendees', 'label': '参会人员', 'required': True},
-            {'name': 'meeting_agenda', 'label': '会议议程', 'required': True},
-            {'name': 'meeting_materials', 'label': '会议材料', 'required': False},
-            {'name': 'organizer', 'label': '组织者', 'required': True},
+            {'name': 'activity_name', 'label': '活动名称', 'required': True},
+            {'name': 'activity_time', 'label': '活动时间', 'required': True},
+            {'name': 'activity_location', 'label': '活动地点', 'required': True},
+            {'name': 'activity_content', 'label': '活动内容', 'required': True},
+            {'name': 'signup_method', 'label': '报名方式', 'required': False},
+            {'name': 'highlights', 'label': '活动亮点', 'required': False},
+            {'name': 'contact_info', 'label': '联系方式', 'required': False},
+            {'name': 'company_name', 'label': '公司名称', 'required': True},
             {'name': 'date', 'label': '公告日期', 'required': True}
         ]
     }
@@ -216,7 +230,7 @@ def get_notice_types(current_user):
     需要登录验证
     """
     try:
-        print(f"【公告类型查询】用户: {current_user.account}")
+        logger.info(f"【公告类型查询】用户: {current_user.account}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -249,7 +263,7 @@ def get_notice_types(current_user):
         # 按优先级排序
         type_list.sort(key=lambda x: x['priority'])
 
-        print(f"【公告类型查询成功】用户: {current_user.account}, 类型数: {len(type_list)}")
+        logger.info(f"【公告类型查询成功】用户: {current_user.account}, 类型数: {len(type_list)}")
         return jsonify({
             'success': True,
             'message': '公告类型查询成功',
@@ -259,8 +273,8 @@ def get_notice_types(current_user):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【公告类型查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告类型查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -279,7 +293,7 @@ def get_notice_type_detail(current_user, type_code):
     - type_code: 公告类型代码
     """
     try:
-        print(f"【公告类型详情查询】用户: {current_user.account}, 类型: {type_code}")
+        logger.info(f"【公告类型详情查询】用户: {current_user.account}, 类型: {type_code}")
 
         if type_code not in NOTICE_TYPES:
             return jsonify({
@@ -293,12 +307,8 @@ def get_notice_type_detail(current_user, type_code):
         is_admin = current_admin is not None
 
         # 权限检查
-        if not is_admin and type_code == 'ADMIN':
-            return jsonify({
-                'success': False,
-                'message': '无权限查看此公告类型',
-                'data': None
-            }), 403
+        # 所有公告类型现在对普通用户/管理员按照 NOTICE_TYPES 中定义的 target_users 可见性处理
+        # 若未来需要 admin-only 类型，可在 NOTICE_TYPES 中配置并在此处校验
 
         type_info = NOTICE_TYPES[type_code]
 
@@ -310,7 +320,7 @@ def get_notice_type_detail(current_user, type_code):
                 Notice.status == 'APPROVED',
                 or_(
                     Notice.expiration.is_(None),
-                    Notice.expiration > datetime.now()
+                    Notice.expiration > datetime.utcnow()
                 )
             )
         ).count()
@@ -329,15 +339,15 @@ def get_notice_type_detail(current_user, type_code):
             }
         }
 
-        print(f"【公告类型详情查询成功】用户: {current_user.account}, 类型: {type_code}")
+        logger.info(f"【公告类型详情查询成功】用户: {current_user.account}, 类型: {type_code}")
         return jsonify({
             'success': True,
             'message': '公告类型详情查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【公告类型详情查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告类型详情查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -354,7 +364,7 @@ def get_notice_templates(current_user):
     需要管理员权限
     """
     try:
-        print(f"【公告模板查询】管理员: {current_user.account}")
+        logger.info(f"【公告模板查询】管理员: {current_user.account}")
 
         # 过滤模板，根据管理员权限显示
         templates = []
@@ -368,7 +378,7 @@ def get_notice_templates(current_user):
             }
             templates.append(template_data)
 
-        print(f"【公告模板查询成功】管理员: {current_user.account}, 模板数: {len(templates)}")
+        logger.info(f"【公告模板查询成功】管理员: {current_user.account}, 模板数: {len(templates)}")
         return jsonify({
             'success': True,
             'message': '公告模板查询成功',
@@ -377,8 +387,8 @@ def get_notice_templates(current_user):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【公告模板查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告模板查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -398,7 +408,7 @@ def get_notice_template_detail(current_user, template_id):
     - template_id: 模板ID
     """
     try:
-        print(f"【公告模板详情查询】管理员: {current_user.account}, 模板ID: {template_id}")
+        logger.info(f"【公告模板详情查询】管理员: {current_user.account}, 模板ID: {template_id}")
 
         # 查找模板
         template = next((t for t in NOTICE_TEMPLATES if t['id'] == template_id), None)
@@ -417,15 +427,15 @@ def get_notice_template_detail(current_user, template_id):
             'variables': template['variables']
         }
 
-        print(f"【公告模板详情查询成功】管理员: {current_user.account}, 模板: {template['name']}")
+        logger.info(f"【公告模板详情查询成功】管理员: {current_user.account}, 模板: {template['name']}")
         return jsonify({
             'success': True,
             'message': '模板详情查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【公告模板详情查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告模板详情查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -472,7 +482,7 @@ def apply_notice_template(current_user):
                 'data': None
             }), 400
 
-        print(f"【应用公告模板】管理员: {current_user.account}, 模板ID: {template_id}")
+        logger.info(f"【应用公告模板】管理员: {current_user.account}, 模板ID: {template_id}")
 
         # 查找模板
         template = next((t for t in NOTICE_TEMPLATES if t['id'] == template_id), None)
@@ -512,15 +522,15 @@ def apply_notice_template(current_user):
             'applied_variables': variables
         }
 
-        print(f"【应用公告模板成功】管理员: {current_user.account}, 模板: {template['name']}")
+        logger.info(f"【应用公告模板成功】管理员: {current_user.account}, 模板: {template['name']}")
         return jsonify({
             'success': True,
             'message': '模板应用成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【应用公告模板异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【应用公告模板异常】")
         return jsonify({
             'success': False,
             'message': f'应用失败：{str(e)}',
@@ -537,7 +547,7 @@ def get_push_rules(current_user):
     需要管理员权限
     """
     try:
-        print(f"【推送规则查询】管理员: {current_user.account}")
+        logger.info(f"【推送规则查询】管理员: {current_user.account}")
 
         push_rules = {
             'SYSTEM': {
@@ -545,21 +555,21 @@ def get_push_rules(current_user):
                 'push_channels': ['web', 'email', 'sms'],
                 'priority': 'high',
                 'immediate': True,
-                'description': '系统公告立即推送给所有用户'
+                'description': '系统通知立即推送给所有用户'
             },
-            'ADMIN': {
-                'target_users': ['ADMIN'],
+            'ACTIVITY': {
+                'target_users': ['USER'],
                 'push_channels': ['web', 'email'],
                 'priority': 'medium',
-                'immediate': True,
-                'description': '管理员公告立即推送给所有管理员'
+                'immediate': False,
+                'description': '活动公告推送给普通用户并可通过邮件或站内消息提醒'
             },
             'GENERAL': {
                 'target_users': ['USER'],
                 'push_channels': ['web'],
                 'priority': 'low',
                 'immediate': False,
-                'description': '一般公告按计划推送给普通用户'
+                'description': '其他公告按计划推送给普通用户'
             }
         }
 
@@ -581,15 +591,15 @@ def get_push_rules(current_user):
             'push_channels': push_channels
         }
 
-        print(f"【推送规则查询成功】管理员: {current_user.account}")
+        logger.info(f"【推送规则查询成功】管理员: {current_user.account}")
         return jsonify({
             'success': True,
             'message': '推送规则查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【推送规则查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【推送规则查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -664,10 +674,13 @@ def validate_notice_config(current_user):
         if expiration:
             try:
                 expiration_date = datetime.fromisoformat(expiration.replace('Z', '+00:00'))
-                if expiration_date <= datetime.now():
+                # 转为 UTC naive
+                if expiration_date.tzinfo:
+                    expiration_date = expiration_date.replace(tzinfo=None)
+                if expiration_date <= datetime.utcnow():
                     validation_result['is_valid'] = False
                     validation_result['errors'].append('到期时间不能早于当前时间')
-                elif expiration_date > datetime.now() + timedelta(days=365):
+                elif expiration_date > datetime.utcnow() + timedelta(days=365):
                     validation_result['warnings'].append('到期时间过远，建议设置在一年内')
             except ValueError:
                 validation_result['is_valid'] = False
@@ -675,7 +688,7 @@ def validate_notice_config(current_user):
         else:
             validation_result['warnings'].append('建议设置公告到期时间')
 
-        print(f"【公告配置验证】管理员: {current_user.account}, 验证结果: {validation_result['is_valid']}")
+        logger.info(f"【公告配置验证】管理员: {current_user.account}, 验证结果: {validation_result['is_valid']}")
 
         return jsonify({
             'success': True,
@@ -683,8 +696,8 @@ def validate_notice_config(current_user):
             'data': validation_result
         }), 200
 
-    except Exception as e:
-        print(f"【公告配置验证异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告配置验证异常】")
         return jsonify({
             'success': False,
             'message': f'验证失败：{str(e)}',

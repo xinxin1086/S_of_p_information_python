@@ -146,17 +146,19 @@ def get_public_user_statistics():
         from sqlalchemy import func
 
         # 普通用户统计
+        from sqlalchemy import case
+
         user_stats = db.session.query(
             func.count(User.id).label('total_users'),
-            func.sum(func.case([(User.is_deleted == 0, 1)], else_=0)).label('active_users'),
-            func.sum(func.case([(User.is_deleted == 1, 1)], else_=0)).label('deleted_users')
+            func.sum(case((User.is_deleted == 0, 1), else_=0)).label('active_users'),
+            func.sum(case((User.is_deleted == 1, 1), else_=0)).label('deleted_users')
         ).first()
 
         # 管理员统计
         admin_stats = db.session.query(
             func.count(Admin.id).label('total_admins'),
-            func.sum(func.case([(Admin.role == 'SUPER_ADMIN', 1)], else_=0)).label('super_admins'),
-            func.sum(func.case([(Admin.role == 'ADMIN', 1)], else_=0)).label('regular_admins')
+            func.sum(case((Admin.role == 'SUPER_ADMIN', 1), else_=0)).label('super_admins'),
+            func.sum(case((Admin.role == 'ADMIN', 1), else_=0)).label('regular_admins')
         ).first()
 
         statistics = {

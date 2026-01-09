@@ -1,8 +1,12 @@
 # 管理员公告管理接口
 # 包含：发布公告、编辑公告、置顶管理、推送管理、撤回公告等功能
+# 时间策略说明：所有时间均使用 UTC naive datetime（datetime.utcnow()），前端应传递 ISO 8601 格式（Z 后缀表示 UTC）
 
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 from components import db, token_required
 from API_notice.common.utils import NoticeUtils, NoticePermissionUtils, NoticeQueryUtils
 from components.models.notice_models import Notice, NoticeAttachment
@@ -42,7 +46,7 @@ def create_notice(current_user):
     {
         "title": "公告标题",
         "content": "公告内容",
-        "notice_type": "SYSTEM|ADMIN|GENERAL",
+        "notice_type": "SYSTEM|ACTIVITY|GENERAL",
         "expiration": "2024-12-31T23:59:59Z",  // 可选，到期时间
         "is_top": false,  // 可选，是否置顶
         "attachments": []  // 可选，附件列表
@@ -76,7 +80,7 @@ def create_notice(current_user):
                 'data': None
             }), 400
 
-        if notice_type not in ['SYSTEM', 'ADMIN', 'GENERAL']:
+        if notice_type not in ['SYSTEM', 'ACTIVITY', 'GENERAL']:
             return jsonify({
                 'success': False,
                 'message': '无效的公告类型',
@@ -97,7 +101,10 @@ def create_notice(current_user):
         if data.get('expiration'):
             try:
                 expiration = datetime.fromisoformat(data['expiration'].replace('Z', '+00:00'))
-                if expiration <= datetime.now():
+                # 转为 UTC naive，然后与 utcnow() 比较
+                if expiration.tzinfo:
+                    expiration = expiration.replace(tzinfo=None)
+                if expiration <= datetime.utcnow():
                     return jsonify({
                         'success': False,
                         'message': '到期时间不能早于当前时间',
@@ -147,7 +154,7 @@ def create_notice(current_user):
 
         db.session.commit()
 
-        print(f"【管理员创建公告成功】管理员: {current_user.account}, 公告ID: {notice.id}, 类型: {notice_type}")
+        logger.info(f"【管理员创建公告成功】管理员: {current_user.account}, 公告ID: {notice.id}, 类型: {notice_type}")
 
         return jsonify({
             'success': True,
@@ -162,9 +169,9 @@ def create_notice(current_user):
             }
         }), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print(f"【管理员创建公告异常】错误: {str(e)}")
+        logger.exception("【管理员创建公告异常】")
         return jsonify({
             'success': False,
             'message': f'创建失败：{str(e)}',
@@ -187,7 +194,7 @@ def update_notice(current_user, notice_id):
     {
         "title": "公告标题",  // 可选
         "content": "公告内容",  // 可选
-        "notice_type": "SYSTEM|ADMIN|GENERAL",  // 可选
+        "notice_type": "SYSTEM|ACTIVITY|GENERAL",  // 可选
         "expiration": "2024-12-31T23:59:59Z",  // 可选
         "is_top": false  // 可选
     }
@@ -259,7 +266,7 @@ def update_notice(current_user, notice_id):
 
         if 'notice_type' in data:
             notice_type = data['notice_type'].strip()
-            if notice_type not in ['SYSTEM', 'ADMIN', 'GENERAL']:
+            if notice_type not in ['SYSTEM', 'ACTIVITY', 'GENERAL']:
                 return jsonify({
                     'success': False,
                     'message': '无效的公告类型',
@@ -272,7 +279,10 @@ def update_notice(current_user, notice_id):
             if data['expiration']:
                 try:
                     expiration = datetime.fromisoformat(data['expiration'].replace('Z', '+00:00'))
-                    if expiration <= datetime.now():
+                    # 转为 UTC naive
+                    if expiration.tzinfo:
+                        expiration = expiration.replace(tzinfo=None)
+                    if expiration <= datetime.utcnow():
                         return jsonify({
                             'success': False,
                             'message': '到期时间不能早于当前时间',
@@ -294,11 +304,11 @@ def update_notice(current_user, notice_id):
             update_fields.append('is_top')
 
         # 更新修改时间
-        notice.update_time = datetime.now()
+        notice.update_time = datetime.utcnow()
 
         db.session.commit()
 
-        print(f"【管理员更新公告成功】管理员: {current_user.account}, 公告ID: {notice_id}, 更新字段: {update_fields}")
+        logger.info(f"【管理员更新公告成功】管理员: {current_user.account}, 公告ID: {notice_id}, 更新字段: {update_fields}")
 
         return jsonify({
             'success': True,
@@ -310,9 +320,9 @@ def update_notice(current_user, notice_id):
             }
         }), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print(f"【管理员更新公告异常】错误: {str(e)}")
+        logger.exception("【管理员更新公告异常】")
         return jsonify({
             'success': False,
             'message': f'更新失败：{str(e)}',
@@ -365,11 +375,11 @@ def delete_notice(current_user, notice_id):
 
         # 软删除：状态改为REJECTED
         notice.status = 'REJECTED'
-        notice.update_time = datetime.now()
+        notice.update_time = datetime.utcnow()
 
         db.session.commit()
 
-        print(f"【管理员删除公告成功】管理员: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【管理员删除公告成功】管理员: {current_user.account}, 公告ID: {notice_id}")
 
         return jsonify({
             'success': True,
@@ -380,9 +390,9 @@ def delete_notice(current_user, notice_id):
             }
         }), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print(f"【管理员删除公告异常】错误: {str(e)}")
+        logger.exception("【管理员删除公告异常】")
         return jsonify({
             'success': False,
             'message': f'删除失败：{str(e)}',
@@ -402,13 +412,13 @@ def get_admin_notice_list(current_user):
     - page: 页码（默认1）
     - size: 页大小（默认20）
     - status: 状态筛选（DRAFT/PENDING/APPROVED/REJECTED/EXPIRED）
-    - type: 类型筛选（SYSTEM/ADMIN/GENERAL）
+    - type: 类型筛选（SYSTEM/ACTIVITY/GENERAL）
     - date_from: 开始日期（YYYY-MM-DD）
     - date_to: 结束日期（YYYY-MM-DD）
     - author: 作者筛选
     """
     try:
-        print(f"【管理员公告列表查询】管理员: {current_user.account}")
+        logger.info(f"【管理员公告列表查询】管理员: {current_user.account}")
 
         # 获取查询参数
         page = int(request.args.get('page', 1))
@@ -484,15 +494,15 @@ def get_admin_notice_list(current_user):
             }
         }
 
-        print(f"【管理员公告列表查询成功】管理员: {current_user.account}, 总数: {total}")
+        logger.info(f"【管理员公告列表查询成功】管理员: {current_user.account}, 总数: {total}")
         return jsonify({
             'success': True,
             'message': '公告列表查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【管理员公告列表查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【管理员公告列表查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -512,7 +522,7 @@ def get_admin_notice_detail(current_user, notice_id):
     - notice_id: 公告ID
     """
     try:
-        print(f"【管理员公告详情查询】管理员: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【管理员公告详情查询】管理员: {current_user.account}, 公告ID: {notice_id}")
 
         # 获取公告详情
         notice_detail = NoticeQueryUtils.get_notice_with_attachments(notice_id)
@@ -540,15 +550,15 @@ def get_admin_notice_detail(current_user, notice_id):
             'can_edit': can_edit
         }
 
-        print(f"【管理员公告详情查询成功】管理员: {current_user.account}, 公告标题: {notice_detail['title']}")
+        logger.info(f"【管理员公告详情查询成功】管理员: {current_user.account}, 公告标题: {notice_detail['title']}")
         return jsonify({
             'success': True,
             'message': '公告详情查询成功',
             'data': result_data
         }), 200
 
-    except Exception as e:
-        print(f"【管理员公告详情查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【管理员公告详情查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -623,12 +633,12 @@ def toggle_notice_top(current_user, notice_id):
         # 更新置顶状态
         old_top_status = notice.is_top
         notice.is_top = data['is_top']
-        notice.update_time = datetime.now()
+        notice.update_time = datetime.utcnow()
 
         db.session.commit()
 
         action = "置顶" if notice.is_top else "取消置顶"
-        print(f"【管理员{action}公告成功】管理员: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【管理员{action}公告成功】管理员: {current_user.account}, 公告ID: {notice_id}")
 
         return jsonify({
             'success': True,
@@ -641,9 +651,9 @@ def toggle_notice_top(current_user, notice_id):
             }
         }), 200
 
-    except Exception as e:
+    except Exception:
         db.session.rollback()
-        print(f"【管理员置顶公告异常】错误: {str(e)}")
+        logger.exception("【管理员置顶公告异常】")
         return jsonify({
             'success': False,
             'message': f'操作失败：{str(e)}',
@@ -660,7 +670,7 @@ def get_notice_statistics(current_user):
     需要管理员权限
     """
     try:
-        print(f"【管理员公告统计查询】管理员: {current_user.account}")
+        logger.info(f"【管理员公告统计查询】管理员: {current_user.account}")
 
         from sqlalchemy import func
 
@@ -683,7 +693,7 @@ def get_notice_statistics(current_user):
                 Notice.status == 'APPROVED',
                 or_(
                     Notice.expiration.is_(None),
-                    Notice.expiration > datetime.now()
+                    Notice.expiration > datetime.utcnow()
                 )
             )
         ).count()
@@ -697,7 +707,7 @@ def get_notice_statistics(current_user):
                     Notice.status == 'APPROVED',
                     or_(
                         Notice.expiration.is_(None),
-                        Notice.expiration > datetime.now()
+                        Notice.expiration > datetime.utcnow()
                     )
                 )
             ).count()
@@ -706,13 +716,13 @@ def get_notice_statistics(current_user):
         expired_count = Notice.query.filter(
             and_(
                 Notice.expiration.isnot(None),
-                Notice.expiration <= datetime.now(),
+                Notice.expiration <= datetime.utcnow(),
                 Notice.status != 'EXPIRED'
             )
         ).count()
 
         # 近期发布的公告数量（最近7天）
-        recent_date = datetime.now() - timedelta(days=7)
+        recent_date = datetime.utcnow() - timedelta(days=7)
         recent_count = Notice.query.filter(
             Notice.release_time >= recent_date
         ).count()
@@ -729,15 +739,15 @@ def get_notice_statistics(current_user):
             'type_distribution': {notice_type: count for notice_type, count in type_stats}
         }
 
-        print(f"【管理员公告统计查询成功】管理员: {current_user.account}")
+        logger.info(f"【管理员公告统计查询成功】管理员: {current_user.account}")
         return jsonify({
             'success': True,
             'message': '公告统计数据查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【管理员公告统计查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【管理员公告统计查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',

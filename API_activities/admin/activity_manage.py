@@ -5,7 +5,7 @@ from components import db, token_required
 from components.models import Activity, ActivityBooking, ActivityRating, User
 from components.response_service import ResponseService
 from ..common.utils import ActivityValidator, ActivityStatistics, ActivityStatusManager
-from datetime import datetime
+from datetime import datetime, timezone
 
 # 创建管理员活动管理模块蓝图
 admin_manage_bp = Blueprint('admin_manage', __name__, url_prefix='/api/activities/admin')
@@ -46,7 +46,7 @@ def create_activity(current_user):
         if start_dt >= end_dt:
             return ResponseService.error('活动开始时间必须早于结束时间', status_code=400)
 
-        if start_dt < datetime.now():
+        if start_dt < datetime.now(timezone.utc):
             return ResponseService.error('活动开始时间不能早于当前时间', status_code=400)
 
         # 验证状态
@@ -179,7 +179,7 @@ def update_activity(current_user, activity_id):
             if not success:
                 return ResponseService.error(error_msg, status_code=400)
 
-        activity.updated_at = datetime.now()
+        activity.updated_at = datetime.now(timezone.utc)
         db.session.commit()
 
         print(f"【管理员更新活动】活动ID: {activity_id}, 用户: {current_user.account}")

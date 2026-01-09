@@ -1,7 +1,9 @@
 # API_notice公共工具函数
 # 包含公告模块的公共工具：已读统计、推送规则、权限校验等
+# 时间策略：所有时间均使用 UTC naive datetime（datetime.utcnow()），确保全局一致性
 
 from datetime import datetime
+import logging
 from typing import Dict, List, Optional, Tuple, Any
 from sqlalchemy import and_, or_, func, text
 from components import db
@@ -34,7 +36,7 @@ class NoticeUtils:
             active_notices_query = Notice.query.filter(
                 and_(
                     Notice.status == 'APPROVED',
-                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.now()),
+                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.utcnow()),
                     ~Notice.id.in_(read_notice_ids)
                 )
             )
@@ -44,15 +46,16 @@ class NoticeUtils:
                 # 管理员可以看到所有类型的公告
                 pass
             else:
-                # 普通用户只能看到一般公告和系统公告
+                # 普通用户可以看到所有公告类型（SYSTEM/ACTIVITY/GENERAL）
                 active_notices_query = active_notices_query.filter(
-                    Notice.notice_type.in_(['GENERAL', 'SYSTEM'])
+                    Notice.notice_type.in_(['SYSTEM', 'ACTIVITY', 'GENERAL'])
                 )
 
             return active_notices_query.count()
 
-        except Exception as e:
-            print(f"【未读公告统计异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【未读公告统计异常】")
             return 0
 
     @staticmethod
@@ -82,14 +85,14 @@ class NoticeUtils:
             base_query = Notice.query.filter(
                 and_(
                     Notice.status == 'APPROVED',
-                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.now())
+                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.utcnow())
                 )
             )
 
             # 根据用户类型过滤公告类型
             if not is_admin:
                 base_query = base_query.filter(
-                    Notice.notice_type.in_(['GENERAL', 'SYSTEM'])
+                    Notice.notice_type.in_(['SYSTEM', 'ACTIVITY', 'GENERAL'])
                 )
 
             # 按类型筛选
@@ -140,8 +143,9 @@ class NoticeUtils:
                 'unread_count': NoticeUtils.get_user_unread_count(user_id, is_admin)
             }
 
-        except Exception as e:
-            print(f"【公告列表查询异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【公告列表查询异常】")
             return {
                 'total': 0,
                 'page': page,
@@ -168,7 +172,7 @@ class NoticeUtils:
                 and_(
                     Notice.id == notice_id,
                     Notice.status == 'APPROVED',
-                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.now())
+                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.utcnow())
                 )
             ).first()
 
@@ -190,7 +194,7 @@ class NoticeUtils:
             notice_read = NoticeRead(
                 user_id=user_id,
                 notice_id=notice_id,
-                read_time=datetime.now()
+                read_time=datetime.utcnow()  # 使用 UTC 时间
             )
 
             db.session.add(notice_read)
@@ -198,9 +202,10 @@ class NoticeUtils:
 
             return True
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
-            print(f"【标记已读异常】错误: {str(e)}")
+            logger = logging.getLogger(__name__)
+            logger.exception("【标记已读异常】")
             return False
 
     @staticmethod
@@ -225,7 +230,7 @@ class NoticeUtils:
             unread_notices_query = Notice.query.filter(
                 and_(
                     Notice.status == 'APPROVED',
-                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.now()),
+                    or_(Notice.expiration.is_(None), Notice.expiration > datetime.utcnow()),
                     ~Notice.id.in_(read_notice_ids)
                 )
             )
@@ -233,7 +238,7 @@ class NoticeUtils:
             # 根据用户类型过滤公告类型
             if not is_admin:
                 unread_notices_query = unread_notices_query.filter(
-                    Notice.notice_type.in_(['GENERAL', 'SYSTEM'])
+                    Notice.notice_type.in_(['SYSTEM', 'ACTIVITY', 'GENERAL'])
                 )
 
             unread_notices = unread_notices_query.all()
@@ -244,7 +249,7 @@ class NoticeUtils:
                 notice_read = NoticeRead(
                     user_id=user_id,
                     notice_id=notice.id,
-                    read_time=datetime.now()
+                    read_time=datetime.utcnow()  # 使用 UTC 时间
                 )
                 db.session.add(notice_read)
                 read_count += 1
@@ -252,9 +257,10 @@ class NoticeUtils:
             db.session.commit()
             return read_count
 
-        except Exception as e:
+        except Exception:
             db.session.rollback()
-            print(f"【全部标记已读异常】错误: {str(e)}")
+            logger = logging.getLogger(__name__)
+            logger.exception("【全部标记已读异常】")
             return 0
 
     @staticmethod
@@ -285,11 +291,15 @@ class NoticeUtils:
             total_target_count = user_count + admin_count
 
             # 根据公告类型计算目标用户数
+            # 兼容旧数据：若存在 'ADMIN' 类型则仍视为仅管理员目标
             if notice.notice_type == 'ADMIN':
                 target_count = admin_count
             elif notice.notice_type == 'SYSTEM':
                 target_count = total_target_count
-            else:  # GENERAL
+            elif notice.notice_type in ('ACTIVITY', 'GENERAL'):
+                target_count = user_count
+            else:
+                # 非预期类型，默认以普通用户为目标
                 target_count = user_count
 
             read_rate = (read_count / target_count * 100) if target_count > 0 else 0
@@ -304,8 +314,9 @@ class NoticeUtils:
                 'read_rate': round(read_rate, 2)
             }
 
-        except Exception as e:
-            print(f"【已读统计异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【已读统计异常】")
             return None
 
 
@@ -335,17 +346,18 @@ class NoticePermissionUtils:
                 return False, "公告未发布"
 
             # 检查公告是否已过期
-            if notice.expiration and notice.expiration <= datetime.now():
+            if notice.expiration and notice.expiration <= datetime.utcnow():
                 return False, "公告已过期"
 
             # 检查公告类型权限
-            if not is_admin and notice.notice_type not in ['GENERAL', 'SYSTEM']:
+            if not is_admin and notice.notice_type not in ['SYSTEM', 'ACTIVITY', 'GENERAL']:
                 return False, "无权限查看此类型公告"
 
             return True, ""
 
-        except Exception as e:
-            print(f"【查看权限校验异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【查看权限校验异常】")
             return False, "权限校验失败"
 
     @staticmethod
@@ -371,8 +383,9 @@ class NoticePermissionUtils:
 
             return True, ""
 
-        except Exception as e:
-            print(f"【管理权限校验异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【管理权限校验异常】")
             return False, "权限校验失败"
 
     @staticmethod
@@ -381,22 +394,18 @@ class NoticePermissionUtils:
         验证公告推送范围是否有效
 
         Args:
-            notice_type: 公告类型
-            target_user_type: 目标用户类型 ('ALL', 'ADMIN', 'USER')
+            notice_type: 公告类型 (SYSTEM/ACTIVITY/GENERAL)
+            target_user_type: 目标用户类型 ('ALL', 'USER')
 
         Returns:
             bool: 推送范围是否有效
         """
-        # 管理员公告只能推送给管理员
-        if notice_type == 'ADMIN' and target_user_type not in ['ADMIN', 'ALL']:
-            return False
-
-        # 系统公告可以推送给所有人
+        # 系统通知可以推送给所有人
         if notice_type == 'SYSTEM':
-            return True
+            return target_user_type in ['ALL', 'USER']
 
-        # 一般公告只能推送给普通用户或所有人
-        if notice_type == 'GENERAL' and target_user_type not in ['USER', 'ALL']:
+        # 活动公告和其他公告只能推送给普通用户或所有人
+        if notice_type in ['ACTIVITY', 'GENERAL'] and target_user_type not in ['USER', 'ALL']:
             return False
 
         return True
@@ -457,8 +466,9 @@ class NoticeQueryUtils:
 
             return base_query
 
-        except Exception as e:
-            print(f"【查询筛选构建异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【查询筛选构建异常】")
             return base_query
 
     @staticmethod
@@ -511,8 +521,9 @@ class NoticeQueryUtils:
                 'attachments': attachments
             }
 
-        except Exception as e:
-            print(f"【公告详情查询异常】错误: {str(e)}")
+        except Exception:
+            logger = logging.getLogger(__name__)
+            logger.exception("【公告详情查询异常】")
             return None
 
 

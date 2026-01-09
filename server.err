@@ -1,0 +1,1521 @@
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.3:5000
+Press CTRL+C to quit
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:10:58] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/admin/users HTTP/1.1" 201 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "GET /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "PUT /api/user/admin/users HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/verify HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/change-password HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "GET /api/public/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "GET /api/public/user/statistics HTTP/1.1" 500 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "GET /api/user/user/info HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:10:59] "POST /api/user/user/avatar HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:11:00] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:11:00] "POST /api/user/auth/register HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:11:14] "GET /api/public/user/statistics HTTP/1.1" 500 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\profile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\token.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\admin\\user_manage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:11:48] "GET /api/public/user/statistics HTTP/1.1" 500 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:12:11] "GET /api/public/user/statistics HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:12:17] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:12:18] "POST /api/user/admin/users HTTP/1.1" 201 -
+127.0.0.1 - - [08/Jan/2026 14:12:18] "GET /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:12:18] "PUT /api/user/admin/users HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:12:40] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:12:40] "POST /api/user/admin/users HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\config.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\token_required.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\response_service.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\permissions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\science_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\other_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\notice_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\forum_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\activity_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\image_storage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\db_compatibility.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\user\\article_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\category.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\admin\\article_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\user\\notice_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\category.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\admin\\notice_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\forum_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\statistics\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\statistics\\stats.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\content\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\content\\content_audit.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\admin_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\user\\user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\root.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\activity.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\discussion\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\discussion\\discuss.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\booking\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\booking\\booking.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:13:09] "POST /api/user/auth/login HTTP/1.1" 200 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_manual.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:13:47] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:13:47] "POST /api/user/admin/users HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_avatar.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_avatar.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_avatar.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_avatar.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:14:46] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:14:46] "POST /api/user/user/avatar HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\mixins.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\file_storage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/admin/users HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/verify HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/register HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/public/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/public/user/statistics HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/user/user/info HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
+[2026-01-08 14:15:34,936] INFO in image_storage: ´´½¨Í¼Æ¬´æ´¢Ä¿Â¼£ºstatic/images
+[2026-01-08 14:15:34,937] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108141534-27cd230d.png
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/user/avatar HTTP/1.1" 200 -
+[2026-01-08 14:15:34,966] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108141534-27cd230d.png
+127.0.0.1 - - [08/Jan/2026 14:15:34] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/register HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 14:15:42] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:15:42] "POST /api/user/admin/users HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/admin/users HTTP/1.1" 201 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "GET /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "PUT /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "DELETE /api/user/admin/users?id=9 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/auth/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/auth/verify HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:32] "POST /api/user/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/change-password HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/public/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/public/user/statistics HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/user/user/info HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
+[2026-01-08 14:16:33,630] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108141633-f175f19a.png
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/user/avatar HTTP/1.1" 200 -
+[2026-01-08 14:16:33,660] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108141633-f175f19a.png
+127.0.0.1 - - [08/Jan/2026 14:16:33] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/register HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_manual.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\test_avatar.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\main.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pluggy\\_hooks.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pluggy\\_manager.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\logging.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\terminal.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:16:53] "GET /api/admin/health HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:16:53] "GET / HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:16:53] "GET /api/admin/list HTTP/1.1" 401 -
+127.0.0.1 - - [08/Jan/2026 14:16:53] "GET /api/admin/users HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:17:03] "GET /api/forum/threads HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:17:03] "GET /api/forum/threads HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:17:04] "GET /api/notice/create HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:17:04] "GET /api/public/notice/types HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:17:05] "GET /api/public/notice/list HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:17:06] "GET /api/science/articles HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:17:07] "GET /api/activities/list HTTP/1.1" 404 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:56:29] "GET /api/notice/create HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:56:29] "GET /api/public/notice/types HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:56:30] "GET /api/public/notice/list HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:56:30] "GET /api/public/notice/list HTTP/1.1" 200 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:57:12] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:57:12] "POST /api/notice/admin/notices HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:57:12] "GET /api/notice/create HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:57:12] "GET /api/public/notice/types HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:57:12] "GET /api/public/notice/list HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:57:12] "GET /api/public/notice/list HTTP/1.1" 200 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\api.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 14:59:30] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "POST /api/notice/admin/create HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "PUT /api/notice/admin/update/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "DELETE /api/notice/admin/delete/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "GET /api/notice/create HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "GET /api/public/notice/types HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "GET /api/public/notice/list HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 14:59:30] "GET /api/public/notice/list HTTP/1.1" 200 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\blueprints.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\blueprints.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\scaffold.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\globals.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\wrappers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\wrappers\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\wrappers\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\sansio\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\extension.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_py_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\registry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\visitors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\inspection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\query.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\query.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\selectable.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\annotation.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\log.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\langhelpers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\roles.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\model.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\decl_api.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\mapper.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\interfaces.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\_typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\cache_key.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\state.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\scoping.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\session.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\session.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\table.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\traversals.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\sansio\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\headers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\structures.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\_typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\operators.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\lambdas.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\pagination.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\row.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_row.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\expression.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\functions.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\__init__.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\public.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\activity.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\forum_manage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\public.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\main.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pluggy\\_hooks.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pluggy\\_manager.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\logging.py', reloading
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\_pytest\\terminal.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities_old.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science_old.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities_old.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science_old.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/forum/threads HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/forum/threads HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/public/activities/activities HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/activities/list HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/public/science/articles HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:25:24] "GET /api/science/articles HTTP/1.1" 404 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_floor_reply_like.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 15:54:11] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:11] "POST /api/forum/posts HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:11] "PUT /api/forum/posts/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:11] "DELETE /api/forum/posts/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:11] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:11] "POST /api/forum/posts HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "POST /api/forum/floors/post/2 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "POST /api/forum/replies/floor/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "POST /api/forum/floors/1/like HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "DELETE /api/forum/floors/1/like HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "POST /api/forum/replies/1/like HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "DELETE /api/forum/admin/replies/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "DELETE /api/forum/admin/floors/1 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "DELETE /api/forum/admin/posts/2 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "GET /api/forum/threads HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 15:54:12] "GET /api/forum/threads HTTP/1.1" 404 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_floor_reply_like.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_floor_reply_like.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+127.0.0.1 - - [08/Jan/2026 15:58:48] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/admin/users HTTP/1.1" 201 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "GET /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "PUT /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "DELETE /api/user/admin/users?id=12 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/verify HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:49] "POST /api/user/auth/login HTTP/1.1" 200 -
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/public/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/public/user/statistics HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/user/user/info HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
+[2026-01-08 15:58:50,802] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108155850-ed7344dc.png
+127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/user/avatar HTTP/1.1" 200 -
+[2026-01-08 15:58:50,816] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108155850-ed7344dc.png
+127.0.0.1 - - [08/Jan/2026 15:58:50] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/auth/register HTTP/1.1" 400 -
+127.0.0.1 - - [08/Jan/2026 16:04:30] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:30] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:30] "POST /api/user/auth/change-password HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:30] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/admin/users HTTP/1.1" 201 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "GET /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "PUT /api/user/admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "DELETE /api/user/admin/users?id=16 HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/refresh HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/verify HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/logout HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:56] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/change-password HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/public/user/info?account=admin HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/public/user/statistics HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/user/user/info HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
+[2026-01-08 16:04:57,261] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108160457-2bb642d5.png
+127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/user/avatar HTTP/1.1" 200 -
+[2026-01-08 16:04:57,292] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108160457-2bb642d5.png
+127.0.0.1 - - [08/Jan/2026 16:04:57] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/register HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/register HTTP/1.1" 400 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\activity.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\forum_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\token.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\extension.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\scaffold.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_py_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\registry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\visitors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\inspection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\query.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\query.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\selectable.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\annotation.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\log.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\langhelpers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\roles.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\model.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\decl_api.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\mapper.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\interfaces.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\_typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\cache_key.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\state.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\user_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\scoping.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\session.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\__init__.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\conftest.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\conftest.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science.py', reloading
+127.0.0.1 - - [08/Jan/2026 20:44:38] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 20:44:38] "POST /api/activities HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 20:44:38] "PUT /api/activities/2 HTTP/1.1" 404 -
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 20:44:40] "GET /api/public/activities/activities HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 20:44:40] "GET /api/activities/list HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 20:44:40] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 20:44:40] "POST /api/science/articles HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 20:44:40] "GET /api/public/science/articles HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 20:44:40] "GET /api/science/articles HTTP/1.1" 404 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities/admin/activities HTTP/1.1" 500 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities HTTP/1.1" 200 -
+¡¾ÁîÅÆÑéÖ¤Ê§°Ü¡¿È±ÉÙÁîÅÆ
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities/booking/activities/3/book HTTP/1.1" 401 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/public/activities/activities HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/activities/list HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/science/admin/articles HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/public/science/articles HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/science/articles HTTP/1.1" 404 -
+127.0.0.1 - - [08/Jan/2026 21:04:45] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:04:45] "POST /api/activities/admin/activities HTTP/1.1" 500 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\scripts\\debug_activity_create.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\scripts\\debug_activity_create.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\scripts\\debug_activity_create.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 21:13:04] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:13:04] "POST /api/activities/admin/activities HTTP/1.1" 500 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_floor_reply_like.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_admin_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\token_required.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\response_service.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\notice_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\profile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\user\\notice_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\category.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\admin\\notice_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\_virtualenv.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\_distutils_hack\\override.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\_distutils_hack\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\__main__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\wheelfile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\_setuptools_logging.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\metadata.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\specifiers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_manylinux.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_parser.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_tokenizer.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_structures.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_musllinux.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\_elffile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\requirements.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\tags.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\vendored\\packaging\\markers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\macosx_libfile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\bdist_wheel.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\cli\\convert.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\cli\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\cli\\unpack.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\cli\\tags.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\wheel\\cli\\pack.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\_reloader.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\wsgi.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\shared_data.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\user_agent.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\proxy_fix.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\urls.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\profiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\testapp.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\test.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\serving.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\lint.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\http_proxy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\middleware\\dispatcher.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\security.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\rules.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\matcher.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\sansio\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\map.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\routing\\converters.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\sansio\\multipart.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\sansio\\http.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\local.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\http.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\formparser.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\range.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\etag.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\csp.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\debug\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\debug\\tbtools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\cache_control.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\debug\\repr.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\datastructures\\accept.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\werkzeug\\debug\\console.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\poolmanager.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\_version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\_request_methods.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\_base_connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\retry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\timeout.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\wait.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\url.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\ssl_match_hostname.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\ssl_.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\ssltransport.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\util\\proxy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\filepost.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\http2\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\http2\\probe.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\http2\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\fields.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\connectionpool.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\socks.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\pyopenssl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\typing_extensions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\emscripten\\fetch.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\emscripten\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\emscripten\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\emscripten\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\urllib3\\contrib\\emscripten\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\events.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_has_cy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_concurrency_py3k.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\topological.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\tool_support.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\queue.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\preloaded.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\concurrency.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\_py_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\_selectable_constructors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\_orm_types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\_dml_constructors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\warnings.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_cte.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_ddl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_deprecations.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_dialect.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_insert.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_reflection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_results.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_rowcount.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_select.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_sequence.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_unicode_ddl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_update_delete.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\suite\\test_types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\requirements.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\naming.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\profiling.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\pickleable.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\events.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\plugin\\bootstrap.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\plugin\\plugin_base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\plugin\\pytestplugin.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\plugin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\dml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\fixtures\\mypy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\fixtures\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\fixtures\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\fixtures\\sql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\fixtures\\orm.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\exclusions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\default_comparator.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\entities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\ddl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\engines.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\config.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\asyncio.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\compiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\assertsql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\testing\\assertions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\future\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\future\\engine.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\pool\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\attributes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\decl_base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\evaluator.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\events.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\mapped_collection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\loading.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\properties.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\persistence.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\path_registry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\state_changes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\strategies.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\strategy_options.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\unitofwork.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\writeonly.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\_orm_constructors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\sync.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\instrumentation.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\identity.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\exc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\dynamic.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\descriptor_props.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\dependency.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\context.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\clsregistry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\orm\\bulk_persistence.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\pool\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\pool\\impl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\pool\\events.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\exc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\associationproxy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\serializer.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\orderinglist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\declarative\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mutable.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\declarative\\extensions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\instrumentation.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\indexable.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\apply.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\infer.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\decl_class.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\plugin.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\mypy\\names.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\hybrid.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\horizontal_shard.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\compiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\legacy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\baked.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\attr.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\automap.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\api.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\result.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\url.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_processors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\_py_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\strategies.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\processors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\reflection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\mock.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\_typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\events.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\interfaces.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\session.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\default.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\scoping.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\cursor.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\result.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\json.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\pg8000.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\_psycopg_common.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\ranges.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg2cffi.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg2.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\psycopg.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\pg_catalog.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\operators.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\named_types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\pysqlite.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\hstore.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\pysqlcipher.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\json.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\ext.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\dml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\dml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\array.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\asyncpg.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\postgresql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\sqlite\\aiosqlite.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\create.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\exc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\characteristics.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\cx_oracle.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\expression.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mariadbconnector.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\pyodbc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\reflection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\reserved_words.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\pymysql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mysqldb.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mariadb.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\mysqlconnector.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\json.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\enumerated.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\vector.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\dml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\cymysql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\oracledb.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\asyncmy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\dictionary.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mysql\\aiomysql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\oracle\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\engine.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\ext\\asyncio\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\engine\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\aioodbc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\json.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\pyodbc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\pymssql.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\provision.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\dialects\\mssql\\information_schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\cyextension\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\connectors\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\connectors\\aioodbc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\connectors\\pyodbc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\connectors\\asyncio.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\warnings.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\jwk_set_cache.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\jwks_client.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\help.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\certs.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\build_clib.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\__version__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\installer.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\launch.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\logging.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\build_py.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\dist_info.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\namespaces.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\py34compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\easy_install.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\install.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\sandbox.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\install_lib.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\install_scripts.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\warnings.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\wheel.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\saveopts.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\sdist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_core_metadata.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\upload_docs.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_imp.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_itertools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_normalization.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\_macos_compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\_log.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\_msvccompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\_framework_compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\upload.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\sdist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\_functools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\py37compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\versionpredicate.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install_scripts.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install_lib.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install_headers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install_egg_info.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\unixccompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\text_file.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install_data.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\sysconfig.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\install.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\config.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\py39compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\spawn.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\clean.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\py38compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build_scripts.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\check.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\msvccompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build_py.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\msvc9compiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\log.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build_ext.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\file_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build_clib.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\build.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\filelist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\fancy_getopt.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\bdist_rpm.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\extension.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\bdist_dumb.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\command\\bdist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\errors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\dist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\dep_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\dir_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\debug.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\cygwinccompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_reqs.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\core.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\config.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_path.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\cmd.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\bcppcompiler.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_distutils\\archive_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\_legacy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\_itertools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_text.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\_compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_py39compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\_common.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_meta.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\zipp.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_itertools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\_adapters.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_functools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\typing_extensions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\simple.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\functools.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_re.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_types.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\tomli\\_parser.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\text\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\readers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\context.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_resources\\abc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata\\_adapters.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\actions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\common.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\markers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\metadata.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\requirements.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\tags.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\diagram\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_elffile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_musllinux.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_structures.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\__about__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_tokenizer.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_parser.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\_manylinux.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\unicode.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\results.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\specifiers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\testing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\helpers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\ordered_set.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_importlib.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\pyparsing\\core.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\upload.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\_requirestxt.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_entry_points.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_deprecation_warning.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\test.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\setopt.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\windows_support.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\more.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\rotate.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\_vendor\\more_itertools\\recipes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\py36compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\unicode_utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\install_egg_info.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\py312compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\egg_info.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\package_index.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\editable_wheel.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\msvc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\develop.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\monkey.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\build_ext.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\_internal_utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\build.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\bdist_rpm.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\structures.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\glob.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\bdist_egg.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\extern\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\status_codes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\extension.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\errors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\sessions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\command\\alias.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\packages.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\dist.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\hooks.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\discovery.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\dep_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\help.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\depends.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\cookies.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\requests\\adapters.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\build_meta.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\expand.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\pyprojecttoml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\setupcfg.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\archive_util.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_apply_pyprojecttoml.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\error_reporting.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\fastjsonschema_validations.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\fastjsonschema_exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\extra_validations.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\formats.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\api_jwt.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\converters.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\optionfile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\err.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\CLIENT.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\protocol.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\CR.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\_auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\FIELD_TYPE.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\FLAG.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\ER.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\SERVER_STATUS.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\times.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\constants\\COMMAND.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\cursors.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\connections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pymysql\\charset.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\api_jwk.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\api_jws.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\jwt\\algorithms.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\__main__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\__pip-runner__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\cache.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\configuration.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\cachecontrol\\heuristics.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\wheel_builder.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\_version.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\logging.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\misc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\hashes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\packaging.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\setuptools_build.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\subprocess.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\unpacking.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\urls.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\virtualenv.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\temp_dir.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\wheel.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\_jaraco_text.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\_log.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\retry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\glibc.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\queue.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\retry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\response.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\ssl_match_hostname.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\wait.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\url.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\timeout.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\ssltransport.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\ssl_.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\proxy.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\filetypes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\request.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\filesystem.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\entrypoints.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\six.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\encoding.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\filepost.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\egg_link.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\backports\\makefile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\backports\\weakref_finalize.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\fields.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\direct_url_helpers.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\deprecation.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\datetime.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\exceptions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\versioncontrol.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\compatibility_tags.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\subversion.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\mercurial.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\appengine.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\utils\\appdirs.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\ntlmpool.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\webencodings\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\securetransport.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\git.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\webencodings\\x_user_defined.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_appengine_environ.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\socks.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\webencodings\\tests.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\vcs\\bazaar.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\webencodings\\mklabels.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\webencodings\\labels.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport\\bindings.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\typing_extensions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport\\low_level.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\locations\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\self_outdated_check.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\locations\\_sysconfig.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\req\\req_set.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\req\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_internal\\req\\req_uninstall.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\pip\\_vendor\\truststore\\__init__.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'C:\\Users\\kana_\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\datetime.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+127.0.0.1 - - [08/Jan/2026 21:24:01] "POST /api/user/auth/login HTTP/1.1" 200 -
+127.0.0.1 - - [08/Jan/2026 21:24:01] "POST /api/activities/admin/activities HTTP/1.1" 200 -
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask_sqlalchemy\\extension.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\app.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\flask\\sansio\\scaffold.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\schema.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\base.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\_py_collections.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\util\\typing.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\event\\registry.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\.venv\\Lib\\site-packages\\sqlalchemy\\sql\\visitors.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\scripts\\debug_activity_create.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_admin_crud_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_booking_flow.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_admin_crud_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\scripts\\debug_activity_create.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\activity_manage.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\compat.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\profile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\root.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\token_required.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\notice_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\admin\\notice_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\notice\\category.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\user\\notice_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\response_service.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_auth.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_admin_users.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\user\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_admin\\test_admin_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\conftest.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_register.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_password.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_user\\test_profile_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_notice\\test_user_list.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_activities\\test_public_activities.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_science\\test_public_science.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_admin_crud.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\tests\\e2e_API_forum\\test_floor_reply_like.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\config.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\booking\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\booking\\booking.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\discussion\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\discussion\\discuss.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\public\\activity.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_activities\\user\\user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\admin_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\content\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\content\\content_audit.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\statistics\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_admin\\statistics\\stats.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\admin\\forum_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\floor\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\post\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\reply\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_forum\\user\\user_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_notice\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\admin\\article_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\category.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\science\\public.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_science\\user\\article_ops.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\admin\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\admin\\user_manage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\auth\\token.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\API_user\\common\\utils.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\__init__.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\common\\routes.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\db_compatibility.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\image_storage.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\permissions.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\activity_models.py', reloading
+ * Detected change in 'G:\\A_Project\\S_of_p_information_python\\components\\models\\forum_models.py', reloading
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 121-247-469

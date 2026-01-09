@@ -1,10 +1,14 @@
 # 公告公开访问接口
+# 时间策略说明：所有时间均使用 UTC naive datetime，数据库存储为 UTC，返回给前端时统一转为 ISO 8601 格式（带 Z 后缀表示 UTC）
 
 from flask import Blueprint, request
 from components import db
 from components.models import Notice
 from components.response_service import ResponseService
-from datetime import datetime
+from datetime import datetime, timedelta
+import logging
+
+logger = logging.getLogger(__name__)
 
 # 创建公告公开访问模块蓝图
 bp_notice_public = Blueprint('notice_public', __name__, url_prefix='/api/public/notice')
@@ -67,25 +71,31 @@ def get_public_notices():
 
         result = []
         for notice in notices:
-            # 处理附件字段
-            attachments = None
+            # 处理附件字段：遍历 NoticeAttachment 对象列表生成 JSON
+            attachments = []
             if notice.attachments:
-                try:
-                    import json
-                    attachments = json.loads(notice.attachments)
-                except json.JSONDecodeError:
-                    attachments = None
+                for attachment in notice.attachments:
+                    attachments.append({
+                        'id': attachment.id,
+                        'file_name': attachment.file_name,
+                        'file_path': attachment.file_path,
+                        'file_size': attachment.file_size,
+                        'file_type': attachment.file_type,
+                        'upload_time': attachment.upload_time.isoformat() + 'Z' if attachment.upload_time else None,
+                        'uploader_account': attachment.uploader_account
+                    })
 
             result.append({
                 'id': notice.id,
-                'release_time': notice.release_time.isoformat().replace('+00:00', 'Z'),
-                'update_time': notice.update_time.isoformat().replace('+00:00', 'Z') if notice.update_time else None,
+                'release_time': notice.release_time.isoformat() + 'Z',
+                'update_time': notice.update_time.isoformat() + 'Z' if notice.update_time else None,
                 'release_title': notice.release_title,
                 'summary': notice.release_notice[:200] + '...' if len(notice.release_notice) > 200 else notice.release_notice,
                 'notice_type': notice.notice_type,
-                'expiration': notice.expiration.isoformat().replace('+00:00', 'Z') if notice.expiration else None,
+                'expiration': notice.expiration.isoformat() + 'Z' if notice.expiration else None,
                 'is_expired': notice.is_expired,
-                'attachment_count': len(attachments) if attachments else 0
+                'attachment_count': len(attachments),
+                'attachments': attachments
             })
 
         return ResponseService.paginated_success(
@@ -110,27 +120,33 @@ def get_public_notice_detail(notice_id):
         if not notice:
             return ResponseService.error('公告不存在或未发布', status_code=404)
 
-        # 检查是否过期
+        # 检查过期状态（同步 is_expired 字段）
+        notice.check_expiration()
         if notice.is_expired:
             return ResponseService.error('公告已过期', status_code=410)
 
-        # 处理附件字段
-        attachments = None
+        # 处理附件字段：遍历 NoticeAttachment 对象列表生成 JSON
+        attachments = []
         if notice.attachments:
-            try:
-                import json
-                attachments = json.loads(notice.attachments)
-            except json.JSONDecodeError:
-                attachments = None
+            for attachment in notice.attachments:
+                attachments.append({
+                    'id': attachment.id,
+                    'file_name': attachment.file_name,
+                    'file_path': attachment.file_path,
+                    'file_size': attachment.file_size,
+                    'file_type': attachment.file_type,
+                    'upload_time': attachment.upload_time.isoformat() + 'Z' if attachment.upload_time else None,
+                    'uploader_account': attachment.uploader_account
+                })
 
         result = {
             'id': notice.id,
-            'release_time': notice.release_time.isoformat().replace('+00:00', 'Z'),
-            'update_time': notice.update_time.isoformat().replace('+00:00', 'Z') if notice.update_time else None,
+            'release_time': notice.release_time.isoformat() + 'Z',
+            'update_time': notice.update_time.isoformat() + 'Z' if notice.update_time else None,
             'release_title': notice.release_title,
             'release_notice': notice.release_notice,
             'notice_type': notice.notice_type,
-            'expiration': notice.expiration.isoformat().replace('+00:00', 'Z') if notice.expiration else None,
+            'expiration': notice.expiration.isoformat() + 'Z' if notice.expiration else None,
             'is_expired': notice.is_expired,
             'author_display': notice.author_display,
             'attachments': attachments
@@ -150,14 +166,15 @@ def get_public_notice_statistics():
     try:
         from sqlalchemy import func
 
+        # UTC naive datetime，表示当前 UTC 时间
         current_time = datetime.utcnow()
 
-        # 基本统计
+        # 基本统计：已发布且未过期的公告
         total_active = Notice.query.filter_by(status='APPROVED').filter(
             (Notice.expiration.is_(None)) | (Notice.expiration > current_time)
         ).count()
 
-        # 按类型统计
+        # 按类型统计：已发布且未过期的公告按类型分组
         type_stats = db.session.query(
             Notice.notice_type,
             func.count(Notice.id).label('count')
@@ -168,7 +185,7 @@ def get_public_notice_statistics():
         type_distribution = {notice_type: count for notice_type, count in type_stats}
 
         # 最近发布的公告（最近30天）
-        thirty_days_ago = current_time - datetime.timedelta(days=30)
+        thirty_days_ago = current_time - timedelta(days=30)
         recent_count = Notice.query.filter(
             Notice.status == 'APPROVED',
             Notice.release_time >= thirty_days_ago
@@ -176,7 +193,7 @@ def get_public_notice_statistics():
             (Notice.expiration.is_(None)) | (Notice.expiration > current_time)
         ).count()
 
-        # 过期公告数量
+        # 过期公告数量：已发布但已经超过 expiration 时间的公告
         expired_count = Notice.query.filter(
             Notice.status == 'APPROVED',
             Notice.expiration.isnot(None),
@@ -204,9 +221,9 @@ def get_public_notice_types():
     try:
         # 定义公告类型
         notice_types = [
-            {'value': 'SYSTEM', 'label': '系统公告', 'description': '系统级别的通知公告'},
-            {'value': 'ADMIN', 'label': '管理公告', 'description': '管理员发布的通知'},
-            {'value': 'GENERAL', 'label': '一般公告', 'description': '常规公告信息'}
+            {'value': 'SYSTEM', 'label': '系统通知', 'description': '系统级别的重要通知'},
+            {'value': 'ACTIVITY', 'label': '活动公告', 'description': '活动相关的公告信息'},
+            {'value': 'GENERAL', 'label': '其他公告', 'description': '其他类型的公告信息'}
         ]
 
         return ResponseService.success(data=notice_types, message="公告类型查询成功")
@@ -214,4 +231,4 @@ def get_public_notice_types():
     except Exception as e:
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
-print("【API_notice 公开访问接口模块加载完成】")
+logger.info("【API_notice 公开访问接口模块加载完成】")

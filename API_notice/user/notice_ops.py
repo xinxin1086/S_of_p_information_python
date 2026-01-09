@@ -1,10 +1,15 @@
 # 用户端公告操作接口
 # 包含：查看公告列表、详情、标记已读、未读提醒等功能
+# 时间策略说明：所有时间均使用 UTC naive datetime（datetime.utcnow()）
 
 from flask import Blueprint, request, jsonify
+from datetime import datetime
 from components import db, token_required
 from API_notice.common.utils import NoticeUtils, NoticePermissionUtils, NoticeQueryUtils
 from components.models.user_models import User, Admin
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # 创建用户端公告操作蓝图
@@ -21,10 +26,10 @@ def get_notice_list(current_user):
     Query参数：
     - page: 页码（默认1）
     - size: 页大小（默认10）
-    - type: 公告类型筛选（SYSTEM/ADMIN/GENERAL）
+    - type: 公告类型筛选（SYSTEM/ACTIVITY/GENERAL）
     """
     try:
-        print(f"【用户公告列表查询】用户: {current_user.account}")
+        logger.info(f"【用户公告列表查询】用户: {current_user.account}")
 
         # 获取查询参数
         page = int(request.args.get('page', 1))
@@ -44,15 +49,15 @@ def get_notice_list(current_user):
             is_admin=is_admin
         )
 
-        print(f"【用户公告列表查询成功】用户: {current_user.account}, 总数: {result['total']}, 未读数: {result['unread_count']}")
+        logger.info(f"【用户公告列表查询成功】用户: {current_user.account}, 总数: {result['total']}, 未读数: {result['unread_count']}")
         return jsonify({
             'success': True,
             'message': '公告列表查询成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【用户公告列表查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【用户公告列表查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -71,7 +76,7 @@ def get_notice_detail(current_user, notice_id):
     - notice_id: 公告ID
     """
     try:
-        print(f"【用户公告详情查询】用户: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【用户公告详情查询】用户: {current_user.account}, 公告ID: {notice_id}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -111,15 +116,15 @@ def get_notice_detail(current_user, notice_id):
             'unread_count': unread_count
         }
 
-        print(f"【用户公告详情查询成功】用户: {current_user.account}, 公告标题: {notice_detail['title']}")
+        logger.info(f"【用户公告详情查询成功】用户: {current_user.account}, 公告标题: {notice_detail['title']}")
         return jsonify({
             'success': True,
             'message': '公告详情查询成功',
             'data': result_data
         }), 200
 
-    except Exception as e:
-        print(f"【用户公告详情查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【用户公告详情查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -138,7 +143,7 @@ def mark_notice_as_read(current_user, notice_id):
     - notice_id: 公告ID
     """
     try:
-        print(f"【标记公告已读】用户: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【标记公告已读】用户: {current_user.account}, 公告ID: {notice_id}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -170,7 +175,7 @@ def mark_notice_as_read(current_user, notice_id):
         # 获取最新的未读数量
         unread_count = NoticeUtils.get_user_unread_count(current_user.id, is_admin)
 
-        print(f"【标记公告已读成功】用户: {current_user.account}, 公告ID: {notice_id}")
+        logger.info(f"【标记公告已读成功】用户: {current_user.account}, 公告ID: {notice_id}")
         return jsonify({
             'success': True,
             'message': '已成功标记为已读',
@@ -180,8 +185,8 @@ def mark_notice_as_read(current_user, notice_id):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【标记公告已读异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【标记公告已读异常】")
         return jsonify({
             'success': False,
             'message': f'操作失败：{str(e)}',
@@ -197,7 +202,7 @@ def mark_all_notices_as_read(current_user):
     需要登录验证
     """
     try:
-        print(f"【标记全部公告已读】用户: {current_user.account}")
+        logger.info(f"【标记全部公告已读】用户: {current_user.account}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -212,7 +217,7 @@ def mark_all_notices_as_read(current_user):
         # 获取最新的未读数量（应该为0）
         unread_count = NoticeUtils.get_user_unread_count(current_user.id, is_admin)
 
-        print(f"【标记全部公告已读成功】用户: {current_user.account}, 标记数量: {read_count}")
+        logger.info(f"【标记全部公告已读成功】用户: {current_user.account}, 标记数量: {read_count}")
         return jsonify({
             'success': True,
             'message': f'已成功标记 {read_count} 条公告为已读',
@@ -222,8 +227,8 @@ def mark_all_notices_as_read(current_user):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【标记全部公告已读异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【标记全部公告已读异常】")
         return jsonify({
             'success': False,
             'message': f'操作失败：{str(e)}',
@@ -239,7 +244,7 @@ def get_unread_count(current_user):
     需要登录验证
     """
     try:
-        print(f"【未读公告数量查询】用户: {current_user.account}")
+        logger.info(f"【未读公告数量查询】用户: {current_user.account}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -248,7 +253,7 @@ def get_unread_count(current_user):
         # 获取未读数量
         unread_count = NoticeUtils.get_user_unread_count(current_user.id, is_admin)
 
-        print(f"【未读公告数量查询成功】用户: {current_user.account}, 未读数: {unread_count}")
+        logger.info(f"【未读公告数量查询成功】用户: {current_user.account}, 未读数: {unread_count}")
         return jsonify({
             'success': True,
             'message': '未读公告数量查询成功',
@@ -257,8 +262,8 @@ def get_unread_count(current_user):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【未读公告数量查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【未读公告数量查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -274,7 +279,7 @@ def get_notice_types(current_user):
     需要登录验证
     """
     try:
-        print(f"【公告类型查询】用户: {current_user.account}")
+        logger.info(f"【公告类型查询】用户: {current_user.account}")
 
         # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
@@ -283,17 +288,18 @@ def get_notice_types(current_user):
         # 根据用户类型返回可用的公告类型
         if is_admin:
             types = [
-                {'value': 'SYSTEM', 'label': '系统公告'},
-                {'value': 'ADMIN', 'label': '管理员公告'},
-                {'value': 'GENERAL', 'label': '一般公告'}
+                {'value': 'SYSTEM', 'label': '系统通知'},
+                {'value': 'ACTIVITY', 'label': '活动公告'},
+                {'value': 'GENERAL', 'label': '其他公告'}
             ]
         else:
             types = [
-                {'value': 'SYSTEM', 'label': '系统公告'},
-                {'value': 'GENERAL', 'label': '一般公告'}
+                {'value': 'SYSTEM', 'label': '系统通知'},
+                {'value': 'ACTIVITY', 'label': '活动公告'},
+                {'value': 'GENERAL', 'label': '其他公告'}
             ]
 
-        print(f"【公告类型查询成功】用户: {current_user.account}, 管理员: {is_admin}")
+        logger.info(f"【公告类型查询成功】用户: {current_user.account}, 管理员: {is_admin}")
         return jsonify({
             'success': True,
             'message': '公告类型查询成功',
@@ -303,8 +309,8 @@ def get_notice_types(current_user):
             }
         }), 200
 
-    except Exception as e:
-        print(f"【公告类型查询异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告类型查询异常】")
         return jsonify({
             'success': False,
             'message': f'查询失败：{str(e)}',
@@ -326,7 +332,7 @@ def search_notices(current_user):
     - type: 公告类型筛选
     """
     try:
-        print(f"【公告搜索】用户: {current_user.account}")
+        logger.info(f"【公告搜索】用户: {current_user.account}")
 
         # 获取查询参数
         keyword = request.args.get('keyword', '').strip()
@@ -356,7 +362,7 @@ def search_notices(current_user):
                 Notice.status == 'APPROVED',
                 or_(
                     Notice.expiration.is_(None),
-                    Notice.expiration > datetime.now()
+                    Notice.expiration > datetime.utcnow()
                 ),
                 or_(
                     Notice.release_title.like(f"%{keyword}%"),
@@ -368,7 +374,7 @@ def search_notices(current_user):
         # 根据用户类型过滤公告类型
         if not is_admin:
             search_query = search_query.filter(
-                Notice.notice_type.in_(['GENERAL', 'SYSTEM'])
+                Notice.notice_type.in_(['SYSTEM', 'ACTIVITY', 'GENERAL'])
             )
 
         # 按类型筛选
@@ -422,15 +428,15 @@ def search_notices(current_user):
             'keyword': keyword
         }
 
-        print(f"【公告搜索成功】用户: {current_user.account}, 关键词: {keyword}, 结果数: {total}")
+        logger.info(f"【公告搜索成功】用户: {current_user.account}, 关键词: {keyword}, 结果数: {total}")
         return jsonify({
             'success': True,
             'message': '公告搜索成功',
             'data': result
         }), 200
 
-    except Exception as e:
-        print(f"【公告搜索异常】错误: {str(e)}")
+    except Exception:
+        logger.exception("【公告搜索异常】")
         return jsonify({
             'success': False,
             'message': f'搜索失败：{str(e)}',
