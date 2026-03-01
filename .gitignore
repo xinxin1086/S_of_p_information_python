@@ -206,32 +206,28 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# 屏蔽整个 docs 文件夹
+
+
 docs/
-# 屏蔽整个 tests 文件夹
 tests/
-# .idea
-# .claude
-# run.bat
-# run.sh
-# server.err
-# .gitignore 新增
-# .env
-# .env.*
-# __pycache__/
-# *.pyc
-# venv/
-# logs/
-# # .gitignore 新增
-# __pycache__/
-# .env
-# .env.*
-# *.pyc
-# venv/
-# logs/
-# .idea
-# .claude
-# server.err
+.idea/
+.claude
+run.bat
+run.sh
+server.err
+.env
+.env.*
+__pycache__/
+*.pyc
+venv/
+logs/
+.env
+.env.*
+*.pyc
+venv/
+logs/
+.claude/
+server.err
 
 
 #不同环境密码配置不相同
