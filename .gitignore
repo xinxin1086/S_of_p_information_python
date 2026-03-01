@@ -210,20 +210,29 @@ __marimo__/
 docs/
 # 屏蔽整个 tests 文件夹
 tests/
-.idea
-.claude
-run.bat
-run.sh
-server.err
-
+# .idea
+# .claude
+# run.bat
+# run.sh
+# server.err
 # .gitignore 新增
-.env
-.env.*
-__pycache__/
-*.pyc
-venv/
-logs/
-# 其他原有忽略项...
+# .env
+# .env.*
+# __pycache__/
+# *.pyc
+# venv/
+# logs/
+# # .gitignore 新增
+# __pycache__/
+# .env
+# .env.*
+# *.pyc
+# venv/
+# logs/
+# .idea
+# .claude
+# server.err
+
 
 #不同环境密码配置不相同
 ./config.py
