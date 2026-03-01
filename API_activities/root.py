@@ -11,11 +11,15 @@ root_bp = Blueprint('api_activities_root', __name__, url_prefix='/api/activities
 @root_bp.route('/', methods=['POST'])
 @token_required
 def create_activity_public(current_user):
-    
+    """
+    前端创建活动兼容接口：POST /api/activities
+    允许已登录用户创建活动（组织者为当前用户）
+    """
     try:
+        # 先打印原始请求体，以诊断JSON问题
         raw_data = request.get_data(as_text=True)
         print(f"【原始请求体】{repr(raw_data)}")
-
+        
         data = request.get_json(force=True, silent=False)
         print(f"【创建活动请求】用户: {current_user.account}, 请求数据: {data}")
         if not data:
@@ -31,12 +35,14 @@ def create_activity_public(current_user):
         status = data.get('status', 'draft')
         print(f"【解析参数】title={title}, start_time={start_time}, end_time={end_time}, max_participants={max_participants}")
 
+        # 权限检查：仅允许组织用户或管理员创建
         role = (getattr(current_user, 'role', '') or '').upper()
         print(f"【权限检查】用户角色: {role}")
         if role not in ('ORG_USER', 'ADMIN', 'SUPER_ADMIN'):
             return ResponseService.error('仅组织者或管理员可以创建活动', status_code=403)
         print(f"【权限验证通过】")
 
+        # 验证必填字段
         if not title:
             return ResponseService.error('活动标题不能为空', status_code=400)
         if not start_time or not end_time:
@@ -51,6 +57,7 @@ def create_activity_public(current_user):
         if start_dt >= end_dt:
             return ResponseService.error('活动开始时间必须早于结束时间', status_code=400)
 
+        # 使用 UTC 时间进行比较（避免 naive vs aware datetime 冲突）
         now_utc = datetime.now(timezone.utc)
         if start_dt < now_utc:
             print(f"【时间验证失败】start_dt={start_dt} < now_utc={now_utc}")

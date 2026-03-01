@@ -1,3 +1,4 @@
+# API_forum 回复路由模块
 
 from flask import request, jsonify
 from datetime import datetime
@@ -12,7 +13,7 @@ from ..common.utils import (
 
 
 def reply_to_dict(reply):
-    
+    """将回复对象转换为字典"""
     return {
         'id': reply.id,
         'floor_id': reply.floor_id,
@@ -29,18 +30,22 @@ def reply_to_dict(reply):
 
 @reply_bp.route('/floor/<int:floor_id>', methods=['GET'])
 def get_replies_by_floor(floor_id):
-    
+    """获取楼层的回复列表"""
     try:
+        # 验证楼层存在
         floor = ForumFloor.query.get(floor_id)
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
+        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
+        # 使用模型的内置方法获取回复
         replies_pagination = ForumReply.get_replies_by_floor(floor_id, page, per_page)
 
+        # 格式化响应
         response_data = PaginationHelper.format_pagination_response(
             replies_pagination,
             replies_pagination.items,
@@ -59,7 +64,7 @@ def get_replies_by_floor(floor_id):
 
 @reply_bp.route('/<int:reply_id>', methods=['GET'])
 def get_reply_detail(reply_id):
-    
+    """获取回复详情"""
     try:
         reply = ForumReply.query.get(reply_id)
 
@@ -79,8 +84,9 @@ def get_reply_detail(reply_id):
 @reply_bp.route('/floor/<int:floor_id>', methods=['POST'])
 @token_required
 def create_reply(current_user, floor_id):
-    
+    """创建回复（回复楼层）"""
     try:
+        # 验证楼层存在
         floor = ForumFloor.query.get(floor_id)
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
@@ -96,18 +102,22 @@ def create_reply(current_user, floor_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
+        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=2000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
+        # 如果有引用内容，也要验证
         if quote_content:
             quote_validation = validate_content(quote_content, min_length=1, max_length=500)
             if not quote_validation['valid']:
                 return ResponseService.error(quote_validation['message'], status_code=400)
 
+        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
         filtered_quote_content = sensitive_filter.filter_content(quote_content) if quote_content else None
 
+        # 创建回复
         reply = ForumReply.create_reply(
             floor_id=floor_id,
             user_id=current_user.id if hasattr(current_user, 'is_deleted') else current_user.id,
@@ -137,13 +147,14 @@ def create_reply(current_user, floor_id):
 @reply_bp.route('/<int:reply_id>', methods=['PUT'])
 @token_required
 def update_reply(current_user, reply_id):
-    
+    """更新回复"""
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
+        # 检查权限
         if not PermissionHelper.can_edit_reply(current_user, reply):
             return ResponseService.error('无权限修改此回复', status_code=403)
 
@@ -153,12 +164,15 @@ def update_reply(current_user, reply_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
+        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=2000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
+        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
 
+        # 更新回复
         reply.content = filtered_content
         reply.updated_at = datetime.utcnow()
         db.session.commit()
@@ -179,16 +193,18 @@ def update_reply(current_user, reply_id):
 @reply_bp.route('/<int:reply_id>', methods=['DELETE'])
 @token_required
 def delete_reply(current_user, reply_id):
-    
+    """删除回复（软删除，改为deleted状态）"""
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
+        # 检查权限
         if not PermissionHelper.can_edit_reply(current_user, reply):
             return ResponseService.error('无权限删除此回复', status_code=403)
 
+        # 删除回复（会同步更新楼层计数）
         reply.delete_reply()
 
         print(f"【回复删除成功】回复ID: {reply_id}, 作者: {current_user.account}")
@@ -204,16 +220,18 @@ def delete_reply(current_user, reply_id):
 @reply_bp.route('/<int:reply_id>/like', methods=['POST'])
 @token_required
 def like_reply(current_user, reply_id):
-    
+    """点赞回复"""
     try:
         from components.models.forum_models import ForumLike
 
+        # 验证回复存在
         reply = ForumReply.query.get(reply_id)
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
+        # 创建点赞记录
         like = ForumLike.create_like(
             user_id=user_id,
             target_type='reply',
@@ -237,12 +255,13 @@ def like_reply(current_user, reply_id):
 @reply_bp.route('/<int:reply_id>/like', methods=['DELETE'])
 @token_required
 def unlike_reply(current_user, reply_id):
-    
+    """取消点赞回复"""
     try:
         from components.models.forum_models import ForumLike
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
+        # 取消点赞
         success = ForumLike.remove_like(
             user_id=user_id,
             target_type='reply',
@@ -265,12 +284,14 @@ def unlike_reply(current_user, reply_id):
 
 @reply_bp.route('/user/<int:user_id>', methods=['GET'])
 def get_replies_by_user(user_id):
-    
+    """获取用户发布的回复列表"""
     try:
+        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
+        # 查询用户发布的回复
         query = ForumReply.query.filter_by(
             author_user_id=user_id,
             status='published'
@@ -278,14 +299,17 @@ def get_replies_by_user(user_id):
 
         pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
+        # 获取楼层和帖子信息
         replies_data = []
         for reply in pagination.items:
             reply_dict = reply_to_dict(reply)
 
+            # 获取楼层信息
             floor = ForumFloor.query.get(reply.floor_id)
             if floor:
                 reply_dict['floor_number'] = floor.floor_number
 
+                # 获取帖子信息
                 post = ForumPost.query.get(floor.post_id)
                 if post:
                     reply_dict['post_title'] = post.title
@@ -293,6 +317,7 @@ def get_replies_by_user(user_id):
 
             replies_data.append(reply_dict)
 
+        # 格式化响应
         response_data = {
             'total': pagination.total,
             'page': pagination.page,
@@ -315,22 +340,26 @@ def get_replies_by_user(user_id):
 
 @reply_bp.route('/recent', methods=['GET'])
 def get_recent_replies():
-    
+    """获取最新回复列表"""
     try:
         limit = min(int(request.args.get('limit', 20)), 100)
 
+        # 查询最新回复
         recent_replies = ForumReply.query.filter_by(
             status='published'
         ).order_by(ForumReply.created_at.desc()).limit(limit).all()
 
+        # 获取详细信息
         replies_data = []
         for reply in recent_replies:
             reply_dict = reply_to_dict(reply)
 
+            # 获取楼层和帖子信息
             floor = ForumFloor.query.get(reply.floor_id)
             if floor:
                 reply_dict['floor_number'] = floor.floor_number
 
+                # 获取帖子信息
                 post = ForumPost.query.get(floor.post_id)
                 if post:
                     reply_dict['post_title'] = post.title
@@ -350,13 +379,14 @@ def get_recent_replies():
 
 @reply_bp.route('/quote/<int:reply_id>', methods=['GET'])
 def get_quote_info(reply_id):
-    
+    """获取回复的引用信息（用于楼中楼功能）"""
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
+        # 获取楼层和帖子信息
         floor = ForumFloor.query.get(reply.floor_id)
         post_info = None
         floor_info = None

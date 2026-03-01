@@ -1,3 +1,6 @@
+# 公告分类管理接口
+# 包含：公告类型管理、模板管理、推送规则等功能
+# 时间策略说明：所有时间均使用 UTC naive datetime（datetime.utcnow()），前端应传递 ISO 8601 格式（Z 后缀表示 UTC）
 
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
@@ -10,9 +13,11 @@ from components.models.user_models import Admin
 from API_notice.common.utils import NoticePermissionUtils, NoticeQueryUtils
 
 
+# 管理员权限装饰器
 def admin_required(f):
-    
+    """管理员权限验证装饰器"""
     def decorated_function(current_user, *args, **kwargs):
+        # 检查当前用户是否为管理员
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -25,9 +30,11 @@ def admin_required(f):
     return decorated_function
 
 
+# 创建公告分类管理蓝图
 bp_notice_category = Blueprint('notice_category', __name__, url_prefix='/api/notice')
 
 
+# 公告类型配置
 NOTICE_TYPES = {
     'SYSTEM': {
         'name': '系统通知',
@@ -56,12 +63,32 @@ NOTICE_TYPES = {
 }
 
 
+# 公告模板配置
 NOTICE_TEMPLATES = [
     {
         'id': 'system_maintenance',
         'name': '系统维护公告',
         'type': 'SYSTEM',
-        'template': ,
+        'template': '''系统维护公告
+
+尊敬的用户：
+
+为了提供更好的服务，我们将进行系统维护，具体安排如下：
+
+维护时间：{maintenance_time}
+维护范围：{maintenance_scope}
+影响内容：{impact_content}
+
+维护期间，相关服务将暂时无法访问。给您带来的不便，敬请谅解。
+
+如有疑问，请联系：
+技术支持：{support_contact}
+服务热线：{service_hotline}
+
+感谢您的理解与支持！
+
+{company_name}
+{date}''',
         'variables': [
             {'name': 'maintenance_time', 'label': '维护时间', 'required': True},
             {'name': 'maintenance_scope', 'label': '维护范围', 'required': True},
@@ -76,7 +103,30 @@ NOTICE_TEMPLATES = [
         'id': 'feature_update',
         'name': '功能更新公告',
         'type': 'GENERAL',
-        'template': ,
+        'template': '''功能更新公告
+
+亲爱的用户：
+
+我们很高兴地通知您，系统已进行功能更新，新增/优化了以下功能：
+
+【新增功能】
+{new_features}
+
+【功能优化】
+{improved_features}
+
+【问题修复】
+{fixed_issues}
+
+更新时间：{update_time}
+版本号：{version_number}
+
+欢迎体验新功能，如有任何问题或建议，请及时反馈。
+
+感谢您的支持！
+
+{company_name}
+{date}''',
         'variables': [
             {'name': 'new_features', 'label': '新增功能', 'required': False},
             {'name': 'improved_features', 'label': '功能优化', 'required': False},
@@ -91,7 +141,26 @@ NOTICE_TEMPLATES = [
         'id': 'holiday_notice',
         'name': '节假日通知',
         'type': 'GENERAL',
-        'template': ,
+        'template': '''节假日通知
+
+各位用户：
+
+根据国家法定节假日安排，现将{holiday_name}假期安排通知如下：
+
+【放假时间】
+{holiday_period}
+
+【注意事项】
+{holiday_notes}
+
+【紧急联系方式】
+如遇紧急情况，请联系：
+{emergency_contact}
+
+祝大家节日快乐！
+
+{company_name}
+{date}''',
         'variables': [
             {'name': 'holiday_name', 'label': '节假日名称', 'required': True},
             {'name': 'holiday_period', 'label': '放假时间', 'required': True},
@@ -105,7 +174,39 @@ NOTICE_TEMPLATES = [
         'id': 'activity_announcement',
         'name': '活动发布公告',
         'type': 'ACTIVITY',
-        'template': ,
+        'template': '''活动发布公告
+
+亲爱的用户：
+
+我们很高兴地为您呈现一场精彩的活动！
+
+【活动名称】
+{activity_name}
+
+【活动时间】
+{activity_time}
+
+【活动地点】
+{activity_location}
+
+【活动内容】
+{activity_content}
+
+【报名方式】
+{signup_method}
+
+【活动亮点】
+{highlights}
+
+参加本活动无需额外费用，欢迎所有感兴趣的用户踊跃报名！
+
+如有任何疑问，请联系：
+{contact_info}
+
+期待与您相见！
+
+{company_name}
+{date}''',
         'variables': [
             {'name': 'activity_name', 'label': '活动名称', 'required': True},
             {'name': 'activity_time', 'label': '活动时间', 'required': True},
@@ -124,21 +225,29 @@ NOTICE_TEMPLATES = [
 @bp_notice_category.route('/types', methods=['GET'])
 @token_required
 def get_notice_types(current_user):
-    
+    """
+    获取公告类型列表
+    需要登录验证
+    """
     try:
         logger.info(f"【公告类型查询】用户: {current_user.account}")
 
+        # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         is_admin = current_admin is not None
 
+        # 根据用户类型过滤可见的公告类型
         if is_admin:
+            # 管理员可以看到所有类型
             visible_types = NOTICE_TYPES
         else:
+            # 普通用户只能看到系统公告和一般公告
             visible_types = {
                 k: v for k, v in NOTICE_TYPES.items()
                 if k in ['SYSTEM', 'GENERAL']
             }
 
+        # 转换为列表格式
         type_list = []
         for type_code, type_info in visible_types.items():
             type_item = {
@@ -151,6 +260,7 @@ def get_notice_types(current_user):
             }
             type_list.append(type_item)
 
+        # 按优先级排序
         type_list.sort(key=lambda x: x['priority'])
 
         logger.info(f"【公告类型查询成功】用户: {current_user.account}, 类型数: {len(type_list)}")
@@ -175,7 +285,13 @@ def get_notice_types(current_user):
 @bp_notice_category.route('/types/<type_code>', methods=['GET'])
 @token_required
 def get_notice_type_detail(current_user, type_code):
-    
+    """
+    获取指定公告类型详情
+    需要登录验证
+
+    Path参数：
+    - type_code: 公告类型代码
+    """
     try:
         logger.info(f"【公告类型详情查询】用户: {current_user.account}, 类型: {type_code}")
 
@@ -186,12 +302,17 @@ def get_notice_type_detail(current_user, type_code):
                 'data': None
             }), 404
 
+        # 检查用户类型
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         is_admin = current_admin is not None
 
+        # 权限检查
+        # 所有公告类型现在对普通用户/管理员按照 NOTICE_TYPES 中定义的 target_users 可见性处理
+        # 若未来需要 admin-only 类型，可在 NOTICE_TYPES 中配置并在此处校验
 
         type_info = NOTICE_TYPES[type_code]
 
+        # 获取该类型公告的统计信息
         total_count = Notice.query.filter_by(notice_type=type_code).count()
         active_count = Notice.query.filter(
             and_(
@@ -238,10 +359,14 @@ def get_notice_type_detail(current_user, type_code):
 @token_required
 @admin_required
 def get_notice_templates(current_user):
-    
+    """
+    获取公告模板列表
+    需要管理员权限
+    """
     try:
         logger.info(f"【公告模板查询】管理员: {current_user.account}")
 
+        # 过滤模板，根据管理员权限显示
         templates = []
         for template in NOTICE_TEMPLATES:
             template_data = {
@@ -275,10 +400,17 @@ def get_notice_templates(current_user):
 @token_required
 @admin_required
 def get_notice_template_detail(current_user, template_id):
-    
+    """
+    获取指定公告模板详情
+    需要管理员权限
+
+    Path参数：
+    - template_id: 模板ID
+    """
     try:
         logger.info(f"【公告模板详情查询】管理员: {current_user.account}, 模板ID: {template_id}")
 
+        # 查找模板
         template = next((t for t in NOTICE_TEMPLATES if t['id'] == template_id), None)
         if not template:
             return jsonify({
@@ -315,7 +447,22 @@ def get_notice_template_detail(current_user, template_id):
 @token_required
 @admin_required
 def apply_notice_template(current_user):
-    
+    """
+    应用公告模板生成公告内容
+    需要管理员权限
+
+    请求参数：
+    {
+        "template_id": "system_maintenance",
+        "variables": {
+            "maintenance_time": "2024-01-15 02:00-06:00",
+            "maintenance_scope": "用户管理系统",
+            "impact_content": "用户登录、注册功能",
+            "company_name": "某某科技有限公司",
+            "date": "2024-01-14"
+        }
+    }
+    """
     try:
         data = request.get_json()
         if not data:
@@ -337,6 +484,7 @@ def apply_notice_template(current_user):
 
         logger.info(f"【应用公告模板】管理员: {current_user.account}, 模板ID: {template_id}")
 
+        # 查找模板
         template = next((t for t in NOTICE_TEMPLATES if t['id'] == template_id), None)
         if not template:
             return jsonify({
@@ -345,6 +493,7 @@ def apply_notice_template(current_user):
                 'data': None
             }), 404
 
+        # 验证必填变量
         required_vars = [v['name'] for v in template['variables'] if v.get('required', False)]
         missing_vars = [var for var in required_vars if var not in variables or not variables[var]]
         if missing_vars:
@@ -354,6 +503,7 @@ def apply_notice_template(current_user):
                 'data': None
             }), 400
 
+        # 应用模板
         try:
             content = template['template'].format(**variables)
         except KeyError as e:
@@ -392,7 +542,10 @@ def apply_notice_template(current_user):
 @token_required
 @admin_required
 def get_push_rules(current_user):
-    
+    """
+    获取公告推送规则配置
+    需要管理员权限
+    """
     try:
         logger.info(f"【推送规则查询】管理员: {current_user.account}")
 
@@ -458,7 +611,19 @@ def get_push_rules(current_user):
 @token_required
 @admin_required
 def validate_notice_config(current_user):
-    
+    """
+    验证公告配置的有效性
+    需要管理员权限
+
+    请求参数：
+    {
+        "notice_type": "SYSTEM",
+        "target_user_type": "ALL",
+        "title": "公告标题",
+        "content": "公告内容",
+        "expiration": "2024-12-31T23:59:59Z"  // 可选
+    }
+    """
     try:
         data = request.get_json()
         if not data:
@@ -480,14 +645,17 @@ def validate_notice_config(current_user):
             'warnings': []
         }
 
+        # 验证公告类型
         if notice_type not in NOTICE_TYPES:
             validation_result['is_valid'] = False
             validation_result['errors'].append('无效的公告类型')
         else:
+            # 验证推送范围
             if not NoticePermissionUtils.validate_notice_access_scope(notice_type, target_user_type):
                 validation_result['is_valid'] = False
                 validation_result['errors'].append('公告类型与推送范围不匹配')
 
+        # 验证标题
         if not title:
             validation_result['is_valid'] = False
             validation_result['errors'].append('公告标题不能为空')
@@ -495,15 +663,18 @@ def validate_notice_config(current_user):
             validation_result['is_valid'] = False
             validation_result['errors'].append('公告标题不能超过150个字符')
 
+        # 验证内容
         if not content:
             validation_result['is_valid'] = False
             validation_result['errors'].append('公告内容不能为空')
         elif len(content) > 10000:
             validation_result['warnings'].append('公告内容较长，建议控制在10000字符以内')
 
+        # 验证到期时间
         if expiration:
             try:
                 expiration_date = datetime.fromisoformat(expiration.replace('Z', '+00:00'))
+                # 转为 UTC naive
                 if expiration_date.tzinfo:
                     expiration_date = expiration_date.replace(tzinfo=None)
                 if expiration_date <= datetime.utcnow():

@@ -1,3 +1,4 @@
+# 用户端活动操作接口 - 预约、评分、讨论
 
 from flask import Blueprint, request
 from components import db, token_required
@@ -6,24 +7,31 @@ from components.response_service import ResponseService
 from ..common.utils import ActivityValidator, ActivityStatistics
 from datetime import datetime
 
+# 创建用户操作模块蓝图
 user_ops_bp = Blueprint('user_ops', __name__, url_prefix='/api/activities/user')
 
 
 @user_ops_bp.route('/activities/<int:activity_id>/booking', methods=['POST'])
 @token_required
 def book_activity(current_user, activity_id):
-    
+    """
+    用户预约活动
+    需要认证：是
+    """
     try:
         print(f"【用户预约活动请求】用户: {current_user.account}, 活动ID: {activity_id}")
 
+        # 验证活动是否存在
         activity = Activity.query.get(activity_id)
         if not activity:
             return ResponseService.error('活动不存在', status_code=404)
 
+        # 验证活动是否可预约
         can_book, error_msg = ActivityValidator.is_activity_bookable(activity)
         if not can_book:
             return ResponseService.error(error_msg, status_code=400)
 
+        # 检查用户预约冲突
         has_conflict, existing_booking = ActivityValidator.check_user_booking_conflict(
             current_user.account, activity_id
         )
@@ -31,10 +39,11 @@ def book_activity(current_user, activity_id):
         if has_conflict:
             return ResponseService.error('您已经预约过该活动', status_code=400)
 
+        # 如果有取消过的预约记录，重新激活
         if existing_booking and existing_booking.status == 'cancelled':
             existing_booking.status = 'booked'
             existing_booking.notes = None
-            existing_booking.updated_at = datetime.utcnow()
+            existing_booking.updated_at = datetime.now()
             db.session.commit()
 
             print(f"【预约重新激活】预约ID: {existing_booking.id}, 用户: {current_user.account}")
@@ -49,6 +58,7 @@ def book_activity(current_user, activity_id):
 
             return ResponseService.success(data=booking_data, message='活动预约成功')
 
+        # 创建新预约
         data = request.get_json() or {}
         booking = ActivityBooking(
             activity_id=activity_id,
@@ -81,10 +91,14 @@ def book_activity(current_user, activity_id):
 @user_ops_bp.route('/activities/<int:activity_id>/booking', methods=['DELETE'])
 @token_required
 def cancel_booking(current_user, activity_id):
-    
+    """
+    用户取消预约
+    需要认证：是
+    """
     try:
         print(f"【用户取消预约请求】用户: {current_user.account}, 活动ID: {activity_id}")
 
+        # 查找用户的预约记录
         booking = ActivityBooking.query.filter_by(
             activity_id=activity_id,
             user_account=current_user.account,
@@ -94,12 +108,14 @@ def cancel_booking(current_user, activity_id):
         if not booking:
             return ResponseService.error('未找到有效的预约记录', status_code=404)
 
+        # 验证活动是否允许取消预约
         activity = Activity.query.get(activity_id)
         if activity and activity.status == 'completed':
             return ResponseService.error('活动已结束，无法取消预约', status_code=400)
 
+        # 更新预约状态为取消
         booking.status = 'cancelled'
-        booking.updated_at = datetime.utcnow()
+        booking.updated_at = datetime.now()
         db.session.commit()
 
         print(f"【预约取消成功】预约ID: {booking.id}, 用户: {current_user.account}")
@@ -117,51 +133,36 @@ def cancel_booking(current_user, activity_id):
 @user_ops_bp.route('/bookings', methods=['GET'])
 @token_required
 def get_my_bookings(current_user):
-    
+    """
+    获取用户的预约列表
+    需要认证：是
+    """
     try:
-        try:
-            page = int(request.args.get('page', 1))
-            size = int(request.args.get('size', 20))
-        except ValueError:
-            return ResponseService.error('分页参数格式错误', status_code=400)
-
-        if page < 1:
-            return ResponseService.error('页码必须大于0', status_code=400)
-        if size < 1 or size > 100:
-            return ResponseService.error('每页数量必须在1-100之间', status_code=400)
-
+        page = int(request.args.get('page', 1))
+        size = int(request.args.get('size', 20))
         status = request.args.get('status', '').strip()
         activity_status = request.args.get('activity_status', '').strip()
 
+        # 构建查询
         query = ActivityBooking.query.filter_by(user_account=current_user.account)
 
+        # 预约状态筛选
         if status:
             query = query.filter(ActivityBooking.status == status)
 
+        # 按预约时间倒序排列
         query = query.order_by(ActivityBooking.booking_time.desc())
 
+        # 分页查询
         pagination = query.paginate(page=page, per_page=size)
         bookings = pagination.items
 
-        activity_ids = [b.activity_id for b in bookings]
-        activities = {a.id: a for a in Activity.query.filter(Activity.id.in_(activity_ids)).all()}
-
-        current_participants = {}
-        if activity_ids:
-            from sqlalchemy import func
-            participant_counts = db.session.query(
-                ActivityBooking.activity_id,
-                func.count(ActivityBooking.id).label('count')
-            ).filter(
-                ActivityBooking.activity_id.in_(activity_ids),
-                ActivityBooking.status == 'booked'
-            ).group_by(ActivityBooking.activity_id).all()
-            current_participants = {row.activity_id: row.count for row in participant_counts}
-
         bookings_data = []
         for booking in bookings:
-            activity = activities.get(booking.activity_id)
+            # 获取活动信息
+            activity = Activity.query.get(booking.activity_id)
 
+            # 活动状态筛选
             if activity_status and activity and activity.status != activity_status:
                 continue
 
@@ -174,7 +175,9 @@ def get_my_bookings(current_user):
                 'activity_start_time': activity.start_time.isoformat().replace('+00:00', 'Z') if activity else None,
                 'activity_end_time': activity.end_time.isoformat().replace('+00:00', 'Z') if activity else None,
                 'activity_max_participants': activity.max_participants if activity else None,
-                'activity_current_participants': current_participants.get(booking.activity_id, 0),
+                'activity_current_participants': ActivityBooking.query.filter_by(
+                    activity_id=booking.activity_id, status='booked'
+                ).count(),
                 'activity_organizer_display': activity.organizer_display if activity else None,
                 'activity_tags': activity.tags if activity else [],
                 'activity_status': activity.status if activity else None,
@@ -184,6 +187,7 @@ def get_my_bookings(current_user):
             }
             bookings_data.append(booking_info)
 
+        # 手动分页（考虑状态筛选）
         total = len(bookings_data)
         start = (page - 1) * size
         end = start + size
@@ -203,7 +207,10 @@ def get_my_bookings(current_user):
 @user_ops_bp.route('/activities/<int:activity_id>/rating', methods=['POST'])
 @token_required
 def create_activity_rating(current_user, activity_id):
-    
+    """
+    用户为活动评分
+    需要认证：是
+    """
     try:
         print(f"【用户活动评分请求】用户: {current_user.account}, 活动ID: {activity_id}")
 
@@ -214,18 +221,22 @@ def create_activity_rating(current_user, activity_id):
         score = data.get('score')
         comment = data.get('comment', '')
 
+        # 验证评分
         if not score or not (1 <= int(score) <= 5):
             return ResponseService.error('评分必须是1-5的整数', status_code=400)
 
+        # 验证用户是否可以评分
         can_rate, error_msg = ActivityValidator.can_user_rate_activity(current_user.id, activity_id)
         if not can_rate:
             return ResponseService.error(error_msg, status_code=400)
 
+        # 创建评分
         rating = ActivityRating(
             activity_id=activity_id,
             score=int(score),
             comment_content=comment.strip() if comment else None
         )
+        # 设置评分者信息
         rating.set_rater_info(current_user)
 
         db.session.add(rating)
@@ -254,12 +265,16 @@ def create_activity_rating(current_user, activity_id):
 @user_ops_bp.route('/activities/<int:activity_id>/rating', methods=['PUT'])
 @token_required
 def update_activity_rating(current_user, activity_id):
-    
+    """
+    用户更新活动评分
+    需要认证：是
+    """
     try:
         data = request.get_json()
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
 
+        # 查找现有评分
         rating = ActivityRating.query.filter_by(
             activity_id=activity_id,
             rater_user_id=current_user.id
@@ -268,6 +283,7 @@ def update_activity_rating(current_user, activity_id):
         if not rating:
             return ResponseService.error('您还未为该活动评分', status_code=404)
 
+        # 更新评分和评语
         if 'score' in data:
             new_score = data['score']
             if not (1 <= int(new_score) <= 5):
@@ -277,7 +293,7 @@ def update_activity_rating(current_user, activity_id):
         if 'comment_content' in data:
             rating.comment_content = data['comment_content'].strip() if data['comment_content'] else None
 
-        rating.update_time = datetime.utcnow()
+        rating.update_time = datetime.now()
         db.session.commit()
 
         print(f"【评分更新成功】评分ID: {rating.id}, 用户: {current_user.account}")
@@ -303,8 +319,12 @@ def update_activity_rating(current_user, activity_id):
 @user_ops_bp.route('/activities/<int:activity_id>/rating', methods=['DELETE'])
 @token_required
 def delete_activity_rating(current_user, activity_id):
-    
+    """
+    用户删除活动评分
+    需要认证：是
+    """
     try:
+        # 查找现有评分
         rating = ActivityRating.query.filter_by(
             activity_id=activity_id,
             rater_user_id=current_user.id
@@ -331,34 +351,29 @@ def delete_activity_rating(current_user, activity_id):
 @user_ops_bp.route('/ratings', methods=['GET'])
 @token_required
 def get_my_ratings(current_user):
-    
+    """
+    获取用户的评分列表
+    需要认证：是
+    """
     try:
-        try:
-            page = int(request.args.get('page', 1))
-            size = int(request.args.get('size', 20))
-        except ValueError:
-            return ResponseService.error('分页参数格式错误', status_code=400)
-
-        if page < 1:
-            return ResponseService.error('页码必须大于0', status_code=400)
-        if size < 1 or size > 100:
-            return ResponseService.error('每页数量必须在1-100之间', status_code=400)
-
+        page = int(request.args.get('page', 1))
+        size = int(request.args.get('size', 20))
         activity_status = request.args.get('activity_status', '').strip()
 
+        # 构建查询
         query = ActivityRating.query.filter_by(rater_user_id=current_user.id)
         query = query.order_by(ActivityRating.create_time.desc())
 
+        # 分页查询
         pagination = query.paginate(page=page, per_page=size)
         ratings = pagination.items
 
-        activity_ids = [r.activity_id for r in ratings]
-        activities = {a.id: a for a in Activity.query.filter(Activity.id.in_(activity_ids)).all()}
-
         ratings_list = []
         for rating in ratings:
-            activity = activities.get(rating.activity_id)
+            # 获取活动信息
+            activity = Activity.query.get(rating.activity_id)
 
+            # 活动状态筛选
             if activity_status and activity and activity.status != activity_status:
                 continue
 
@@ -378,6 +393,7 @@ def get_my_ratings(current_user):
             }
             ratings_list.append(item)
 
+        # 手动分页（考虑状态筛选）
         total = len(ratings_list)
         start = (page - 1) * size
         end = start + size
@@ -397,7 +413,10 @@ def get_my_ratings(current_user):
 @user_ops_bp.route('/activities/<int:activity_id>/discussions', methods=['POST'])
 @token_required
 def create_activity_discussion(current_user, activity_id):
-    
+    """
+    用户创建活动讨论
+    需要认证：是
+    """
     try:
         data = request.get_json()
         if not data:
@@ -409,15 +428,18 @@ def create_activity_discussion(current_user, activity_id):
         if not content:
             return ResponseService.error('讨论内容不能为空', status_code=400)
 
+        # 验证活动是否存在
         activity = Activity.query.get(activity_id)
         if not activity:
             return ResponseService.error('活动不存在', status_code=404)
 
+        # 创建讨论
         discussion = ActivityDiscuss(
             activity_id=activity_id,
             content=content,
             image_urls=image_urls if image_urls else None
         )
+        # 设置发布者信息
         discussion.set_author_info(current_user)
 
         db.session.add(discussion)
@@ -446,12 +468,16 @@ def create_activity_discussion(current_user, activity_id):
 @user_ops_bp.route('/discussions/<int:discussion_id>', methods=['PUT'])
 @token_required
 def update_activity_discussion(current_user, discussion_id):
-    
+    """
+    用户更新活动讨论
+    需要认证：是
+    """
     try:
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
+        # 检查权限（只有作者可以修改）
         if discussion.author_user_id != current_user.id:
             return ResponseService.error('无权限修改此讨论', status_code=403)
 
@@ -459,6 +485,7 @@ def update_activity_discussion(current_user, discussion_id):
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
 
+        # 更新内容
         if 'content' in data:
             new_content = data['content'].strip()
             if not new_content:
@@ -468,7 +495,7 @@ def update_activity_discussion(current_user, discussion_id):
         if 'image_urls' in data:
             discussion.image_urls = data['image_urls']
 
-        discussion.update_time = datetime.utcnow()
+        discussion.update_time = datetime.now()
         db.session.commit()
 
         print(f"【讨论更新成功】讨论ID: {discussion_id}, 用户: {current_user.account}")
@@ -493,7 +520,10 @@ def update_activity_discussion(current_user, discussion_id):
 @user_ops_bp.route('/discussions/<int:discussion_id>', methods=['DELETE'])
 @token_required
 def delete_activity_discussion(current_user, discussion_id):
-    
+    """
+    用户删除活动讨论
+    需要认证：是
+    """
     try:
         print(f"【删除讨论请求】讨论ID: {discussion_id}, 用户: {current_user.account}")
 
@@ -501,12 +531,15 @@ def delete_activity_discussion(current_user, discussion_id):
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
+        # 验证是否为讨论作者
         if discussion.author_user_id != current_user.id:
             return ResponseService.error('无权删除此讨论', status_code=403)
 
+        # 统计即将删除的留言数量
         from components.models import ActivityDiscussComment
         comment_count = ActivityDiscussComment.query.filter_by(discuss_id=discussion_id).count()
 
+        # 删除讨论（级联删除所有相关留言）
         db.session.delete(discussion)
         db.session.commit()
 
@@ -529,16 +562,20 @@ def delete_activity_discussion(current_user, discussion_id):
 @user_ops_bp.route('/my-activities', methods=['GET'])
 @token_required
 def get_my_activities(current_user):
-    
+    """
+    获取用户参与的或创建的活动列表
+    需要认证：是
+    """
     try:
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
-        role = request.args.get('role', 'all')
+        role = request.args.get('role', 'all')  # organizer/participant/all
         status = request.args.get('status', '').strip()
 
         result_list = []
 
         if role in ['organizer', 'all']:
+            # 获取用户创建的活动
             organizer_query = Activity.query.filter_by(organizer_user_id=current_user.id)
             if status:
                 organizer_query = organizer_query.filter(Activity.status == status)
@@ -546,6 +583,7 @@ def get_my_activities(current_user):
             organizer_activities = organizer_query.order_by(Activity.updated_at.desc()).all()
 
             for activity in organizer_activities:
+                # 统计预约人数
                 current_bookings = ActivityBooking.query.filter_by(
                     activity_id=activity.id, status='booked'
                 ).count()
@@ -568,8 +606,10 @@ def get_my_activities(current_user):
                 result_list.append(item)
 
         if role in ['participant', 'all']:
+            # 获取用户参与的活动
             participant_query = ActivityBooking.query.filter_by(user_account=current_user.account)
             if status:
+                # 需要关联活动表进行状态筛选
                 participant_query = participant_query.join(Activity).filter(Activity.status == status)
 
             participant_bookings = participant_query.order_by(ActivityBooking.booking_time.desc()).all()
@@ -579,9 +619,11 @@ def get_my_activities(current_user):
                 if not activity:
                     continue
 
+                # 避免重复添加（如果用户既是创建者也是参与者）
                 if any(item['id'] == activity.id for item in result_list):
                     continue
 
+                # 统计预约人数
                 current_bookings = ActivityBooking.query.filter_by(
                     activity_id=activity.id, status='booked'
                 ).count()
@@ -605,8 +647,10 @@ def get_my_activities(current_user):
                 }
                 result_list.append(item)
 
+        # 按更新时间排序
         result_list.sort(key=lambda x: x['updated_at'], reverse=True)
 
+        # 手动分页
         total = len(result_list)
         start = (page - 1) * size
         end = start + size

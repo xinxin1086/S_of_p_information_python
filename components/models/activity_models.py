@@ -1,10 +1,11 @@
+# 活动管理相关模型
 
 from datetime import datetime
 from .base import db
-from flask import current_app
 from .user_models import User
 
 
+# 活动模型（对应activities表）
 class Activity(db.Model):
     __tablename__ = 'activities'
     __table_args__ = {'mysql_comment': '活动信息表：存储各类活动的基本信息和状态', 'comment': '活动信息表：存储各类活动的基本信息和状态'}
@@ -23,16 +24,20 @@ class Activity(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now, comment='创建时间')
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment='更新时间')
 
+    # 关联用户表
     organizer = db.relationship('User', backref='organized_activities', foreign_keys=[organizer_user_id])
 
     def update_organizer_display(self):
-        
+        """更新发布者显示名，支持注销用户匿名化"""
         if self.organizer_user_id and self.organizer and self.organizer.is_deleted == 0:
+            # 用户正常存在
             self.organizer_display = self.organizer.username
         else:
+            # 用户不存在或已注销，显示匿名信息
             self.organizer_display = "用户已注销"
             self.organizer_user_id = None
 
+    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {
@@ -53,6 +58,7 @@ class Activity(db.Model):
         }
 
 
+# 活动预约模型（对应activity_bookings表）
 class ActivityBooking(db.Model):
     __tablename__ = 'activity_bookings'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True, comment='预约唯一标识')
@@ -64,14 +70,17 @@ class ActivityBooking(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now, comment='创建时间')
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment='更新时间')
 
+    # 关联活动表和用户表
     activity = db.relationship('Activity', backref='bookings')
     user = db.relationship('User', backref='activity_bookings')
 
+    # 唯一约束
     __table_args__ = (
         db.UniqueConstraint('activity_id', 'user_account', name='unique_booking'),
         {'mysql_comment': '活动预约表：记录用户参与活动的预约信息', 'comment': '活动预约表：记录用户参与活动的预约信息'}
     )
 
+    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {
@@ -86,6 +95,7 @@ class ActivityBooking(db.Model):
         }
 
 
+# 活动评分表（对应activity_rating表）- 增加评语功能
 class ActivityRating(db.Model):
     __tablename__ = 'activity_rating'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True, comment='评分ID')
@@ -98,26 +108,30 @@ class ActivityRating(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.now, comment='评分时间')
     update_time = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment='修改时间')
 
+    # 关联活动表和用户表
     activity = db.relationship('Activity', backref='ratings')
     rater_user = db.relationship('User', backref='activity_ratings', foreign_keys=[rater_user_id])
 
+    # 唯一约束
     __table_args__ = (
         db.UniqueConstraint('rater_user_id', 'activity_id', name='idx_unique_user_activity'),
         {'mysql_comment': '活动评分表：记录用户对活动的评分和评价', 'comment': '活动评分表：记录用户对活动的评分和评价'}
     )
 
     def update_rater_info(self):
-        
+        """更新评分用户显示信息，支持注销用户匿名化"""
         if self.rater_user_id and self.rater_user and self.rater_user.is_deleted == 0:
+            # 用户正常存在
             self.rater_display = self.rater_user.username
             self.rater_avatar = self.rater_user.avatar
         else:
+            # 用户不存在或已注销，显示匿名信息
             self.rater_display = "用户已注销"
-            self.rater_avatar = current_app.config.get('DEFAULT_AVATAR_URL', '/static/images/default-avatar.png')
+            self.rater_avatar = "/static/images/default-avatar.png"  # 默认头像
             self.rater_user_id = None
 
     def set_rater_info(self, user):
-        
+        """设置评分用户信息"""
         if user and user.is_deleted == 0:
             self.rater_user_id = user.id
             self.rater_display = user.username
@@ -127,6 +141,7 @@ class ActivityRating(db.Model):
             self.rater_display = "用户已注销"
             self.rater_avatar = "/static/images/default-avatar.png"
 
+    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {
@@ -142,6 +157,7 @@ class ActivityRating(db.Model):
         }
 
 
+# 活动讨论表（对应activity_discuss表）- 活动层级可发图片
 class ActivityDiscuss(db.Model):
     __tablename__ = 'activity_discuss'
     __table_args__ = {'mysql_comment': '活动讨论表：存储用户对活动的讨论内容', 'comment': '活动讨论表：存储用户对活动的讨论内容'}
@@ -155,21 +171,24 @@ class ActivityDiscuss(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.now, comment='发布时间')
     update_time = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment='修改时间')
 
+    # 关联活动表和用户表
     activity = db.relationship('Activity', backref='discussions')
     author_user = db.relationship('User', backref='activity_discussions', foreign_keys=[author_user_id])
 
     def update_author_info(self):
-        
+        """更新发布者显示信息，支持注销用户匿名化"""
         if self.author_user_id and self.author_user and self.author_user.is_deleted == 0:
+            # 用户正常存在
             self.author_display = self.author_user.username
             self.author_avatar = self.author_user.avatar
         else:
+            # 用户不存在或已注销，显示匿名信息
             self.author_display = "用户已注销"
-            self.author_avatar = "/static/images/default-avatar.png"
+            self.author_avatar = "/static/images/default-avatar.png"  # 默认头像
             self.author_user_id = None
 
     def set_author_info(self, user):
-        
+        """设置发布者用户信息"""
         if user and user.is_deleted == 0:
             self.author_user_id = user.id
             self.author_display = user.username
@@ -179,6 +198,7 @@ class ActivityDiscuss(db.Model):
             self.author_display = "用户已注销"
             self.author_avatar = "/static/images/default-avatar.png"
 
+    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {
@@ -194,6 +214,7 @@ class ActivityDiscuss(db.Model):
         }
 
 
+# 活动讨论留言表（对应activity_discuss_comment表）- 不可发图片，支持嵌套回复
 class ActivityDiscussComment(db.Model):
     __tablename__ = 'activity_discuss_comment'
     __table_args__ = {'mysql_comment': '活动讨论留言表：存储对讨论的回复和评论', 'comment': '活动讨论留言表：存储对讨论的回复和评论'}
@@ -207,6 +228,7 @@ class ActivityDiscussComment(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.now, comment='发布时间')
     update_time = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, comment='修改时间')
 
+    # 关联讨论表、用户表和自关联
     discuss = db.relationship('ActivityDiscuss', backref='comments')
     author_user = db.relationship('User', backref='discuss_comments', foreign_keys=[author_user_id])
     parent_comment = db.relationship(
@@ -218,17 +240,19 @@ class ActivityDiscussComment(db.Model):
     )
 
     def update_author_info(self):
-        
+        """更新发布者显示信息，支持注销用户匿名化"""
         if self.author_user_id and self.author_user and self.author_user.is_deleted == 0:
+            # 用户正常存在
             self.author_display = self.author_user.username
             self.author_avatar = self.author_user.avatar
         else:
+            # 用户不存在或已注销，显示匿名信息
             self.author_display = "用户已注销"
-            self.author_avatar = "/static/images/default-avatar.png"
+            self.author_avatar = "/static/images/default-avatar.png"  # 默认头像
             self.author_user_id = None
 
     def set_author_info(self, user):
-        
+        """设置发布者用户信息"""
         if user and user.is_deleted == 0:
             self.author_user_id = user.id
             self.author_display = user.username
@@ -238,6 +262,7 @@ class ActivityDiscussComment(db.Model):
             self.author_display = "用户已注销"
             self.author_avatar = "/static/images/default-avatar.png"
 
+    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {

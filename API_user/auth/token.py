@@ -1,3 +1,5 @@
+# API_user 认证授权接口
+# 基于 components/token_required.py 的认证功能
 
 import jwt
 from datetime import datetime, timedelta
@@ -11,7 +13,11 @@ from ..common.utils import UserQueryHelper, validate_user_data
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    
+    """
+    用户登录接口
+    支持用户和管理员登录
+    返回JWT token和用户信息
+    """
     try:
         data = request.get_json()
         if not data:
@@ -25,25 +31,29 @@ def login():
 
         print(f"【用户登录请求】账号: {account}")
 
+        # 查找用户
         user, user_type = UserQueryHelper.find_user_by_identifier(account)
 
         if not user:
             print(f"【登录失败】用户不存在: {account}")
             return ResponseService.error('账号或密码错误', status_code=401)
 
+        # 验证密码
         if not user.check_password(password):
             print(f"【登录失败】密码错误: {account}")
             return ResponseService.error('账号或密码错误', status_code=401)
 
+        # 检查用户状态（仅普通用户需要检查）
         if user_type == 'user' and user.is_deleted == 1:
             print(f"【登录失败】用户已注销: {account}")
             return ResponseService.error('用户账号已注销', status_code=403)
 
+        # 生成JWT token
         token_payload = {
             'user_id': user.id,
             'account': user.account,
             'role': 'admin' if user_type == 'admin' else 'user',
-            'exp': datetime.utcnow() + timedelta(hours=24),
+            'exp': datetime.utcnow() + timedelta(hours=24),  # 24小时过期
             'iat': datetime.utcnow()
         }
 
@@ -53,6 +63,7 @@ def login():
             algorithm='HS256'
         )
 
+        # 返回用户信息
         from ..common.utils import UserDataProcessor
         user_info = UserDataProcessor.format_user_info(user, include_sensitive=False)
         user_info.update({
@@ -73,7 +84,10 @@ def login():
 
 @auth_bp.route('/refresh', methods=['POST'])
 def refresh_token():
-    
+    """
+    刷新token接口
+    需要有效的token，返回新的token
+    """
     try:
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
@@ -82,6 +96,7 @@ def refresh_token():
         token = auth_header.split(' ')[1]
 
         try:
+            # 验证当前token
             payload = jwt.decode(
                 token,
                 Config.JWT_SECRET_KEY,
@@ -92,6 +107,7 @@ def refresh_token():
         except jwt.InvalidTokenError:
             return ResponseService.error('token格式无效', status_code=401)
 
+        # 查找用户
         user_id = payload['user_id']
         role = payload.get('role', 'user')
 
@@ -103,6 +119,7 @@ def refresh_token():
         if not user:
             return ResponseService.error('用户不存在', status_code=404)
 
+        # 生成新token
         new_payload = {
             'user_id': user.id,
             'account': user.account,
@@ -122,7 +139,7 @@ def refresh_token():
         return ResponseService.success(
             data={
                 'token': new_token,
-                'expires_in': 24 * 60 * 60
+                'expires_in': 24 * 60 * 60  # 24小时（秒）
             },
             message="Token刷新成功"
         )
@@ -133,7 +150,10 @@ def refresh_token():
 
 @auth_bp.route('/verify', methods=['POST'])
 def verify_token():
-    
+    """
+    验证token有效性接口
+    返回token对应的用户信息
+    """
     try:
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
@@ -152,6 +172,7 @@ def verify_token():
         except jwt.InvalidTokenError:
             return ResponseService.error('token格式无效', status_code=401)
 
+        # 查找用户
         user_id = payload['user_id']
         role = payload.get('role', 'user')
 
@@ -163,6 +184,7 @@ def verify_token():
         if not user:
             return ResponseService.error('用户不存在', status_code=404)
 
+        # 检查用户状态
         if role == 'user' and user.is_deleted == 1:
             return ResponseService.error('用户账号已注销', status_code=403)
 
@@ -187,8 +209,12 @@ def verify_token():
 
 @auth_bp.route('/logout', methods=['POST'])
 def logout():
-    
+    """
+    用户登出接口
+    实际上JWT是无状态的，客户端删除token即可完成登出
+    """
     try:
+        # 获取token进行记录
         auth_header = request.headers.get('Authorization')
         if auth_header and auth_header.startswith('Bearer '):
             token = auth_header.split(' ')[1]
@@ -200,7 +226,7 @@ def logout():
                 )
                 print(f"【用户登出】用户ID: {payload.get('user_id')}, 账号: {payload.get('account')}")
             except:
-                pass
+                pass  # token无效也无所谓，登出操作不依赖token有效性
 
         return ResponseService.success(message="登出成功")
 
@@ -210,12 +236,16 @@ def logout():
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    
+    """
+    用户注册接口
+    仅支持普通用户注册，管理员需要后台创建
+    """
     try:
         data = request.get_json()
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
 
+        # 验证必填字段
         required_fields = ['account', 'password', 'username']
         validation_errors = validate_user_data(data, required_fields=required_fields)
 
@@ -230,19 +260,23 @@ def register():
 
         print(f"【用户注册请求】账号: {account}")
 
+        # 检查账号是否已存在
         existing_user = User.query.filter_by(account=account, is_deleted=0).first()
         if existing_user:
             return ResponseService.error('账号已存在', status_code=400)
 
+        # 检查手机号是否已存在
         if phone:
             existing_phone = User.query.filter_by(phone=phone, is_deleted=0).first()
             if existing_phone:
                 return ResponseService.error('手机号已被使用', status_code=400)
 
+        # 检查用户名是否已存在
         existing_username = User.query.filter_by(username=username, is_deleted=0).first()
         if existing_username:
             return ResponseService.error('用户名已被使用', status_code=400)
 
+        # 创建新用户
         new_user = User(
             account=account,
             username=username,
@@ -258,6 +292,7 @@ def register():
 
         print(f"【用户注册成功】账号: {account}, 用户ID: {new_user.id}")
 
+        # 返回用户信息（不包含敏感信息）
         from ..common.utils import UserDataProcessor
         user_info = UserDataProcessor.format_user_info(new_user, include_sensitive=False)
 
@@ -273,7 +308,11 @@ def register():
 
 @auth_bp.route('/change-password', methods=['POST'])
 def change_password():
-    
+    """
+    修改密码接口
+    支持用户和管理员修改自己的密码
+    需要提供旧密码进行验证
+    """
     try:
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
@@ -292,6 +331,7 @@ def change_password():
         except jwt.InvalidTokenError:
             return ResponseService.error('登录状态无效', status_code=401)
 
+        # 查找用户
         user_id = payload['user_id']
         role = payload.get('role', 'user')
 
@@ -303,6 +343,7 @@ def change_password():
         if not user:
             return ResponseService.error('用户不存在', status_code=404)
 
+        # 获取请求数据
         data = request.get_json()
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
@@ -313,15 +354,18 @@ def change_password():
         if not old_password or not new_password:
             return ResponseService.error('旧密码和新密码不能为空', status_code=400)
 
+        # 验证新密码格式
         from ..common.utils import UserValidator
         is_valid, msg = UserValidator.validate_password(new_password)
         if not is_valid:
             return ResponseService.error(msg, status_code=400)
 
+        # 验证旧密码
         if not user.check_password(old_password):
             print(f"【修改密码失败】旧密码错误: {user.account}")
             return ResponseService.error('原密码错误', status_code=400)
 
+        # 设置新密码
         user.set_password(new_password)
         db.session.commit()
 

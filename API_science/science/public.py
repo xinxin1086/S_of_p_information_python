@@ -1,3 +1,4 @@
+# 科普文章公开访问接口
 
 from flask import Blueprint, request
 from components import db
@@ -6,36 +7,47 @@ from components.response_service import ResponseService
 from components.models import User
 from datetime import datetime
 
+# 创建科普公开访问模块蓝图
 bp_science_public = Blueprint('science_public', __name__, url_prefix='/api/public/science')
 
+# 公开的科普文章列表查询（无需登录）
 @bp_science_public.route('/articles', methods=['GET'])
 def get_public_science_articles():
-    
+    """
+    获取公开发布的科普文章列表（无需登录）
+    """
     try:
+        # 获取查询参数
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 10))
         keyword = request.args.get('keyword', '').strip()
         author_account = request.args.get('author_account', '').strip()
 
+        # 构建查询
         query = ScienceArticle.query.filter_by(status='published')
 
+        # 关键词搜索
         if keyword:
             query = query.filter(
                 (ScienceArticle.title.like(f'%{keyword}%')) |
                 (ScienceArticle.content.like(f'%{keyword}%'))
             )
 
+        # 作者筛选
         if author_account:
             query = query.filter(ScienceArticle.author_account == author_account)
 
+        # 分页查询
         pagination = query.order_by(ScienceArticle.published_at.desc()).paginate(page=page, per_page=size)
         articles = pagination.items
         total = pagination.total
 
         result_list = []
         for article in articles:
+            # 获取作者基础信息
             author_info = {}
             if article.author_account:
+                # 尝试从用户表获取作者信息
                 author = User.query.filter_by(account=article.author_account, is_deleted=0).first()
                 if author:
                     author_info = {
@@ -44,6 +56,7 @@ def get_public_science_articles():
                         'role_cn': '普通用户'
                     }
                 else:
+                    # 尝试从管理员表获取
                     from components.models import Admin
                     admin = Admin.query.filter_by(account=article.author_account).first()
                     if admin:
@@ -79,17 +92,22 @@ def get_public_science_articles():
     except Exception as e:
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
+# 公开的科普文章详情查询（无需登录）
 @bp_science_public.route('/articles/<int:article_id>', methods=['GET'])
 def get_public_science_article_detail(article_id):
-    
+    """
+    获取公开发布的科普文章详情（无需登录）
+    """
     try:
         article = ScienceArticle.query.filter_by(id=article_id, status='published').first()
         if not article:
             return ResponseService.error('文章不存在或未发布', status_code=404)
 
+        # 增加浏览次数
         article.view_count += 1
         db.session.commit()
 
+        # 获取作者信息
         author_info = {}
         if article.author_account:
             author = User.query.filter_by(account=article.author_account, is_deleted=0).first()
@@ -109,6 +127,7 @@ def get_public_science_article_detail(article_id):
                         'role_cn': '管理员'
                     }
 
+        # 返回完整信息
         item = {
             'id': article.id,
             'title': article.title,
@@ -130,14 +149,19 @@ def get_public_science_article_detail(article_id):
         db.session.rollback()
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
+# 公开的科普文章统计信息（无需登录）
 @bp_science_public.route('/articles/statistics', methods=['GET'])
 def get_public_science_statistics():
-    
+    """
+    获取科普文章公开统计信息（无需登录）
+    """
     try:
         from sqlalchemy import func
 
+        # 基本统计（仅已发布文章）
         total_published = ScienceArticle.query.filter_by(status='published').count()
 
+        # 点赞和浏览统计
         published_stats = db.session.query(
             func.count(ScienceArticle.id).label('total_published'),
             func.sum(ScienceArticle.like_count).label('total_likes'),
@@ -146,6 +170,7 @@ def get_public_science_statistics():
             func.avg(ScienceArticle.view_count).label('avg_views')
         ).filter_by(status='published').first()
 
+        # 最近发布趋势（最近30天）
         thirty_days_ago = datetime.utcnow() - datetime.timedelta(days=30)
         recent_count = ScienceArticle.query.filter(
             ScienceArticle.status == 'published',

@@ -1,3 +1,4 @@
+# 论坛帖子公开访问接口
 
 from flask import Blueprint, request
 from components import db
@@ -6,34 +7,44 @@ from components.response_service import ResponseService
 from components.models import User
 from datetime import datetime
 
+# 创建论坛公开访问模块蓝图
 bp_forum_public = Blueprint('forum_public', __name__, url_prefix='/api/public/forum')
 
+# 公开的论坛帖子列表查询（无需登录）
 @bp_forum_public.route('/posts', methods=['GET'])
 def get_public_forum_posts():
-    
+    """
+    获取公开发布的论坛帖子列表（无需登录）
+    """
     try:
+        # 获取查询参数
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
         category = request.args.get('category', '').strip()
         keyword = request.args.get('keyword', '').strip()
 
+        # 构建查询
         query = ForumPost.query.filter_by(status='published')
 
+        # 分类筛选
         if category:
             query = query.filter(ForumPost.category == category)
 
+        # 关键词搜索
         if keyword:
             query = query.filter(
                 (ForumPost.title.like(f'%{keyword}%')) |
                 (ForumPost.content.like(f'%{keyword}%'))
             )
 
+        # 分页查询
         pagination = query.order_by(ForumPost.created_at.desc()).paginate(page=page, per_page=size)
         posts = pagination.items
         total = pagination.total
 
         result_list = []
         for post in posts:
+            # 获取作者基础信息
             author_info = {}
             if post.author_user_id:
                 author = User.query.filter_by(id=post.author_user_id, is_deleted=0).first()
@@ -70,17 +81,22 @@ def get_public_forum_posts():
     except Exception as e:
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
+# 公开的论坛帖子详情查询（无需登录）
 @bp_forum_public.route('/posts/<int:post_id>', methods=['GET'])
 def get_public_forum_post_detail(post_id):
-    
+    """
+    获取公开发布的论坛帖子详情（无需登录）
+    """
     try:
         post = ForumPost.query.filter_by(id=post_id, status='published').first()
         if not post:
             return ResponseService.error('帖子不存在或未发布', status_code=404)
 
+        # 增加浏览次数
         post.view_count = (post.view_count or 0) + 1
         db.session.commit()
 
+        # 获取作者信息
         author_info = {}
         if post.author_user_id:
             author = User.query.filter_by(id=post.author_user_id, is_deleted=0).first()
@@ -92,6 +108,7 @@ def get_public_forum_post_detail(post_id):
                     'role_cn': '普通用户'
                 }
 
+        # 返回完整信息
         item = {
             'id': post.id,
             'title': post.title,
@@ -112,17 +129,23 @@ def get_public_forum_post_detail(post_id):
         db.session.rollback()
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
+# 公开的论坛帖子楼层查询（无需登录）
 @bp_forum_public.route('/posts/<int:post_id>/floors', methods=['GET'])
 def get_public_forum_floors(post_id):
-    
+    """
+    获取论坛帖子的楼层列表（无需登录）
+    """
     try:
+        # 验证帖子存在且已发布
         post = ForumPost.query.filter_by(id=post_id, status='published').first()
         if not post:
             return ResponseService.error('帖子不存在或未发布', status_code=404)
 
+        # 获取分页参数
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
 
+        # 查询楼层
         pagination = ForumFloor.query.filter_by(
             post_id=post_id,
             status='published'
@@ -133,6 +156,7 @@ def get_public_forum_floors(post_id):
 
         floors_data = []
         for floor in floors:
+            # 获取楼层作者信息
             author_info = {}
             if floor.author_user_id:
                 author = User.query.filter_by(id=floor.author_user_id, is_deleted=0).first()
@@ -166,12 +190,16 @@ def get_public_forum_floors(post_id):
     except Exception as e:
         return ResponseService.error(f'查询失败：{str(e)}', status_code=500)
 
+# 公开的论坛帖子分类统计（无需登录）
 @bp_forum_public.route('/categories', methods=['GET'])
 def get_public_forum_categories():
-    
+    """
+    获取论坛帖子分类统计（无需登录）
+    """
     try:
         from sqlalchemy import func
 
+        # 获取各分类统计
         category_stats = db.session.query(
             ForumPost.category,
             func.count(ForumPost.id).label('post_count'),

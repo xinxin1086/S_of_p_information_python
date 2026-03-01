@@ -1,12 +1,19 @@
+# API_science/__init__.py
 
+"""
+科普模块初始化文件
+注册所有子模块的蓝图
+"""
 
 from .user import bp_science_user
 from .admin import bp_science_admin
 from .science import bp_science_category
 from .science.public import bp_science_public
 
+# 导入蓝图列表，便于主应用注册
 __all__ = ['bp_science_user', 'bp_science_admin', 'bp_science_category', 'bp_science_public']
 
+# 科普模块信息
 MODULE_INFO = {
     'name': 'Science Module',
     'version': '1.0.0',
@@ -18,17 +25,3 @@ MODULE_INFO = {
         'bp_science_public': '科普文章公开访问接口'
     }
 }
-
-
-def register_science_blueprints(app):
-    
-    app.register_blueprint(bp_science_user)
-    app.register_blueprint(bp_science_admin)
-    app.register_blueprint(bp_science_category)
-    app.register_blueprint(bp_science_public)
-
-    print("【API_science模块】所有蓝图注册完成")
-    print("  - 用户端科普操作: /api/science/user/*")
-    print("  - 管理员科普管理: /api/science/admin/*")
-    print("  - 科普业务公共接口: /api/science/category/*")
-    print("  - 科普文章公开访问: /api/public/science/*")

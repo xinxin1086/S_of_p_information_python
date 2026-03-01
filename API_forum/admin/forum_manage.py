@@ -1,3 +1,4 @@
+# API_forum 管理员论坛管理模块
 
 from flask import request, jsonify
 from datetime import datetime, timedelta
@@ -15,14 +16,14 @@ from ..common.utils import (
 
 
 def check_admin_permission(user):
-    
+    """检查管理员权限"""
     if not hasattr(user, 'role'):
         return False
     return user.role in ['ADMIN', 'SUPER_ADMIN']
 
 
 def post_to_dict(post, include_content=True, include_user_info=False):
-    
+    """将帖子对象转换为字典"""
     result = {
         'id': post.id,
         'title': post.title,
@@ -55,7 +56,7 @@ def post_to_dict(post, include_content=True, include_user_info=False):
 
 
 def floor_to_dict(floor, include_user_info=False):
-    
+    """将楼层对象转换为字典"""
     result = {
         'id': floor.id,
         'post_id': floor.post_id,
@@ -85,7 +86,7 @@ def floor_to_dict(floor, include_user_info=False):
 
 
 def reply_to_dict(reply, include_user_info=False):
-    
+    """将回复对象转换为字典"""
     result = {
         'id': reply.id,
         'floor_id': reply.floor_id,
@@ -117,15 +118,16 @@ def reply_to_dict(reply, include_user_info=False):
 @admin_bp.before_request
 @token_required
 def admin_permission_check(current_user):
-    
+    """管理员权限检查"""
     if not check_admin_permission(current_user):
         return ResponseService.error('需要管理员权限', status_code=403)
 
 
 @admin_bp.route('/posts', methods=['GET'])
 def get_all_posts():
-    
+    """获取所有帖子（管理员视角）"""
     try:
+        # 获取查询参数
         category = request.args.get('category', '').strip()
         status = request.args.get('status', '').strip()
         keyword = request.args.get('keyword', '').strip()
@@ -133,12 +135,15 @@ def get_all_posts():
         sort_by = request.args.get('sort', 'latest').strip()
         include_deleted = request.args.get('include_deleted', 'false').lower() == 'true'
 
+        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
+        # 构建查询
         query = ForumPost.query
 
+        # 应用筛选条件
         if category:
             query = query.filter(ForumPost.category == category)
         if status:
@@ -153,15 +158,19 @@ def get_all_posts():
         if author_id:
             query = query.filter(ForumPost.author_user_id == int(author_id))
 
+        # 执行查询
         posts = query.all()
 
+        # 排序
         sorted_posts = post_sorter.sort_posts(posts, sort_by)
 
+        # 手动分页
         start = (page - 1) * per_page
         end = start + per_page
         paginated_posts = sorted_posts[start:end]
         total = len(sorted_posts)
 
+        # 格式化响应
         posts_data = [post_to_dict(post, include_content=False, include_user_info=True) for post in paginated_posts]
 
         response_data = {
@@ -186,7 +195,7 @@ def get_all_posts():
 
 @admin_bp.route('/posts/<int:post_id>', methods=['GET'])
 def get_post_detail_admin(post_id):
-    
+    """获取帖子详情（管理员视角）"""
     try:
         post = ForumPost.query.get(post_id)
 
@@ -205,7 +214,7 @@ def get_post_detail_admin(post_id):
 
 @admin_bp.route('/posts/<int:post_id>/status', methods=['PUT'])
 def update_post_status(post_id):
-    
+    """更新帖子状态（审核、置顶等）"""
     try:
         post = ForumPost.query.get(post_id)
 
@@ -218,6 +227,7 @@ def update_post_status(post_id):
         if not status or status not in ['published', 'draft', 'deleted']:
             return ResponseService.error('无效的状态值', status_code=400)
 
+        # 更新状态
         old_status = post.status
         post.status = status
         post.updated_at = datetime.utcnow()
@@ -238,7 +248,7 @@ def update_post_status(post_id):
 
 @admin_bp.route('/posts/<int:post_id>/pin', methods=['PUT'])
 def pin_post(post_id):
-    
+    """置顶/取消置顶帖子"""
     try:
         post = ForumPost.query.get(post_id)
 
@@ -248,10 +258,13 @@ def pin_post(post_id):
         data = request.get_json()
         is_pinned = data.get('is_pinned', False)
 
+        # 这里需要数据库字段支持置顶功能，目前通过更新时间模拟
         if is_pinned:
+            # 置顶：将更新时间设为很早的时间，确保排在前面
             post.updated_at = datetime.now() - timedelta(days=365)
             message = '帖子置顶成功'
         else:
+            # 取消置顶：恢复正常更新时间
             post.updated_at = datetime.utcnow()
             message = '取消置顶成功'
 
@@ -272,13 +285,14 @@ def pin_post(post_id):
 
 @admin_bp.route('/posts/<int:post_id>', methods=['DELETE'])
 def delete_post_admin(post_id):
-    
+    """删除帖子（管理员硬删除）"""
     try:
         post = ForumPost.query.get(post_id)
 
         if not post:
             return ResponseService.error('帖子不存在', status_code=404)
 
+        # 硬删除帖子及其关联数据
         db.session.delete(post)
         db.session.commit()
 
@@ -294,17 +308,20 @@ def delete_post_admin(post_id):
 
 @admin_bp.route('/floors', methods=['GET'])
 def get_all_floors():
-    
+    """获取所有楼层（管理员视角）"""
     try:
+        # 获取查询参数
         post_id = request.args.get('post_id', '').strip()
         status = request.args.get('status', '').strip()
         keyword = request.args.get('keyword', '').strip()
         author_id = request.args.get('author_id', '').strip()
 
+        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
+        # 构建查询
         query = ForumFloor.query
 
         if post_id:
@@ -316,10 +333,12 @@ def get_all_floors():
         if author_id:
             query = query.filter(ForumFloor.author_user_id == int(author_id))
 
+        # 分页查询
         pagination = query.order_by(ForumFloor.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
+        # 格式化响应
         response_data = PaginationHelper.format_pagination_response(
             pagination,
             pagination.items,
@@ -338,13 +357,14 @@ def get_all_floors():
 
 @admin_bp.route('/floors/<int:floor_id>', methods=['DELETE'])
 def delete_floor_admin(floor_id):
-    
+    """删除楼层（管理员硬删除）"""
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
+        # 硬删除楼层及其关联数据
         db.session.delete(floor)
         db.session.commit()
 
@@ -360,17 +380,20 @@ def delete_floor_admin(floor_id):
 
 @admin_bp.route('/replies', methods=['GET'])
 def get_all_replies():
-    
+    """获取所有回复（管理员视角）"""
     try:
+        # 获取查询参数
         floor_id = request.args.get('floor_id', '').strip()
         status = request.args.get('status', '').strip()
         keyword = request.args.get('keyword', '').strip()
         author_id = request.args.get('author_id', '').strip()
 
+        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
+        # 构建查询
         query = ForumReply.query
 
         if floor_id:
@@ -382,10 +405,12 @@ def get_all_replies():
         if author_id:
             query = query.filter(ForumReply.author_user_id == int(author_id))
 
+        # 分页查询
         pagination = query.order_by(ForumReply.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
+        # 格式化响应
         response_data = PaginationHelper.format_pagination_response(
             pagination,
             pagination.items,
@@ -404,13 +429,14 @@ def get_all_replies():
 
 @admin_bp.route('/replies/<int:reply_id>', methods=['DELETE'])
 def delete_reply_admin(reply_id):
-    
+    """删除回复（管理员硬删除）"""
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
+        # 硬删除回复
         db.session.delete(reply)
         db.session.commit()
 
@@ -426,23 +452,27 @@ def delete_reply_admin(reply_id):
 
 @admin_bp.route('/stats', methods=['GET'])
 def get_forum_stats():
-    
+    """获取论坛统计信息（管理员视角）"""
     try:
         days = int(request.args.get('days', 7))
 
+        # 获取基础统计
         stats = ForumStatsHelper.get_post_stats(days)
 
+        # 添加更详细的统计信息
         total_users = User.query.filter_by(is_deleted=0).count()
         active_users = User.query.filter(
             User.is_deleted == 0,
             User.last_login >= datetime.now() - timedelta(days=days)
         ).count()
 
+        # 内容统计
         total_floors = ForumFloor.query.count()
         total_replies = ForumReply.query.count()
         total_likes = ForumLike.query.count()
         total_visits = ForumVisit.query.count()
 
+        # 时间范围内的统计
         time_threshold = datetime.now() - timedelta(days=days)
         recent_posts = ForumPost.query.filter(ForumPost.created_at >= time_threshold).count()
         recent_floors = ForumFloor.query.filter(ForumFloor.created_at >= time_threshold).count()
@@ -482,8 +512,9 @@ def get_forum_stats():
 
 @admin_bp.route('/categories/manage', methods=['GET'])
 def get_categories_stats():
-    
+    """获取分类统计信息"""
     try:
+        # 获取所有分类及其统计
         categories_stats = db.session.query(
             ForumPost.category,
             db.func.count(ForumPost.id).label('posts_count'),
@@ -517,10 +548,11 @@ def get_categories_stats():
 
 @admin_bp.route('/sensitive-words', methods=['GET'])
 def get_sensitive_words():
-    
+    """获取敏感词列表"""
     try:
         from ..common.utils import sensitive_filter
 
+        # 返回当前敏感词列表（实际项目中可能需要权限控制）
         return ResponseService.success(
             data={
                 'sensitive_words': sensitive_filter.sensitive_words,
@@ -536,7 +568,7 @@ def get_sensitive_words():
 
 @admin_bp.route('/sensitive-words', methods=['POST'])
 def add_sensitive_words():
-    
+    """添加敏感词"""
     try:
         from ..common.utils import sensitive_filter
 
@@ -546,6 +578,7 @@ def add_sensitive_words():
         if not isinstance(words, list) or not words:
             return ResponseService.error('敏感词列表不能为空', status_code=400)
 
+        # 添加新敏感词
         added_words = []
         for word in words:
             word = word.strip()
@@ -553,6 +586,7 @@ def add_sensitive_words():
                 sensitive_filter.sensitive_words.append(word)
                 added_words.append(word)
 
+        # 重新编译正则表达式
         sensitive_filter.pattern = __import__('re').compile(
             '|'.join(map(__import__('re').escape, sensitive_filter.sensitive_words)),
             __import__('re').IGNORECASE
@@ -572,11 +606,11 @@ def add_sensitive_words():
 
 @admin_bp.route('/bulk-operation', methods=['POST'])
 def bulk_operation():
-    
+    """批量操作（批量删除、状态修改等）"""
     try:
         data = request.get_json()
         operation = data.get('operation', '').strip()
-        target_type = data.get('target_type', '').strip()
+        target_type = data.get('target_type', '').strip()  # post, floor, reply
         target_ids = data.get('target_ids', [])
 
         if not operation or not target_type or not target_ids:

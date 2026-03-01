@@ -1,3 +1,5 @@
+# API_notice模块主初始化文件
+# 注册所有公告相关的Blueprint
 
 from flask import Blueprint
 import logging
@@ -6,10 +8,12 @@ from .admin import bp_notice_admin
 from .notice import bp_notice_category
 from .notice.public import bp_notice_public
 
+# 创建主Blueprint
 bp_notice_main = Blueprint('notice_main', __name__, url_prefix='/api/notice')
 
 logger = logging.getLogger(__name__)
 
+# 导出所有Blueprint
 __all__ = [
     'bp_notice_main',
     'bp_notice_user',
@@ -18,8 +22,14 @@ __all__ = [
     'bp_notice_public'
 ]
 
+# 注册函数
 def register_blueprints(app):
-    
+    """
+    注册所有公告相关的Blueprint到Flask应用
+
+    Args:
+        app: Flask应用实例
+    """
     app.register_blueprint(bp_notice_user)
     app.register_blueprint(bp_notice_admin)
     app.register_blueprint(bp_notice_category)

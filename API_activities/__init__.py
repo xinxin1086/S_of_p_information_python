@@ -1,10 +1,18 @@
+# API_activities 模块初始化文件
 
 from flask import Blueprint
 
+# 创建主蓝图，URL前缀为 /api/activities
 api_activities_bp = Blueprint('api_activities', __name__, url_prefix='/api/activities')
 
 def register_api_activities_blueprints(app):
-    
+    """
+    注册 API_activities 模块的所有蓝图
+
+    Args:
+        app: Flask应用实例
+    """
+    # 导入各子模块蓝图
     from .user import user_ops_bp
     from .admin import admin_manage_bp
     from .root import root_bp
@@ -12,12 +20,13 @@ def register_api_activities_blueprints(app):
     from .discussion import discussion_bp
     from .public import bp_activities_public
 
+    # 注册子模块蓝图到Flask应用
     app.register_blueprint(user_ops_bp)
     app.register_blueprint(admin_manage_bp)
     app.register_blueprint(root_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(discussion_bp)
-    app.register_blueprint(bp_activities_public)
+    app.register_blueprint(bp_activities_public)  # 注册公开访问模块
 
     print("【API_activities模块】所有蓝图注册完成")
     print("  - 用户操作模块: /api/activities/user/*")
@@ -26,6 +35,7 @@ def register_api_activities_blueprints(app):
     print("  - 讨论模块: /api/activities/discussion/*")
     print("  - 公开访问模块: /api/public/activities/*")
 
+# 路由映射信息（用于文档和测试）
 ROUTES_MAPPING = {
     'user_ops': {
         'module': 'user.user_ops',
@@ -108,11 +118,18 @@ ROUTES_MAPPING = {
 }
 
 def get_routes_info():
-    
+    """
+    获取所有路由信息（用于文档生成）
+
+    Returns:
+        dict: 路由信息映射
+    """
     return ROUTES_MAPPING
 
 def print_routes_info():
-    
+    """
+    打印所有路由信息（用于调试）
+    """
     print("\n=== API_activities 模块路由信息 ===")
     for module_name, info in ROUTES_MAPPING.items():
         print(f"\n【{module_name}】{info['description']}")
