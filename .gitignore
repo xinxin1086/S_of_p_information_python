@@ -215,7 +215,15 @@ tests/
 run.bat
 run.sh
 server.err
-.md
+
+# .gitignore 新增
+.env
+.env.*
+__pycache__/
+*.pyc
+venv/
+logs/
+# 其他原有忽略项...
 
 #不同环境密码配置不相同
 ./config.py
