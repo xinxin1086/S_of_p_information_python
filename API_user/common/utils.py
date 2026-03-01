@@ -1,4 +1,3 @@
-# API_user 公共工具函数
 
 import re
 from functools import wraps
@@ -6,27 +5,27 @@ from flask import request, jsonify
 from components.response_service import ResponseService
 
 class UserValidator:
-    """用户相关参数校验工具类"""
+    
 
     @staticmethod
     def validate_email(email):
-        """校验邮箱格式"""
+        
         if not email:
-            return True  # 邮箱为空时允许
+            return True
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(pattern, email) is not None
 
     @staticmethod
     def validate_phone(phone):
-        """校验手机号格式"""
+        
         if not phone:
-            return True  # 手机号为空时允许
+            return True
         pattern = r'^1[3-9]\d{9}$'
         return re.match(pattern, phone) is not None
 
     @staticmethod
     def validate_password(password):
-        """校验密码格式"""
+        
         if not password:
             return False, "密码不能为空"
         if len(password) < 6 or len(password) > 20:
@@ -35,7 +34,7 @@ class UserValidator:
 
     @staticmethod
     def validate_username(username):
-        """校验用户名格式"""
+        
         if not username or not username.strip():
             return False, "用户名不能为空"
         if len(username.strip()) < 2 or len(username.strip()) > 20:
@@ -43,37 +42,34 @@ class UserValidator:
         return True, "用户名格式正确"
 
 class UserPermissionChecker:
-    """用户权限检查工具类"""
+    
 
     @staticmethod
     def is_admin_user(current_user):
-        """检查当前用户是否为管理员"""
+        
         return hasattr(current_user, 'role') and current_user.role in ['ADMIN', 'SUPER_ADMIN']
 
     @staticmethod
     def is_super_admin(current_user):
-        """检查当前用户是否为超级管理员"""
+        
         return hasattr(current_user, 'role') and current_user.role == 'SUPER_ADMIN'
 
     @staticmethod
     def can_manage_user(current_user, target_user):
-        """检查当前用户是否可以管理目标用户"""
-        # 超级管理员可以管理所有用户
+        
         if UserPermissionChecker.is_super_admin(current_user):
             return True
 
-        # 普通管理员只能管理普通用户，不能管理其他管理员
         if UserPermissionChecker.is_admin_user(current_user):
             return not UserPermissionChecker.is_admin_user(target_user)
 
-        # 普通用户不能管理其他用户
         return False
 
 def admin_required(f):
-    """管理员权限装饰器"""
+    
     @wraps(f)
     def decorated(*args, **kwargs):
-        current_user = args[0]  # 假设第一个参数是 current_user
+        current_user = args[0]
 
         if not UserPermissionChecker.is_admin_user(current_user):
             return ResponseService.error('权限不足，需要管理员权限', status_code=403)
@@ -82,10 +78,10 @@ def admin_required(f):
     return decorated
 
 def super_admin_required(f):
-    """超级管理员权限装饰器"""
+    
     @wraps(f)
     def decorated(*args, **kwargs):
-        current_user = args[0]  # 假设第一个参数是 current_user
+        current_user = args[0]
 
         if not UserPermissionChecker.is_super_admin(current_user):
             return ResponseService.error('权限不足，需要超级管理员权限', status_code=403)
@@ -94,11 +90,11 @@ def super_admin_required(f):
     return decorated
 
 class UserDataProcessor:
-    """用户数据处理工具类"""
+    
 
     @staticmethod
     def format_user_info(user, include_sensitive=False):
-        """格式化用户信息"""
+        
         base_info = {
             'id': user.id,
             'username': user.username,
@@ -119,7 +115,7 @@ class UserDataProcessor:
 
     @staticmethod
     def clean_update_data(data, allowed_fields=None):
-        """清理更新数据，只保留允许的字段"""
+        
         if allowed_fields is None:
             allowed_fields = ['username', 'phone', 'email', 'avatar', 'password']
 
@@ -168,11 +164,10 @@ class UserQueryHelper:
         return None, None
 
 def validate_user_data(data, required_fields=None, optional_fields=None):
-    """通用用户数据验证函数"""
+    
     errors = []
     validator = UserValidator()
 
-    # 检查必填字段
     if required_fields:
         for field in required_fields:
             value = data.get(field)
@@ -191,7 +186,6 @@ def validate_user_data(data, required_fields=None, optional_fields=None):
                 if not is_valid:
                     errors.append(msg)
 
-    # 检查可选字段格式
     if optional_fields:
         for field in optional_fields:
             value = data.get(field)

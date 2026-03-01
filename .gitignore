@@ -210,3 +210,12 @@ __marimo__/
 docs/
 # 屏蔽整个 tests 文件夹
 tests/
+.idea
+.claude
+run.bat
+run.sh
+server.err
+.md
+
+#不同环境密码配置不相同
+./config.py

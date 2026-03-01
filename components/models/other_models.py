@@ -1,11 +1,9 @@
-# 其他相关模型
 
 from datetime import datetime
 from .base import db
 from .user_models import User
 
 
-# 附件模型（对应attachments表）
 class Attachment(db.Model):
     __tablename__ = 'attachments'
     __table_args__ = {'mysql_comment': '附件信息表：存储系统中的文件附件信息', 'comment': '附件信息表：存储系统中的文件附件信息'}
@@ -18,10 +16,8 @@ class Attachment(db.Model):
     usage_type = db.Column(db.Enum('avatar', 'cover', 'attachment'), nullable=False, comment='用途类型')
     created_at = db.Column(db.DateTime, default=datetime.now, comment='创建时间')
 
-    # 关联用户表
     uploader = db.relationship('User', backref='attachments')
 
-    # 动态字段信息
     @classmethod
     def get_fields_info(cls):
         return {

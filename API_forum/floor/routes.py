@@ -1,4 +1,3 @@
-# API_forum 楼层路由模块
 
 from flask import request, jsonify
 from datetime import datetime
@@ -13,7 +12,7 @@ from ..common.utils import (
 
 
 def floor_to_dict(floor, include_replies=False, replies_limit=3):
-    """将楼层对象转换为字典"""
+    
     result = {
         'id': floor.id,
         'post_id': floor.post_id,
@@ -28,7 +27,6 @@ def floor_to_dict(floor, include_replies=False, replies_limit=3):
     }
 
     if include_replies:
-        # 获取最近的回复
         recent_replies = ForumReply.query.filter_by(
             floor_id=floor.id,
             status='published'
@@ -42,26 +40,21 @@ def floor_to_dict(floor, include_replies=False, replies_limit=3):
 
 @floor_bp.route('/post/<int:post_id>', methods=['GET'])
 def get_floors_by_post(post_id):
-    """获取帖子的楼层列表"""
+    
     try:
-        # 验证帖子存在
         post = ForumPost.query.get(post_id)
         if not post:
             return ResponseService.error('帖子不存在', status_code=404)
 
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
-        # 获取是否包含回复的参数
         include_replies = request.args.get('include_replies', 'false').lower() == 'true'
         replies_limit = min(int(request.args.get('replies_limit', 3)), 10)
 
-        # 使用模型的内置方法获取楼层
         floors_data = ForumFloor.get_floors_by_post(post_id, page, per_page)
 
-        # 转换楼层数据
         floors_list = []
         for floor_data in floors_data['floors']:
             floor = floor_data['floor']
@@ -73,7 +66,6 @@ def get_floors_by_post(post_id):
 
             floors_list.append(floor_dict)
 
-        # 格式化分页信息
         pagination = floors_data['pagination']
         response_data = {
             'total': pagination.total,
@@ -98,20 +90,18 @@ def get_floors_by_post(post_id):
 
 @floor_bp.route('/<int:floor_id>', methods=['GET'])
 def get_floor_detail(floor_id):
-    """获取楼层详情"""
+    
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
-        # 获取是否包含回复的参数
         include_replies = request.args.get('include_replies', 'true').lower() == 'true'
 
         result = floor_to_dict(floor, include_replies=False)
 
         if include_replies:
-            # 获取该楼层的所有回复
             page = int(request.args.get('page', 1))
             per_page = min(int(request.args.get('size', 20)), 100)
 
@@ -141,9 +131,8 @@ def get_floor_detail(floor_id):
 @floor_bp.route('/post/<int:post_id>', methods=['POST'])
 @token_required
 def create_floor(current_user, post_id):
-    """创建楼层（回复帖子）"""
+    
     try:
-        # 验证帖子存在
         post = ForumPost.query.get(post_id)
         if not post:
             return ResponseService.error('帖子不存在', status_code=404)
@@ -157,15 +146,12 @@ def create_floor(current_user, post_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
-        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=5000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
-        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
 
-        # 创建楼层
         floor = ForumFloor.create_floor(
             post_id=post_id,
             user_id=current_user.id if hasattr(current_user, 'is_deleted') else current_user.id,
@@ -193,14 +179,13 @@ def create_floor(current_user, post_id):
 @floor_bp.route('/<int:floor_id>', methods=['PUT'])
 @token_required
 def update_floor(current_user, floor_id):
-    """更新楼层"""
+    
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
-        # 检查权限
         if not PermissionHelper.can_edit_floor(current_user, floor):
             return ResponseService.error('无权限修改此楼层', status_code=403)
 
@@ -210,15 +195,12 @@ def update_floor(current_user, floor_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
-        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=5000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
-        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
 
-        # 更新楼层
         floor.content = filtered_content
         floor.updated_at = datetime.utcnow()
         db.session.commit()
@@ -239,18 +221,16 @@ def update_floor(current_user, floor_id):
 @floor_bp.route('/<int:floor_id>', methods=['DELETE'])
 @token_required
 def delete_floor(current_user, floor_id):
-    """删除楼层（软删除，改为deleted状态）"""
+    
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
-        # 检查权限
         if not PermissionHelper.can_edit_floor(current_user, floor):
             return ResponseService.error('无权限删除此楼层', status_code=403)
 
-        # 删除楼层（会同步更新帖子计数）
         floor.delete_floor()
 
         print(f"【楼层删除成功】楼层ID: {floor_id}, 作者: {current_user.account}")
@@ -266,18 +246,16 @@ def delete_floor(current_user, floor_id):
 @floor_bp.route('/<int:floor_id>/like', methods=['POST'])
 @token_required
 def like_floor(current_user, floor_id):
-    """点赞楼层"""
+    
     try:
         from components.models.forum_models import ForumLike
 
-        # 验证楼层存在
         floor = ForumFloor.query.get(floor_id)
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
-        # 创建点赞记录
         like = ForumLike.create_like(
             user_id=user_id,
             target_type='floor',
@@ -301,13 +279,12 @@ def like_floor(current_user, floor_id):
 @floor_bp.route('/<int:floor_id>/like', methods=['DELETE'])
 @token_required
 def unlike_floor(current_user, floor_id):
-    """取消点赞楼层"""
+    
     try:
         from components.models.forum_models import ForumLike
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
-        # 取消点赞
         success = ForumLike.remove_like(
             user_id=user_id,
             target_type='floor',
@@ -330,14 +307,12 @@ def unlike_floor(current_user, floor_id):
 
 @floor_bp.route('/user/<int:user_id>', methods=['GET'])
 def get_floors_by_user(user_id):
-    """获取用户发布的楼层列表"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
-        # 查询用户发布的楼层
         query = ForumFloor.query.filter_by(
             author_user_id=user_id,
             status='published'
@@ -345,7 +320,6 @@ def get_floors_by_user(user_id):
 
         pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
-        # 格式化响应
         response_data = PaginationHelper.format_pagination_response(
             pagination,
             pagination.items,

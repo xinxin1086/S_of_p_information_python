@@ -1,6 +1,3 @@
-# 管理员公告管理接口
-# 包含：发布公告、编辑公告、置顶管理、推送管理、撤回公告等功能
-# 时间策略说明：所有时间均使用 UTC naive datetime（datetime.utcnow()），前端应传递 ISO 8601 格式（Z 后缀表示 UTC）
 
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
@@ -13,11 +10,9 @@ from components.models.notice_models import Notice, NoticeAttachment
 from components.models.user_models import Admin
 
 
-# 管理员权限装饰器
 def admin_required(f):
-    """管理员权限验证装饰器"""
+    
     def decorated_function(current_user, *args, **kwargs):
-        # 检查当前用户是否为管理员
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -30,7 +25,6 @@ def admin_required(f):
     return decorated_function
 
 
-# 创建管理员公告管理蓝图
 bp_notice_admin = Blueprint('notice_admin', __name__, url_prefix='/api/notice/admin')
 
 
@@ -38,20 +32,7 @@ bp_notice_admin = Blueprint('notice_admin', __name__, url_prefix='/api/notice/ad
 @token_required
 @admin_required
 def create_notice(current_user):
-    """
-    创建公告
-    需要管理员权限
-
-    请求参数：
-    {
-        "title": "公告标题",
-        "content": "公告内容",
-        "notice_type": "SYSTEM|ACTIVITY|GENERAL",
-        "expiration": "2024-12-31T23:59:59Z",  // 可选，到期时间
-        "is_top": false,  // 可选，是否置顶
-        "attachments": []  // 可选，附件列表
-    }
-    """
+    
     try:
         data = request.get_json()
         if not data:
@@ -61,7 +42,6 @@ def create_notice(current_user):
                 'data': None
             }), 400
 
-        # 验证必填字段
         title = data.get('title', '').strip()
         content = data.get('content', '').strip()
         notice_type = data.get('notice_type', '').strip()
@@ -87,7 +67,6 @@ def create_notice(current_user):
                 'data': None
             }), 400
 
-        # 获取当前管理员信息
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -96,12 +75,10 @@ def create_notice(current_user):
                 'data': None
             }), 404
 
-        # 解析到期时间
         expiration = None
         if data.get('expiration'):
             try:
                 expiration = datetime.fromisoformat(data['expiration'].replace('Z', '+00:00'))
-                # 转为 UTC naive，然后与 utcnow() 比较
                 if expiration.tzinfo:
                     expiration = expiration.replace(tzinfo=None)
                 if expiration <= datetime.utcnow():
@@ -117,7 +94,6 @@ def create_notice(current_user):
                     'data': None
                 }), 400
 
-        # 创建公告
         notice = Notice(
             release_title=title,
             release_notice=content,
@@ -125,22 +101,20 @@ def create_notice(current_user):
             expiration=expiration,
             author_user_id=current_admin.id,
             author_display=f"{current_admin.username}（管理员）",
-            status='APPROVED'  # 管理员创建的公告直接设为已发布状态
+            status='APPROVED'
         )
 
-        # 如果模型支持置顶功能
         if hasattr(notice, 'is_top'):
             notice.is_top = data.get('is_top', False)
 
         db.session.add(notice)
-        db.session.flush()  # 获取公告ID
+        db.session.flush()
 
-        # 处理附件（如果提供）
         attachments_data = data.get('attachments', [])
         if attachments_data:
             for attachment_data in attachments_data:
                 if not all(key in attachment_data for key in ['file_name', 'file_path', 'file_size', 'file_type']):
-                    continue  # 跳过无效的附件数据
+                    continue
 
                 attachment = NoticeAttachment(
                     notice_id=notice.id,
@@ -183,22 +157,7 @@ def create_notice(current_user):
 @token_required
 @admin_required
 def update_notice(current_user, notice_id):
-    """
-    更新公告
-    需要管理员权限
-
-    Path参数：
-    - notice_id: 公告ID
-
-    请求参数：
-    {
-        "title": "公告标题",  // 可选
-        "content": "公告内容",  // 可选
-        "notice_type": "SYSTEM|ACTIVITY|GENERAL",  // 可选
-        "expiration": "2024-12-31T23:59:59Z",  // 可选
-        "is_top": false  // 可选
-    }
-    """
+    
     try:
         data = request.get_json()
         if not data:
@@ -208,7 +167,6 @@ def update_notice(current_user, notice_id):
                 'data': None
             }), 400
 
-        # 获取公告
         notice = Notice.query.get(notice_id)
         if not notice:
             return jsonify({
@@ -217,7 +175,6 @@ def update_notice(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 获取当前管理员信息
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -226,7 +183,6 @@ def update_notice(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 权限校验
         can_manage, error_msg = NoticePermissionUtils.can_admin_manage_notice(
             admin_user_id=current_admin.id,
             notice=notice
@@ -239,7 +195,6 @@ def update_notice(current_user, notice_id):
                 'data': None
             }), 403
 
-        # 更新字段
         update_fields = []
 
         if 'title' in data:
@@ -279,7 +234,6 @@ def update_notice(current_user, notice_id):
             if data['expiration']:
                 try:
                     expiration = datetime.fromisoformat(data['expiration'].replace('Z', '+00:00'))
-                    # 转为 UTC naive
                     if expiration.tzinfo:
                         expiration = expiration.replace(tzinfo=None)
                     if expiration <= datetime.utcnow():
@@ -303,7 +257,6 @@ def update_notice(current_user, notice_id):
             notice.is_top = data['is_top']
             update_fields.append('is_top')
 
-        # 更新修改时间
         notice.update_time = datetime.utcnow()
 
         db.session.commit()
@@ -334,15 +287,8 @@ def update_notice(current_user, notice_id):
 @token_required
 @admin_required
 def delete_notice(current_user, notice_id):
-    """
-    删除公告（软删除，状态改为REJECTED）
-    需要管理员权限
-
-    Path参数：
-    - notice_id: 公告ID
-    """
+    
     try:
-        # 获取公告
         notice = Notice.query.get(notice_id)
         if not notice:
             return jsonify({
@@ -351,7 +297,6 @@ def delete_notice(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 获取当前管理员信息
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -360,7 +305,6 @@ def delete_notice(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 权限校验
         can_manage, error_msg = NoticePermissionUtils.can_admin_manage_notice(
             admin_user_id=current_admin.id,
             notice=notice
@@ -373,7 +317,6 @@ def delete_notice(current_user, notice_id):
                 'data': None
             }), 403
 
-        # 软删除：状态改为REJECTED
         notice.status = 'REJECTED'
         notice.update_time = datetime.utcnow()
 
@@ -404,23 +347,10 @@ def delete_notice(current_user, notice_id):
 @token_required
 @admin_required
 def get_admin_notice_list(current_user):
-    """
-    管理员获取公告列表（支持条件筛选）
-    需要管理员权限
-
-    Query参数：
-    - page: 页码（默认1）
-    - size: 页大小（默认20）
-    - status: 状态筛选（DRAFT/PENDING/APPROVED/REJECTED/EXPIRED）
-    - type: 类型筛选（SYSTEM/ACTIVITY/GENERAL）
-    - date_from: 开始日期（YYYY-MM-DD）
-    - date_to: 结束日期（YYYY-MM-DD）
-    - author: 作者筛选
-    """
+    
     try:
         logger.info(f"【管理员公告列表查询】管理员: {current_user.account}")
 
-        # 获取查询参数
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
         status_filter = request.args.get('status', '').strip() or None
@@ -429,10 +359,8 @@ def get_admin_notice_list(current_user):
         date_to = request.args.get('date_to', '').strip() or None
         author_filter = request.args.get('author', '').strip() or None
 
-        # 构建基础查询
         base_query = Notice.query
 
-        # 应用筛选条件
         filtered_query = NoticeQueryUtils.build_admin_filter_query(
             base_query=base_query,
             status_filter=status_filter,
@@ -442,7 +370,6 @@ def get_admin_notice_list(current_user):
             author_filter=author_filter
         )
 
-        # 排序：置顶优先，然后按发布时间倒序
         if hasattr(Notice, 'is_top'):
             filtered_query = filtered_query.order_by(
                 Notice.is_top.desc(),
@@ -451,15 +378,12 @@ def get_admin_notice_list(current_user):
         else:
             filtered_query = filtered_query.order_by(Notice.release_time.desc())
 
-        # 分页查询
         pagination = filtered_query.paginate(page=page, per_page=size, error_out=False)
         notices = pagination.items
         total = pagination.total
 
-        # 构建返回数据
         notice_list = []
         for notice in notices:
-            # 获取已读统计
             read_stats = NoticeUtils.get_notice_read_statistics(notice.id)
 
             notice_data = {
@@ -514,17 +438,10 @@ def get_admin_notice_list(current_user):
 @token_required
 @admin_required
 def get_admin_notice_detail(current_user, notice_id):
-    """
-    管理员获取公告详情（包含完整统计信息）
-    需要管理员权限
-
-    Path参数：
-    - notice_id: 公告ID
-    """
+    
     try:
         logger.info(f"【管理员公告详情查询】管理员: {current_user.account}, 公告ID: {notice_id}")
 
-        # 获取公告详情
         notice_detail = NoticeQueryUtils.get_notice_with_attachments(notice_id)
         if not notice_detail:
             return jsonify({
@@ -533,13 +450,10 @@ def get_admin_notice_detail(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 获取已读统计
         read_stats = NoticeUtils.get_notice_read_statistics(notice_id)
 
-        # 获取当前管理员信息
         current_admin = Admin.query.filter_by(account=current_user.account).first()
 
-        # 检查权限
         can_edit = False
         if current_admin and notice_detail['author_user_id'] == current_admin.id:
             can_edit = True
@@ -570,18 +484,7 @@ def get_admin_notice_detail(current_user, notice_id):
 @token_required
 @admin_required
 def toggle_notice_top(current_user, notice_id):
-    """
-    切换公告置顶状态
-    需要管理员权限
-
-    Path参数：
-    - notice_id: 公告ID
-
-    请求参数：
-    {
-        "is_top": true  // 是否置顶
-    }
-    """
+    
     try:
         data = request.get_json()
         if not data or 'is_top' not in data:
@@ -591,7 +494,6 @@ def toggle_notice_top(current_user, notice_id):
                 'data': None
             }), 400
 
-        # 获取公告
         notice = Notice.query.get(notice_id)
         if not notice:
             return jsonify({
@@ -600,7 +502,6 @@ def toggle_notice_top(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 检查模型是否支持置顶功能
         if not hasattr(notice, 'is_top'):
             return jsonify({
                 'success': False,
@@ -608,7 +509,6 @@ def toggle_notice_top(current_user, notice_id):
                 'data': None
             }), 400
 
-        # 获取当前管理员信息
         current_admin = Admin.query.filter_by(account=current_user.account).first()
         if not current_admin:
             return jsonify({
@@ -617,7 +517,6 @@ def toggle_notice_top(current_user, notice_id):
                 'data': None
             }), 404
 
-        # 权限校验
         can_manage, error_msg = NoticePermissionUtils.can_admin_manage_notice(
             admin_user_id=current_admin.id,
             notice=notice
@@ -630,7 +529,6 @@ def toggle_notice_top(current_user, notice_id):
                 'data': None
             }), 403
 
-        # 更新置顶状态
         old_top_status = notice.is_top
         notice.is_top = data['is_top']
         notice.update_time = datetime.utcnow()
@@ -665,28 +563,22 @@ def toggle_notice_top(current_user, notice_id):
 @token_required
 @admin_required
 def get_notice_statistics(current_user):
-    """
-    获取公告统计数据
-    需要管理员权限
-    """
+    
     try:
         logger.info(f"【管理员公告统计查询】管理员: {current_user.account}")
 
         from sqlalchemy import func
 
-        # 统计各状态公告数量
         status_stats = db.session.query(
             Notice.status,
             func.count(Notice.id)
         ).group_by(Notice.status).all()
 
-        # 统计各类型公告数量
         type_stats = db.session.query(
             Notice.notice_type,
             func.count(Notice.id)
         ).group_by(Notice.notice_type).all()
 
-        # 统计总公告数和活跃公告数
         total_count = Notice.query.count()
         active_count = Notice.query.filter(
             and_(
@@ -698,7 +590,6 @@ def get_notice_statistics(current_user):
             )
         ).count()
 
-        # 统计置顶公告数量（如果支持）
         top_count = 0
         if hasattr(Notice, 'is_top'):
             top_count = Notice.query.filter(
@@ -712,7 +603,6 @@ def get_notice_statistics(current_user):
                 )
             ).count()
 
-        # 统计过期公告数量
         expired_count = Notice.query.filter(
             and_(
                 Notice.expiration.isnot(None),
@@ -721,7 +611,6 @@ def get_notice_statistics(current_user):
             )
         ).count()
 
-        # 近期发布的公告数量（最近7天）
         recent_date = datetime.utcnow() - timedelta(days=7)
         recent_count = Notice.query.filter(
             Notice.release_time >= recent_date

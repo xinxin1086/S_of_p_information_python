@@ -174,10 +174,10 @@ Press CTRL+C to quit
 127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/public/user/statistics HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/user/user/info HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:15:34] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
-[2026-01-08 14:15:34,936] INFO in image_storage: ´´½¨Í¼Æ¬´æ´¢Ä¿Â¼£ºstatic/images
-[2026-01-08 14:15:34,937] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108141534-27cd230d.png
+[2026-01-08 14:15:34,936] INFO in image_storage: ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½æ´¢Ä¿Â¼ï¿½ï¿½static/images
+[2026-01-08 14:15:34,937] INFO in image_storage: Í¼Æ¬ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108141534-27cd230d.png
 127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/user/avatar HTTP/1.1" 200 -
-[2026-01-08 14:15:34,966] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108141534-27cd230d.png
+[2026-01-08 14:15:34,966] INFO in image_storage: Í¼Æ¬É¾ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108141534-27cd230d.png
 127.0.0.1 - - [08/Jan/2026 14:15:34] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:15:34] "POST /api/user/auth/register HTTP/1.1" 400 -
 127.0.0.1 - - [08/Jan/2026 14:15:42] "POST /api/user/auth/login HTTP/1.1" 200 -
@@ -216,9 +216,9 @@ Press CTRL+C to quit
 127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/public/user/statistics HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/user/user/info HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:16:33] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
-[2026-01-08 14:16:33,630] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108141633-f175f19a.png
+[2026-01-08 14:16:33,630] INFO in image_storage: Í¼Æ¬ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108141633-f175f19a.png
 127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/user/avatar HTTP/1.1" 200 -
-[2026-01-08 14:16:33,660] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108141633-f175f19a.png
+[2026-01-08 14:16:33,660] INFO in image_storage: Í¼Æ¬É¾ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108141633-f175f19a.png
 127.0.0.1 - - [08/Jan/2026 14:16:33] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/register HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 14:16:33] "POST /api/user/auth/register HTTP/1.1" 400 -
@@ -511,9 +511,9 @@ Press CTRL+C to quit
 127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/public/user/statistics HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/user/user/info HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 15:58:50] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
-[2026-01-08 15:58:50,802] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108155850-ed7344dc.png
+[2026-01-08 15:58:50,802] INFO in image_storage: Í¼Æ¬ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108155850-ed7344dc.png
 127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/user/avatar HTTP/1.1" 200 -
-[2026-01-08 15:58:50,816] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108155850-ed7344dc.png
+[2026-01-08 15:58:50,816] INFO in image_storage: Í¼Æ¬É¾ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108155850-ed7344dc.png
 127.0.0.1 - - [08/Jan/2026 15:58:50] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/auth/register HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 15:58:50] "POST /api/user/auth/register HTTP/1.1" 400 -
@@ -538,9 +538,9 @@ Press CTRL+C to quit
 127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/public/user/statistics HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/user/user/info HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 16:04:57] "GET /api/user/user/info?account=admin HTTP/1.1" 200 -
-[2026-01-08 16:04:57,261] INFO in image_storage: Í¼Æ¬±£´æ³É¹¦£ºstatic/images\20260108160457-2bb642d5.png
+[2026-01-08 16:04:57,261] INFO in image_storage: Í¼Æ¬ï¿½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108160457-2bb642d5.png
 127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/user/avatar HTTP/1.1" 200 -
-[2026-01-08 16:04:57,292] INFO in image_storage: Í¼Æ¬É¾³ý³É¹¦£ºstatic/images\20260108160457-2bb642d5.png
+[2026-01-08 16:04:57,292] INFO in image_storage: Í¼Æ¬É¾ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½static/images\20260108160457-2bb642d5.png
 127.0.0.1 - - [08/Jan/2026 16:04:57] "DELETE /api/user/user/avatar HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/register HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 16:04:57] "POST /api/user/auth/register HTTP/1.1" 400 -
@@ -673,7 +673,7 @@ Press CTRL+C to quit
 127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities/admin/activities HTTP/1.1" 500 -
 127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/user/auth/login HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities HTTP/1.1" 200 -
-¡¾ÁîÅÆÑéÖ¤Ê§°Ü¡¿È±ÉÙÁîÅÆ
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤Ê§ï¿½Ü¡ï¿½È±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 127.0.0.1 - - [08/Jan/2026 21:03:34] "POST /api/activities/booking/activities/3/book HTTP/1.1" 401 -
 127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/public/activities/activities HTTP/1.1" 200 -
 127.0.0.1 - - [08/Jan/2026 21:03:34] "GET /api/activities/list HTTP/1.1" 404 -

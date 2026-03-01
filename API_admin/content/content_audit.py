@@ -1,4 +1,3 @@
-# 内容审核管理接口模块
 
 from flask import Blueprint, request, jsonify, Response
 from components import db
@@ -6,24 +5,18 @@ from API_admin.common.utils import super_admin_required, admin_required, log_adm
 from datetime import datetime
 import json
 
-# 创建内容审核蓝图
 bp_admin_content = Blueprint('admin_content', __name__, url_prefix='/api/admin/content')
 
-# 跨模块待审核内容查询接口
 @bp_admin_content.route('/pending/all', methods=['GET'])
 @admin_required
 def get_all_pending_content(current_user):
-    """
-    获取所有模块的待审核内容
-    支持分页和模块筛选
-    """
+    
     try:
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
-        module = request.args.get('module', '').strip()  # science/activity/forum
+        module = request.args.get('module', '').strip()
         status = request.args.get('status', 'pending').strip()
 
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -33,7 +26,6 @@ def get_all_pending_content(current_user):
 
         results = {}
 
-        # 科普文章待审核内容
         if module in ['', 'science']:
             from components.models import ScienceArticle
             science_query = ScienceArticle.query.filter_by(status=status)
@@ -58,7 +50,6 @@ def get_all_pending_content(current_user):
                 ]
             }
 
-        # 活动待审核内容
         if module in ['', 'activity']:
             from components.models import Activity
             activity_query = Activity.query.filter_by(status=status)
@@ -84,7 +75,6 @@ def get_all_pending_content(current_user):
                 ]
             }
 
-        # 论坛讨论待审核内容
         if module in ['', 'forum']:
             from components.models import ActivityDiscuss
             discuss_query = ActivityDiscuss.query.filter_by(status=status)
@@ -110,7 +100,6 @@ def get_all_pending_content(current_user):
                 ]
             }
 
-        # 统计信息
         stats = get_cross_module_pending_content()
         results['summary'] = stats
 
@@ -143,18 +132,14 @@ def get_all_pending_content(current_user):
             'data': None
         }), 500
 
-# 批量审核接口
 @bp_admin_content.route('/batch-review', methods=['POST'])
 @admin_required
 def batch_review_content(current_user):
-    """
-    批量审核内容
-    支持批量通过、拒绝、退回修改
-    """
+    
     try:
         data = request.get_json()
-        action = data.get('action')  # approve/reject/request_changes
-        content_list = data.get('content_list', [])  # [{'module': 'science', 'id': 1, 'reason': '...'}]
+        action = data.get('action')
+        content_list = data.get('content_list', [])
         review_comment = data.get('review_comment', '')
 
         if not content_list:
@@ -164,7 +149,6 @@ def batch_review_content(current_user):
                 'data': None
             }), 400
 
-        # 记录批量审核操作日志
         log_admin_operation(
             current_user,
             'UPDATE',
@@ -180,7 +164,6 @@ def batch_review_content(current_user):
         error_count = 0
         errors = []
 
-        # 根据不同模块执行审核操作
         for content_item in content_list:
             try:
                 module = content_item.get('module')
@@ -252,7 +235,6 @@ def batch_review_content(current_user):
                 errors.append(f'处理内容ID {content_item.get("id")} 时出错: {str(e)}')
                 error_count += 1
 
-        # 提交事务
         if success_count > 0:
             try:
                 db.session.commit()
@@ -284,16 +266,11 @@ def batch_review_content(current_user):
             'data': None
         }), 500
 
-# 内容详情查看接口
 @bp_admin_content.route('/detail/<module>/<int:content_id>', methods=['GET'])
 @admin_required
 def get_content_detail(current_user, module, content_id):
-    """
-    获取内容详情
-    支持科普、活动、论坛内容查看
-    """
+    
     try:
-        # 记录查看操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -411,23 +388,18 @@ def get_content_detail(current_user, module, content_id):
             'data': None
         }), 500
 
-# 内容导出接口
 @bp_admin_content.route('/export', methods=['POST'])
 @admin_required
 def export_content_data(current_user):
-    """
-    导出内容数据
-    支持按模块、状态、时间范围筛选导出
-    """
+    
     try:
         data = request.get_json()
-        modules = data.get('modules', ['science', 'activity', 'forum'])  # 要导出的模块
-        status = data.get('status', '')  # 状态筛选
-        start_date = data.get('start_date', '')  # 开始日期
-        end_date = data.get('end_date', '')  # 结束日期
-        export_format = data.get('format', 'csv')  # 导出格式 csv/json
+        modules = data.get('modules', ['science', 'activity', 'forum'])
+        status = data.get('status', '')
+        start_date = data.get('start_date', '')
+        end_date = data.get('end_date', '')
+        export_format = data.get('format', 'csv')
 
-        # 记录导出操作日志
         log_admin_operation(
             current_user,
             'EXPORT',
@@ -443,7 +415,6 @@ def export_content_data(current_user):
 
         export_data = []
 
-        # 科普文章数据
         if 'science' in modules:
             from components.models import ScienceArticle
             query = ScienceArticle.query
@@ -470,7 +441,6 @@ def export_content_data(current_user):
                     '更新时间': article.updated_at.strftime('%Y-%m-%d %H:%M:%S') if article.updated_at else ''
                 })
 
-        # 活动数据
         if 'activity' in modules:
             from components.models import Activity
             query = Activity.query
@@ -498,7 +468,6 @@ def export_content_data(current_user):
                     '更新时间': activity.updated_at.strftime('%Y-%m-%d %H:%M:%S') if activity.updated_at else ''
                 })
 
-        # 论坛讨论数据
         if 'forum' in modules:
             from components.models import ActivityDiscuss
             query = ActivityDiscuss.query
@@ -525,15 +494,12 @@ def export_content_data(current_user):
                     '更新时间': discussion.updated_at.strftime('%Y-%m-%d %H:%M:%S') if discussion.updated_at else ''
                 })
 
-        # 生成文件名
         timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
         filename = f"content_export_{timestamp}.{export_format}"
 
         if export_format == 'csv':
-            # CSV导出
             headers = ['模块', 'ID', '标题', '作者/组织者', '状态', '分类/类型', '数据', '时间']
 
-            # 转换数据格式
             csv_data = []
             for item in export_data:
                 if item['模块'] == '科普文章':
@@ -555,7 +521,6 @@ def export_content_data(current_user):
             return export_to_csv(csv_data, filename, headers)
 
         elif export_format == 'json':
-            # JSON导出
             response = Response(
                 json.dumps(export_data, ensure_ascii=False, indent=2),
                 mimetype='application/json',
@@ -578,22 +543,17 @@ def export_content_data(current_user):
             'data': None
         }), 500
 
-# 批量更新用户显示信息接口
 @bp_admin_content.route('/update-user-displays', methods=['POST'])
 @super_admin_required
 def update_user_displays(current_user):
-    """
-    批量更新已删除用户的显示信息为"用户已注销"
-    """
+    
     try:
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'UPDATE',
             'user_display_info'
         )
 
-        # 执行批量更新
         result = batch_update_user_display()
 
         if result['success']:
@@ -621,15 +581,11 @@ def update_user_displays(current_user):
             'data': None
         }), 500
 
-# 内容统计接口
 @bp_admin_content.route('/statistics', methods=['GET'])
 @admin_required
 def get_content_statistics(current_user):
-    """
-    获取内容管理统计数据
-    """
+    
     try:
-        # 记录查看统计日志
         log_admin_operation(current_user, 'VIEW', 'content_statistics')
 
         from components.models import ScienceArticle, Activity, ActivityDiscuss
@@ -637,18 +593,7 @@ def get_content_statistics(current_user):
 
         stats = {}
 
-        # 科普文章统计
-        article_stats = db.session.execute(text("""
-            SELECT
-                COUNT(*) as total,
-                SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published,
-                SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as draft,
-                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected,
-                SUM(view_count) as total_views,
-                SUM(like_count) as total_likes
-            FROM science_articles
-        """)).fetchone()
+        article_stats = db.session.execute(text()).fetchone()
 
         stats['science_articles'] = {
             'total': article_stats.total or 0,
@@ -660,18 +605,7 @@ def get_content_statistics(current_user):
             'total_likes': article_stats.total_likes or 0
         }
 
-        # 活动统计
-        activity_stats = db.session.execute(text("""
-            SELECT
-                COUNT(*) as total,
-                SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published,
-                SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as draft,
-                SUM(CASE WHEN status = 'ongoing' THEN 1 ELSE 0 END) as ongoing,
-                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
-                SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
-                SUM(current_participants) as total_participants
-            FROM activities
-        """)).fetchone()
+        activity_stats = db.session.execute(text()).fetchone()
 
         stats['activities'] = {
             'total': activity_stats.total or 0,
@@ -683,17 +617,7 @@ def get_content_statistics(current_user):
             'total_participants': activity_stats.total_participants or 0
         }
 
-        # 论坛讨论统计
-        forum_stats = db.session.execute(text("""
-            SELECT
-                COUNT(*) as total,
-                SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
-                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected,
-                SUM(view_count) as total_views,
-                SUM(like_count) as total_likes
-            FROM activity_discuss
-        """)).fetchone()
+        forum_stats = db.session.execute(text()).fetchone()
 
         stats['forum_discussions'] = {
             'total': forum_stats.total or 0,
@@ -704,7 +628,6 @@ def get_content_statistics(current_user):
             'total_likes': forum_stats.total_likes or 0
         }
 
-        # 总体统计
         stats['summary'] = {
             'total_content': (
                 stats['science_articles']['total'] +
@@ -713,7 +636,7 @@ def get_content_statistics(current_user):
             ),
             'pending_review': (
                 stats['science_articles']['pending'] +
-                stats['activities']['published'] +  # 假设发布的活动需要审核
+                stats['activities']['published'] +
                 stats['forum_discussions']['pending']
             ),
             'total_views': (

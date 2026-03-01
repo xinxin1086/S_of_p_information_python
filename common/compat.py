@@ -10,10 +10,7 @@ compat_bp = Blueprint('compat', __name__, url_prefix='/api')
 @compat_bp.route('/activities/my-activities', methods=['GET'])
 @token_required
 def alias_get_my_activities(current_user):
-    """
-    兼容旧前端路径：/api/activities/my-activities
-    直接返回用户创建或参与的活动（与 /api/activities/user/my-activities 功能一致）
-    """
+    
     try:
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
@@ -87,7 +84,6 @@ def alias_get_my_activities(current_user):
 
         result_list.sort(key=lambda x: x.get('updated_at', ''), reverse=True)
 
-        # 手动分页
         total = len(result_list)
         start = (page - 1) * size
         end = start + size
@@ -107,13 +103,9 @@ def alias_get_my_activities(current_user):
 @compat_bp.route('/upload/images', methods=['POST'])
 @token_required
 def alias_upload_images(current_user):
-    """
-    兼容旧前端路径：/api/upload/images
-    支持多图上传，表单字段名可为 images (多个) 或 image (单个)
-    """
+    
     try:
         files = request.files.getlist('images') or []
-        # 如果没有 images，尝试单文件字段 image
         if not files:
             single = request.files.get('image')
             if single:
@@ -127,13 +119,11 @@ def alias_upload_images(current_user):
         for f in files:
             save_result = storage.save_image(f)
             if save_result.get('status') != 'success':
-                # 回滚已保存的文件（尝试删除）
                 filename = save_result.get('filename')
                 if filename:
                     storage.delete_image(filename)
                 return ResponseService.error(f'上传失败：{save_result.get("message")}', status_code=400)
 
-            # 创建附件记录
             attachment = Attachment(
                 uploader_account=current_user.account,
                 file_name=save_result.get('filename'),

@@ -1,4 +1,3 @@
-# API_forum 用户操作模块
 
 from flask import request, jsonify
 from datetime import datetime, timedelta
@@ -13,7 +12,7 @@ from ..common.utils import (
 
 
 def post_to_dict(post, include_content=True):
-    """将帖子对象转换为字典"""
+    
     result = {
         'id': post.id,
         'title': post.title,
@@ -34,7 +33,7 @@ def post_to_dict(post, include_content=True):
 
 
 def floor_to_dict(floor):
-    """将楼层对象转换为字典"""
+    
     return {
         'id': floor.id,
         'post_id': floor.post_id,
@@ -50,7 +49,7 @@ def floor_to_dict(floor):
 
 
 def reply_to_dict(reply):
-    """将回复对象转换为字典"""
+    
     return {
         'id': reply.id,
         'floor_id': reply.floor_id,
@@ -68,9 +67,8 @@ def reply_to_dict(reply):
 @user_bp.route('/posts', methods=['GET'])
 @token_required
 def get_my_posts(current_user):
-    """获取当前用户发布的帖子列表"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
@@ -79,31 +77,25 @@ def get_my_posts(current_user):
         keyword = request.args.get('keyword', '').strip()
         category = request.args.get('category', '').strip()
 
-        # 构建查询
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         query = ForumPost.query.filter_by(author_user_id=user_id)
 
-        # 状态筛选
         if status:
             query = query.filter(ForumPost.status == status)
 
-        # 分类筛选
         if category:
             query = query.filter(ForumPost.category == category)
 
-        # 关键词搜索
         if keyword:
             query = query.filter(
                 (ForumPost.title.like(f'%{keyword}%')) |
                 (ForumPost.content.like(f'%{keyword}%'))
             )
 
-        # 分页查询（按更新时间倒序）
         pagination = query.order_by(ForumPost.updated_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        # 格式化响应
         response_data = PaginationHelper.format_pagination_response(
             pagination,
             pagination.items,
@@ -123,34 +115,28 @@ def get_my_posts(current_user):
 @user_bp.route('/floors', methods=['GET'])
 @token_required
 def get_my_floors(current_user):
-    """获取当前用户发布的楼层列表"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
         keyword = request.args.get('keyword', '').strip()
 
-        # 构建查询
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         query = ForumFloor.query.filter_by(author_user_id=user_id, status='published')
 
-        # 关键词搜索
         if keyword:
             query = query.filter(ForumFloor.content.like(f'%{keyword}%'))
 
-        # 分页查询（按创建时间倒序）
         pagination = query.order_by(ForumFloor.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        # 获取帖子信息
         floors_data = []
         for floor in pagination.items:
             floor_dict = floor_to_dict(floor)
 
-            # 获取帖子信息
             post = ForumPost.query.get(floor.post_id)
             if post:
                 floor_dict['post_title'] = post.title
@@ -158,7 +144,6 @@ def get_my_floors(current_user):
 
             floors_data.append(floor_dict)
 
-        # 格式化响应
         response_data = {
             'total': pagination.total,
             'page': pagination.page,
@@ -182,39 +167,32 @@ def get_my_floors(current_user):
 @user_bp.route('/replies', methods=['GET'])
 @token_required
 def get_my_replies(current_user):
-    """获取当前用户发布的回复列表"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
         keyword = request.args.get('keyword', '').strip()
 
-        # 构建查询
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         query = ForumReply.query.filter_by(author_user_id=user_id, status='published')
 
-        # 关键词搜索
         if keyword:
             query = query.filter(ForumReply.content.like(f'%{keyword}%'))
 
-        # 分页查询（按创建时间倒序）
         pagination = query.order_by(ForumReply.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        # 获取楼层和帖子信息
         replies_data = []
         for reply in pagination.items:
             reply_dict = reply_to_dict(reply)
 
-            # 获取楼层信息
             floor = ForumFloor.query.get(reply.floor_id)
             if floor:
                 reply_dict['floor_number'] = floor.floor_number
 
-                # 获取帖子信息
                 post = ForumPost.query.get(floor.post_id)
                 if post:
                     reply_dict['post_title'] = post.title
@@ -222,7 +200,6 @@ def get_my_replies(current_user):
 
             replies_data.append(reply_dict)
 
-        # 格式化响应
         response_data = {
             'total': pagination.total,
             'page': pagination.page,
@@ -246,11 +223,10 @@ def get_my_replies(current_user):
 @user_bp.route('/posts', methods=['POST'])
 @token_required
 def create_post(current_user):
-    """创建论坛帖子"""
+    
     try:
         data = request.get_json()
 
-        # 验证必填字段
         if not data or not data.get('title', '').strip():
             return ResponseService.error('标题不能为空', status_code=400)
         if not data.get('content', '').strip():
@@ -261,7 +237,6 @@ def create_post(current_user):
         category = data.get('category', 'default').strip()
         status = data.get('status', 'published').strip()
 
-        # 验证内容
         title_validation = validate_content(title, min_length=1, max_length=200)
         if not title_validation['valid']:
             return ResponseService.error(title_validation['message'], status_code=400)
@@ -270,11 +245,9 @@ def create_post(current_user):
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
-        # 敏感词过滤
         filtered_title = sensitive_filter.filter_content(title)
         filtered_content = sensitive_filter.filter_content(content)
 
-        # 创建帖子
         post = ForumPost(
             title=filtered_title,
             content=filtered_content,
@@ -304,21 +277,19 @@ def create_post(current_user):
 @user_bp.route('/posts/<int:post_id>', methods=['PUT'])
 @token_required
 def update_my_post(current_user, post_id):
-    """更新当前用户的帖子"""
+    
     try:
         post = ForumPost.query.get(post_id)
 
         if not post:
             return ResponseService.error('帖子不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if post.author_user_id != user_id:
             return ResponseService.error('无权限修改此帖子', status_code=403)
 
         data = request.get_json()
 
-        # 更新字段
         if 'title' in data:
             title = data['title'].strip()
             title_validation = validate_content(title, min_length=1, max_length=200)
@@ -358,14 +329,13 @@ def update_my_post(current_user, post_id):
 @user_bp.route('/floors/<int:floor_id>', methods=['PUT'])
 @token_required
 def update_my_floor(current_user, floor_id):
-    """更新当前用户的楼层"""
+    
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if floor.author_user_id != user_id:
             return ResponseService.error('无权限修改此楼层', status_code=403)
@@ -376,15 +346,12 @@ def update_my_floor(current_user, floor_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
-        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=5000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
-        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
 
-        # 更新楼层
         floor.content = filtered_content
         floor.updated_at = datetime.utcnow()
         db.session.commit()
@@ -405,14 +372,13 @@ def update_my_floor(current_user, floor_id):
 @user_bp.route('/replies/<int:reply_id>', methods=['PUT'])
 @token_required
 def update_my_reply(current_user, reply_id):
-    """更新当前用户的回复"""
+    
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if reply.author_user_id != user_id:
             return ResponseService.error('无权限修改此回复', status_code=403)
@@ -423,15 +389,12 @@ def update_my_reply(current_user, reply_id):
         if not content:
             return ResponseService.error('回复内容不能为空', status_code=400)
 
-        # 验证内容
         content_validation = validate_content(content, min_length=1, max_length=2000)
         if not content_validation['valid']:
             return ResponseService.error(content_validation['message'], status_code=400)
 
-        # 敏感词过滤
         filtered_content = sensitive_filter.filter_content(content)
 
-        # 更新回复
         reply.content = filtered_content
         reply.updated_at = datetime.utcnow()
         db.session.commit()
@@ -452,19 +415,17 @@ def update_my_reply(current_user, reply_id):
 @user_bp.route('/posts/<int:post_id>', methods=['DELETE'])
 @token_required
 def delete_my_post(current_user, post_id):
-    """删除当前用户的帖子"""
+    
     try:
         post = ForumPost.query.get(post_id)
 
         if not post:
             return ResponseService.error('帖子不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if post.author_user_id != user_id:
             return ResponseService.error('无权限删除此帖子', status_code=403)
 
-        # 软删除
         post.status = 'deleted'
         post.updated_at = datetime.utcnow()
         db.session.commit()
@@ -482,19 +443,17 @@ def delete_my_post(current_user, post_id):
 @user_bp.route('/floors/<int:floor_id>', methods=['DELETE'])
 @token_required
 def delete_my_floor(current_user, floor_id):
-    """删除当前用户的楼层"""
+    
     try:
         floor = ForumFloor.query.get(floor_id)
 
         if not floor:
             return ResponseService.error('楼层不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if floor.author_user_id != user_id:
             return ResponseService.error('无权限删除此楼层', status_code=403)
 
-        # 删除楼层
         floor.delete_floor()
 
         print(f"【用户楼层删除成功】楼层ID: {floor_id}, 作者: {current_user.account}")
@@ -510,19 +469,17 @@ def delete_my_floor(current_user, floor_id):
 @user_bp.route('/replies/<int:reply_id>', methods=['DELETE'])
 @token_required
 def delete_my_reply(current_user, reply_id):
-    """删除当前用户的回复"""
+    
     try:
         reply = ForumReply.query.get(reply_id)
 
         if not reply:
             return ResponseService.error('回复不存在', status_code=404)
 
-        # 检查权限
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         if reply.author_user_id != user_id:
             return ResponseService.error('无权限删除此回复', status_code=403)
 
-        # 删除回复
         reply.delete_reply()
 
         print(f"【用户回复删除成功】回复ID: {reply_id}, 作者: {current_user.account}")
@@ -538,28 +495,24 @@ def delete_my_reply(current_user, reply_id):
 @user_bp.route('/likes', methods=['GET'])
 @token_required
 def get_my_likes(current_user):
-    """获取当前用户的点赞列表"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
-        target_type = request.args.get('type', '').strip()  # post, floor, reply
+        target_type = request.args.get('type', '').strip()
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
         query = ForumLike.query.filter_by(user_id=user_id)
 
-        # 按目标类型筛选
         if target_type:
             query = query.filter_by(target_type=target_type)
 
-        # 分页查询
         pagination = query.order_by(ForumLike.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
 
-        # 获取详细信息
         likes_data = []
         for like in pagination.items:
             like_dict = {
@@ -569,7 +522,6 @@ def get_my_likes(current_user):
                 'created_at': like.created_at.isoformat() if like.created_at else None
             }
 
-            # 根据目标类型获取详细信息
             if like.target_type == 'post' and like.post_id:
                 post = ForumPost.query.get(like.post_id)
                 if post:
@@ -601,7 +553,6 @@ def get_my_likes(current_user):
 
             likes_data.append(like_dict)
 
-        # 格式化响应
         response_data = {
             'total': pagination.total,
             'page': pagination.page,
@@ -625,11 +576,10 @@ def get_my_likes(current_user):
 @user_bp.route('/stats', methods=['GET'])
 @token_required
 def get_my_stats(current_user):
-    """获取当前用户的论坛统计信息"""
+    
     try:
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
-        # 获取基础统计
         basic_stats = {
             'posts_count': ForumPost.query.filter_by(author_user_id=user_id).count(),
             'floors_count': ForumFloor.query.filter_by(author_user_id=user_id).count(),
@@ -637,7 +587,6 @@ def get_my_stats(current_user):
             'likes_given': ForumLike.query.filter_by(user_id=user_id).count()
         }
 
-        # 获取收到的点赞数
         likes_received = 0
         likes_received += db.session.query(db.func.sum(ForumPost.like_count)).filter_by(author_user_id=user_id).scalar() or 0
         likes_received += db.session.query(db.func.sum(ForumFloor.like_count)).filter_by(author_user_id=user_id).scalar() or 0
@@ -645,10 +594,8 @@ def get_my_stats(current_user):
 
         basic_stats['likes_received'] = int(likes_received)
 
-        # 获取最近30天的参与统计
         recent_stats = ForumStatsHelper.get_user_participation_stats(user_id, days=30)
 
-        # 获取最近的帖子
         recent_posts = ForumPost.query.filter_by(author_user_id=user_id).order_by(
             ForumPost.created_at.desc()
         ).limit(5).all()
@@ -674,21 +621,18 @@ def get_my_stats(current_user):
 @user_bp.route('/visits', methods=['GET'])
 @token_required
 def get_my_visits(current_user):
-    """获取当前用户的浏览记录"""
+    
     try:
-        # 获取分页参数
         pagination_params = PaginationHelper.get_pagination_params()
         page = pagination_params['page']
         per_page = pagination_params['per_page']
 
         user_id = current_user.id if hasattr(current_user, 'is_deleted') else current_user.id
 
-        # 查询浏览记录
         pagination = ForumVisit.query.filter_by(user_id=user_id).order_by(
             ForumVisit.last_visit_at.desc()
         ).paginate(page=page, per_page=per_page, error_out=False)
 
-        # 获取帖子信息
         visits_data = []
         for visit in pagination.items:
             post = ForumPost.query.get(visit.post_id)
@@ -704,7 +648,6 @@ def get_my_visits(current_user):
                 }
                 visits_data.append(visit_dict)
 
-        # 格式化响应
         response_data = {
             'total': pagination.total,
             'page': pagination.page,

@@ -1,16 +1,14 @@
-# ./components/token_required.py
 
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from flask import request, jsonify
 from config import Config
-from components.models import Admin ,User  # 引用公共模型
+from components.models import Admin ,User
 import logging
 
 logger = logging.getLogger(__name__)
 
-# JWT验证装饰器（管理员和用户模块共享）
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -19,7 +17,6 @@ def token_required(f):
             logger.debug("------------")
             auth_header = request.headers['Authorization']
             if auth_header.startswith('Bearer '):
-                # 使用repr以避免控制台编码引起的UnicodeEncodeError
                 try:
                     logger.debug("【原始Authorization头】%s", repr(auth_header))
                 except Exception:
@@ -46,14 +43,12 @@ def token_required(f):
                 algorithms=['HS256']
             )
             logger.debug("【令牌解码成功】payload: %s", repr(payload))
-            # 根据角色查询对应的用户表
             current_user = None
             if payload.get('role') == 'admin':
                 current_user = Admin.query.get(payload['user_id'])
             elif payload.get('role') == 'user':
                 current_user = User.query.get(payload['user_id'])
             else:
-                # 兼容旧逻辑，按顺序查找
                 current_user = Admin.query.get(payload['user_id'])
                 if not current_user:
                     current_user = User.query.get(payload['user_id'])

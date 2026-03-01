@@ -1,4 +1,3 @@
-# 统计分析接口模块
 
 from flask import Blueprint, request, jsonify, Response
 from components import db
@@ -7,24 +6,18 @@ from datetime import datetime, timedelta
 from sqlalchemy import text
 import json
 
-# 创建统计分析蓝图
 bp_admin_stats = Blueprint('admin_stats', __name__, url_prefix='/api/admin/statistics')
 
-# 用户增长统计接口
 @bp_admin_stats.route('/user-growth', methods=['GET'])
 @super_admin_required
 def get_user_growth_stats(current_user):
-    """
-    获取用户增长统计数据
-    支持按天、周、月统计用户注册增长
-    """
+    
     try:
         start_date = request.args.get('start_date', '').strip()
         end_date = request.args.get('end_date', '').strip()
-        period = request.args.get('period', 'day')  # day/week/month
-        chart_type = request.args.get('chart_type', 'line')  # line/bar/area
+        period = request.args.get('period', 'day')
+        chart_type = request.args.get('chart_type', 'line')
 
-        # 验证日期范围
         is_valid, error_msg = validate_date_range(start_date, end_date)
         if not is_valid:
             return jsonify({
@@ -33,14 +26,12 @@ def get_user_growth_stats(current_user):
                 'data': None
             }), 400
 
-        # 设置默认日期范围（最近30天）
         if not start_date:
             end_date_dt = datetime.utcnow()
             start_date_dt = end_date_dt - timedelta(days=30)
             start_date = start_date_dt.strftime('%Y-%m-%d')
             end_date = end_date_dt.strftime('%Y-%m-%d')
 
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -53,12 +44,11 @@ def get_user_growth_stats(current_user):
             }
         )
 
-        # 根据统计周期构建SQL查询
         if period == 'day':
             date_format = '%Y-%m-%d'
             group_by = 'DATE(created_at)'
         elif period == 'week':
-            date_format = '%Y-%u'  # 年-周
+            date_format = '%Y-%u'
             group_by = 'YEARWEEK(created_at)'
         elif period == 'month':
             date_format = '%Y-%m'
@@ -70,40 +60,20 @@ def get_user_growth_stats(current_user):
                 'data': None
             }), 400
 
-        # 查询用户注册数据
-        user_query = text(f"""
-            SELECT
-                {group_by} as period,
-                COUNT(*) as new_users,
-                COUNT(CASE WHEN is_deleted = 0 THEN 1 END) as active_users
-            FROM user_info
-            WHERE created_at BETWEEN :start_date AND :end_date
-            GROUP BY {group_by}
-            ORDER BY period
-        """)
+        user_query = text(f)
 
         user_stats = db.session.execute(user_query, {
             'start_date': start_date,
             'end_date': end_date + ' 23:59:59'
         }).fetchall()
 
-        # 查询管理员数据
-        admin_query = text(f"""
-            SELECT
-                {group_by} as period,
-                COUNT(*) as new_admins
-            FROM admin
-            WHERE created_at BETWEEN :start_date AND :end_date
-            GROUP BY {group_by}
-            ORDER BY period
-        """)
+        admin_query = text(f)
 
         admin_stats = db.session.execute(admin_query, {
             'start_date': start_date,
             'end_date': end_date + ' 23:59:59'
         }).fetchall()
 
-        # 构建图表数据
         chart_data = {
             'labels': [],
             'datasets': [
@@ -131,11 +101,9 @@ def get_user_growth_stats(current_user):
             ]
         }
 
-        # 填充图表数据
         user_dict = {str(row.period): {'new_users': row.new_users, 'active_users': row.active_users} for row in user_stats}
         admin_dict = {str(row.period): row.new_admins for row in admin_stats}
 
-        # 合并所有日期
         all_periods = sorted(set(user_dict.keys()) | set(admin_dict.keys()))
 
         for period in all_periods:
@@ -145,7 +113,6 @@ def get_user_growth_stats(current_user):
             chart_data['datasets'][1]['data'].append(user_data['active_users'])
             chart_data['datasets'][2]['data'].append(admin_dict.get(period, 0))
 
-        # 计算汇总统计
         total_new_users = sum(row.new_users for row in user_stats)
         total_active_users = sum(row.active_users for row in user_stats)
         total_new_admins = sum(row.new_admins for row in admin_stats)
@@ -181,21 +148,16 @@ def get_user_growth_stats(current_user):
             'data': None
         }), 500
 
-# 内容发布统计接口
 @bp_admin_stats.route('/content-publishing', methods=['GET'])
 @super_admin_required
 def get_content_publishing_stats(current_user):
-    """
-    获取内容发布统计数据
-    包括科普文章、活动、论坛讨论的发布趋势
-    """
+    
     try:
         start_date = request.args.get('start_date', '').strip()
         end_date = request.args.get('end_date', '').strip()
-        period = request.args.get('period', 'day')  # day/week/month
-        content_type = request.args.get('content_type', 'all')  # all/science/activity/forum
+        period = request.args.get('period', 'day')
+        content_type = request.args.get('content_type', 'all')
 
-        # 验证日期范围
         is_valid, error_msg = validate_date_range(start_date, end_date)
         if not is_valid:
             return jsonify({
@@ -204,14 +166,12 @@ def get_content_publishing_stats(current_user):
                 'data': None
             }), 400
 
-        # 设置默认日期范围（最近30天）
         if not start_date:
             end_date_dt = datetime.utcnow()
             start_date_dt = end_date_dt - timedelta(days=30)
             start_date = start_date_dt.strftime('%Y-%m-%d')
             end_date = end_date_dt.strftime('%Y-%m-%d')
 
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -224,7 +184,6 @@ def get_content_publishing_stats(current_user):
             }
         )
 
-        # 根据统计周期构建SQL查询
         if period == 'day':
             group_by = 'DATE(created_at)'
         elif period == 'week':
@@ -241,21 +200,9 @@ def get_content_publishing_stats(current_user):
         datasets = []
         all_periods = set()
 
-        # 科普文章统计
         if content_type in ['all', 'science']:
             from components.models import ScienceArticle
-            science_query = text(f"""
-                SELECT
-                    {group_by} as period,
-                    COUNT(*) as total,
-                    SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published,
-                    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-                    SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected
-                FROM science_articles
-                WHERE created_at BETWEEN :start_date AND :end_date
-                GROUP BY {group_by}
-                ORDER BY period
-            """)
+            science_query = text(f)
 
             science_stats = db.session.execute(science_query, {
                 'start_date': start_date,
@@ -278,21 +225,9 @@ def get_content_publishing_stats(current_user):
                 }
             })
 
-        # 活动统计
         if content_type in ['all', 'activity']:
             from components.models import Activity
-            activity_query = text(f"""
-                SELECT
-                    {group_by} as period,
-                    COUNT(*) as total,
-                    SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published,
-                    SUM(CASE WHEN status = 'ongoing' THEN 1 ELSE 0 END) as ongoing,
-                    SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
-                FROM activities
-                WHERE created_at BETWEEN :start_date AND :end_date
-                GROUP BY {group_by}
-                ORDER BY period
-            """)
+            activity_query = text(f)
 
             activity_stats = db.session.execute(activity_query, {
                 'start_date': start_date,
@@ -315,21 +250,9 @@ def get_content_publishing_stats(current_user):
                 }
             })
 
-        # 论坛讨论统计
         if content_type in ['all', 'forum']:
             from components.models import ActivityDiscuss
-            forum_query = text(f"""
-                SELECT
-                    {group_by} as period,
-                    COUNT(*) as total,
-                    SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
-                    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-                    SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected
-                FROM activity_discuss
-                WHERE created_at BETWEEN :start_date AND :end_date
-                GROUP BY {group_by}
-                ORDER BY period
-            """)
+            forum_query = text(f)
 
             forum_stats = db.session.execute(forum_query, {
                 'start_date': start_date,
@@ -352,10 +275,8 @@ def get_content_publishing_stats(current_user):
                 }
             })
 
-        # 排序周期
         sorted_periods = sorted(all_periods)
 
-        # 填充图表数据
         for i, period in enumerate(sorted_periods):
             for dataset in datasets:
                 if dataset['label'] == '科普文章':
@@ -382,7 +303,6 @@ def get_content_publishing_stats(current_user):
             'datasets': datasets
         }
 
-        # 计算汇总统计
         summary = {}
         total_content = 0
 
@@ -419,20 +339,15 @@ def get_content_publishing_stats(current_user):
             'data': None
         }), 500
 
-# 活动参与度统计接口
 @bp_admin_stats.route('/activity-engagement', methods=['GET'])
 @super_admin_required
 def get_activity_engagement_stats(current_user):
-    """
-    获取活动参与度统计数据
-    包括活动参与人数、完成率、评分统计等
-    """
+    
     try:
         start_date = request.args.get('start_date', '').strip()
         end_date = request.args.get('end_date', '').strip()
-        activity_type = request.args.get('activity_type', '').strip()  # 活动类型筛选
+        activity_type = request.args.get('activity_type', '').strip()
 
-        # 验证日期范围
         is_valid, error_msg = validate_date_range(start_date, end_date)
         if not is_valid:
             return jsonify({
@@ -441,14 +356,12 @@ def get_activity_engagement_stats(current_user):
                 'data': None
             }), 400
 
-        # 设置默认日期范围（最近30天）
         if not start_date:
             end_date_dt = datetime.utcnow()
             start_date_dt = end_date_dt - timedelta(days=30)
             start_date = start_date_dt.strftime('%Y-%m-%d')
             end_date = end_date_dt.strftime('%Y-%m-%d')
 
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -460,7 +373,6 @@ def get_activity_engagement_stats(current_user):
             }
         )
 
-        # 构建查询条件
         where_conditions = ["created_at BETWEEN :start_date AND :end_date"]
         params = {'start_date': start_date, 'end_date': end_date + ' 23:59:59'}
 
@@ -470,57 +382,18 @@ def get_activity_engagement_stats(current_user):
 
         where_clause = "WHERE " + " AND ".join(where_conditions)
 
-        # 活动参与度统计
-        engagement_query = text(f"""
-            SELECT
-                activity_type,
-                COUNT(*) as total_activities,
-                SUM(current_participants) as total_participants,
-                SUM(max_participants) as total_capacity,
-                AVG(current_participants / max_participants * 100) as avg_fill_rate,
-                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_activities,
-                SUM(CASE WHEN status = 'ongoing' THEN 1 ELSE 0 END) as ongoing_activities
-            FROM activities
-            {where_clause}
-            GROUP BY activity_type
-            ORDER BY total_activities DESC
-        """)
+        engagement_query = text(f)
 
         engagement_stats = db.session.execute(engagement_query, params).fetchall()
 
-        # 月度参与趋势
-        monthly_trend_query = text(f"""
-            SELECT
-                DATE_FORMAT(created_at, '%Y-%m') as month,
-                COUNT(*) as activities_created,
-                SUM(current_participants) as total_participants,
-                AVG(current_participants / max_participants * 100) as avg_fill_rate
-            FROM activities
-            {where_clause}
-            GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-            ORDER BY month
-        """)
+        monthly_trend_query = text(f)
 
         monthly_trend = db.session.execute(monthly_trend_query, params).fetchall()
 
-        # 最受欢迎的活动类型
-        popular_types_query = text(f"""
-            SELECT
-                activity_type,
-                COUNT(*) as count,
-                SUM(current_participants) as total_participants,
-                AVG(current_participants) as avg_participants
-            FROM activities
-            {where_clause}
-            GROUP BY activity_type
-            ORDER BY total_participants DESC
-            LIMIT 10
-        """)
+        popular_types_query = text(f)
 
         popular_types = db.session.execute(popular_types_query, params).fetchall()
 
-        # 构建图表数据
-        # 活动类型分布饼图
         type_distribution_data = {
             'labels': [],
             'datasets': [{
@@ -536,7 +409,6 @@ def get_activity_engagement_stats(current_user):
             type_distribution_data['labels'].append(stat.activity_type or '未分类')
             type_distribution_data['datasets'][0]['data'].append(stat.total_activities)
 
-        # 月度参与趋势折线图
         monthly_trend_data = {
             'labels': [],
             'datasets': [
@@ -564,7 +436,6 @@ def get_activity_engagement_stats(current_user):
             monthly_trend_data['datasets'][0]['data'].append(trend.activities_created)
             monthly_trend_data['datasets'][1]['data'].append(round(trend.avg_fill_rate or 0, 2))
 
-        # 计算汇总统计
         total_activities = sum(stat.total_activities for stat in engagement_stats)
         total_participants = sum(stat.total_participants for stat in engagement_stats)
         total_capacity = sum(stat.total_capacity for stat in engagement_stats)
@@ -582,7 +453,6 @@ def get_activity_engagement_stats(current_user):
             ) if total_activities > 0 else 0
         }
 
-        # 活动类型详细统计
         type_details = []
         for stat in engagement_stats:
             type_details.append({
@@ -626,20 +496,15 @@ def get_activity_engagement_stats(current_user):
             'data': None
         }), 500
 
-# 系统使用情况统计接口
 @bp_admin_stats.route('/system-usage', methods=['GET'])
 @super_admin_required
 def get_system_usage_stats(current_user):
-    """
-    获取系统使用情况统计数据
-    包括API访问量、数据增长趋势、系统资源使用等
-    """
+    
     try:
         start_date = request.args.get('start_date', '').strip()
         end_date = request.args.get('end_date', '').strip()
-        period = request.args.get('period', 'day')  # day/week/month
+        period = request.args.get('period', 'day')
 
-        # 验证日期范围
         is_valid, error_msg = validate_date_range(start_date, end_date)
         if not is_valid:
             return jsonify({
@@ -648,14 +513,12 @@ def get_system_usage_stats(current_user):
                 'data': None
             }), 400
 
-        # 设置默认日期范围（最近30天）
         if not start_date:
             end_date_dt = datetime.utcnow()
             start_date_dt = end_date_dt - timedelta(days=30)
             start_date = start_date_dt.strftime('%Y-%m-%d')
             end_date = end_date_dt.strftime('%Y-%m-%d')
 
-        # 记录操作日志
         log_admin_operation(
             current_user,
             'VIEW',
@@ -667,18 +530,9 @@ def get_system_usage_stats(current_user):
             }
         )
 
-        # 数据库统计查询
         db_stats = {}
 
-        # 用户表统计
-        user_stats_query = text("""
-            SELECT
-                COUNT(*) as total_users,
-                COUNT(CASE WHEN is_deleted = 0 THEN 1 END) as active_users,
-                COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) as today_registrations,
-                COUNT(CASE WHEN DATE(last_login) = CURDATE() THEN 1 END) as today_logins
-            FROM user_info
-        """)
+        user_stats_query = text()
 
         user_stats = db.session.execute(user_stats_query).fetchone()
         db_stats['users'] = {
@@ -688,16 +542,7 @@ def get_system_usage_stats(current_user):
             'today_logins': user_stats.today_logins
         }
 
-        # 内容统计
-        content_stats_query = text("""
-            SELECT
-                (SELECT COUNT(*) FROM science_articles) as science_articles,
-                (SELECT COUNT(*) FROM activities) as activities,
-                (SELECT COUNT(*) FROM activity_discuss) as forum_discussions,
-                (SELECT COUNT(*) FROM activity_rating) as activity_ratings,
-                (SELECT SUM(view_count) FROM science_articles WHERE view_count IS NOT NULL) as total_science_views,
-                (SELECT SUM(view_count) FROM activity_discuss WHERE view_count IS NOT NULL) as total_forum_views
-        """)
+        content_stats_query = text()
 
         content_stats = db.session.execute(content_stats_query).fetchone()
         db_stats['content'] = {
@@ -708,7 +553,6 @@ def get_system_usage_stats(current_user):
             'total_views': (content_stats.total_science_views or 0) + (content_stats.total_forum_views or 0)
         }
 
-        # 数据增长趋势
         if period == 'day':
             date_format = '%Y-%m-%d'
             group_by = 'DATE(created_at)'
@@ -719,32 +563,13 @@ def get_system_usage_stats(current_user):
             date_format = '%Y-%m'
             group_by = 'DATE_FORMAT(created_at, "%Y-%m")'
 
-        growth_query = text(f"""
-            SELECT
-                {group_by} as period,
-                COUNT(CASE WHEN table_name = 'user_info' THEN 1 END) as new_users,
-                COUNT(CASE WHEN table_name = 'science_articles' THEN 1 END) as new_articles,
-                COUNT(CASE WHEN table_name = 'activities' THEN 1 END) as new_activities
-            FROM (
-                SELECT 'user_info' as table_name, created_at FROM user_info
-                WHERE created_at BETWEEN :start_date AND :end_date
-                UNION ALL
-                SELECT 'science_articles' as table_name, created_at FROM science_articles
-                WHERE created_at BETWEEN :start_date AND :end_date
-                UNION ALL
-                SELECT 'activities' as table_name, created_at FROM activities
-                WHERE created_at BETWEEN :start_date AND :end_date
-            ) as combined_data
-            GROUP BY {group_by}
-            ORDER BY period
-        """)
+        growth_query = text(f)
 
         growth_stats = db.session.execute(growth_query, {
             'start_date': start_date,
             'end_date': end_date + ' 23:59:59'
         }).fetchall()
 
-        # 构建增长趋势图表数据
         growth_chart_data = {
             'labels': [str(row.period) for row in growth_stats],
             'datasets': [
@@ -772,20 +597,11 @@ def get_system_usage_stats(current_user):
             ]
         }
 
-        # 数据库大小统计
-        db_size_query = text("""
-            SELECT
-                table_schema as 'database',
-                ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS 'size_mb'
-            FROM information_schema.tables
-            WHERE table_schema = DATABASE()
-            GROUP BY table_schema
-        """)
+        db_size_query = text()
 
         db_size_stats = db.session.execute(db_size_query).fetchone()
         db_size = db_size_stats.size_mb if db_size_stats else 0
 
-        # 汇总统计
         summary = {
             'database_size_mb': db_size,
             'total_records': (
@@ -823,22 +639,17 @@ def get_system_usage_stats(current_user):
             'data': None
         }), 500
 
-# 数据导出接口
 @bp_admin_stats.route('/export', methods=['POST'])
 @super_admin_required
 def export_statistics_data(current_user):
-    """
-    导出统计数据
-    支持导出各种统计报表
-    """
+    
     try:
         data = request.get_json()
-        report_type = data.get('report_type', 'user_growth')  # user_growth/content_publishing/activity_engagement/system_usage
-        export_format = data.get('format', 'csv')  # csv/json
+        report_type = data.get('report_type', 'user_growth')
+        export_format = data.get('format', 'csv')
         start_date = data.get('start_date', '')
         end_date = data.get('end_date', '')
 
-        # 记录导出操作日志
         log_admin_operation(
             current_user,
             'EXPORT',
@@ -855,18 +666,7 @@ def export_statistics_data(current_user):
         filename = f"statistics_{report_type}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.{export_format}"
 
         if report_type == 'user_growth':
-            # 导出用户增长数据
-            query = text("""
-                SELECT
-                    DATE(created_at) as date,
-                    COUNT(*) as new_users,
-                    COUNT(CASE WHEN is_deleted = 0 THEN 1 END) as active_users
-                FROM user_info
-                WHERE (:start_date = '' OR created_at >= :start_date)
-                AND (:end_date = '' OR created_at <= :end_date)
-                GROUP BY DATE(created_at)
-                ORDER BY date
-            """)
+            query = text()
 
             results = db.session.execute(query, {
                 'start_date': start_date,
@@ -882,29 +682,7 @@ def export_statistics_data(current_user):
                 })
 
         elif report_type == 'content_publishing':
-            # 导出内容发布数据
-            query = text("""
-                SELECT
-                    'science_articles' as module,
-                    DATE(created_at) as date,
-                    COUNT(*) as total,
-                    SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published
-                FROM science_articles
-                WHERE (:start_date = '' OR created_at >= :start_date)
-                AND (:end_date = '' OR created_at <= :end_date)
-                GROUP BY DATE(created_at)
-                UNION ALL
-                SELECT
-                    'activities' as module,
-                    DATE(created_at) as date,
-                    COUNT(*) as total,
-                    SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as published
-                FROM activities
-                WHERE (:start_date = '' OR created_at >= :start_date)
-                AND (:end_date = '' OR created_at <= :end_date)
-                GROUP BY DATE(created_at)
-                ORDER BY date, module
-            """)
+            query = text()
 
             results = db.session.execute(query, {
                 'start_date': start_date,
@@ -921,20 +699,7 @@ def export_statistics_data(current_user):
                 })
 
         elif report_type == 'activity_engagement':
-            # 导出活动参与度数据
-            query = text("""
-                SELECT
-                    activity_type,
-                    COUNT(*) as total_activities,
-                    SUM(current_participants) as total_participants,
-                    SUM(max_participants) as total_capacity,
-                    AVG(current_participants / max_participants * 100) as avg_fill_rate
-                FROM activities
-                WHERE (:start_date = '' OR created_at >= :start_date)
-                AND (:end_date = '' OR created_at <= :end_date)
-                GROUP BY activity_type
-                ORDER BY total_activities DESC
-            """)
+            query = text()
 
             results = db.session.execute(query, {
                 'start_date': start_date,
@@ -951,7 +716,6 @@ def export_statistics_data(current_user):
                 })
 
         elif report_type == 'system_usage':
-            # 导出系统使用概况
             export_data = [
                 {
                     '统计项目': '用户总数',
@@ -976,13 +740,11 @@ def export_statistics_data(current_user):
             ]
 
         if export_format == 'csv':
-            # CSV导出
             headers = list(export_data[0].keys()) if export_data else []
             csv_data = [[item[key] for key in headers] for item in export_data]
             return export_to_csv(csv_data, filename, headers)
 
         elif export_format == 'json':
-            # JSON导出
             response = Response(
                 json.dumps(export_data, ensure_ascii=False, indent=2),
                 mimetype='application/json',

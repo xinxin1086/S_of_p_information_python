@@ -1,5 +1,3 @@
-# API_user 管理员用户管理接口
-# 管理员对用户的管理操作接口
 
 from flask import request
 from components import token_required, db
@@ -16,10 +14,7 @@ from ..common.utils import (
 @admin_required
 @handle_api_exception
 def get_admin_list(current_user):
-    """
-    获取管理员列表
-    需要管理员权限
-    """
+    
     try:
         print(f"【接收查询请求】当前用户: {current_user.account}")
         admins = Admin.query.all()
@@ -51,14 +46,9 @@ def get_admin_list(current_user):
 @admin_required
 @handle_api_exception
 def manage_users(current_user):
-    """
-    用户信息管理接口
-    需要管理员权限
-    支持GET(查询)、POST(新增)、PUT(更新)、DELETE(删除)操作
-    """
+    
     try:
         if request.method == 'GET':
-            # 查询用户列表
             page = int(request.args.get('page', 1))
             size = int(request.args.get('size', 10))
             keyword = request.args.get('keyword', '').strip()
@@ -67,11 +57,9 @@ def manage_users(current_user):
 
             query = User.query
 
-            # 软删除状态筛选
             if is_deleted in ['0', '1']:
                 query = query.filter(User.is_deleted == int(is_deleted))
 
-            # 关键词搜索
             if keyword:
                 query = query.filter(
                     (User.account.like(f'%{keyword}%')) |
@@ -79,11 +67,9 @@ def manage_users(current_user):
                     (User.email.like(f'%{keyword}%'))
                 )
 
-            # 角色筛选
             if role:
                 query = query.filter(User.role == role)
 
-            # 分页查询
             pagination = query.order_by(User.created_at.desc()).paginate(page=page, per_page=size)
             users = pagination.items
             total = pagination.total
@@ -105,30 +91,24 @@ def manage_users(current_user):
             )
 
         elif request.method == 'POST':
-            # 新增用户
             data = request.get_json()
 
-            # 验证必填字段
             required_fields = ['account', 'password', 'username']
             validation_errors = validate_user_data(data, required_fields=required_fields)
             if validation_errors:
                 return ResponseService.error(f'数据验证失败: {", ".join(validation_errors)}', status_code=400)
 
-            # 检查账号是否已存在
             if User.query.filter_by(account=data['account']).first():
                 return ResponseService.error('账号已存在', status_code=400)
 
-            # 检查手机号是否已存在
             phone = data.get('phone', '').strip()
             if phone and User.query.filter_by(phone=phone).first():
                 return ResponseService.error('手机号已被使用', status_code=400)
 
-            # 检查用户名是否已存在
             username = data.get('username', '').strip()
             if User.query.filter_by(username=username).first():
                 return ResponseService.error('用户名已被使用', status_code=400)
 
-            # 创建新用户
             user = User(
                 account=data['account'],
                 username=data['username'],
@@ -152,7 +132,6 @@ def manage_users(current_user):
             )
 
         elif request.method == 'PUT':
-            # 更新用户信息
             data = request.get_json()
             user_id = data.get('id')
 
@@ -163,26 +142,22 @@ def manage_users(current_user):
             if not user:
                 return ResponseService.error('用户不存在', status_code=404)
 
-            # 权限检查：普通管理员不能修改其他管理员
             if not UserPermissionChecker.can_manage_user(current_user, user):
                 return ResponseService.error('权限不足，无法修改该用户', status_code=403)
 
-            # 清理更新数据
             allowed_fields = ['username', 'email', 'phone', 'avatar', 'password', 'role']
             if not UserPermissionChecker.is_super_admin(current_user):
-                allowed_fields.remove('role')  # 普通管理员不能修改角色
+                allowed_fields.remove('role')
 
             update_data = UserDataProcessor.clean_update_data(data, allowed_fields)
 
             if not update_data:
                 return ResponseService.error('没有有效的更新字段', status_code=400)
 
-            # 验证更新数据
             validation_errors = validate_user_data(update_data, optional_fields=list(update_data.keys()))
             if validation_errors:
                 return ResponseService.error(f'数据验证失败: {", ".join(validation_errors)}', status_code=400)
 
-            # 检查唯一性
             if 'username' in update_data and update_data['username'] != user.username:
                 if User.query.filter_by(username=update_data['username']).first():
                     return ResponseService.error('用户名已存在', status_code=400)
@@ -191,12 +166,10 @@ def manage_users(current_user):
                 if User.query.filter_by(phone=update_data['phone']).first():
                     return ResponseService.error('手机号已存在', status_code=400)
 
-            # 处理密码更新
             if 'password' in update_data:
                 user.set_password(update_data['password'])
                 update_data.pop('password')
 
-            # 执行更新
             for field, value in update_data.items():
                 setattr(user, field, value)
 
@@ -210,7 +183,6 @@ def manage_users(current_user):
             )
 
         elif request.method == 'DELETE':
-            # 删除用户（软删除）
             user_id = request.args.get('id')
 
             if not user_id:
@@ -220,11 +192,9 @@ def manage_users(current_user):
             if not user:
                 return ResponseService.error('用户不存在', status_code=404)
 
-            # 权限检查：普通管理员不能删除其他管理员
             if not UserPermissionChecker.can_manage_user(current_user, user):
                 return ResponseService.error('权限不足，无法删除该用户', status_code=403)
 
-            # 执行软删除
             deleted_user, message = user.soft_delete()
 
             if deleted_user:
@@ -252,10 +222,7 @@ def manage_users(current_user):
 @super_admin_required
 @handle_api_exception
 def demote_admin(current_user, admin_id):
-    """
-    降级单个管理员为普通用户
-    需要超级管理员权限
-    """
+    
     try:
         print(f"【管理员降级请求】操作者: {current_user.account}, 目标管理员ID: {admin_id}")
 
@@ -263,7 +230,6 @@ def demote_admin(current_user, admin_id):
         if not admin:
             return ResponseService.error('管理员不存在', status_code=404)
 
-        # 执行降级操作
         result = admin.demote_to_regular_user()
 
         print(f"【管理员降级成功】管理员ID: {admin_id} 已降级为普通用户")
@@ -284,33 +250,26 @@ def demote_admin(current_user, admin_id):
 @super_admin_required
 @handle_api_exception
 def create_admin(current_user):
-    """
-    创建管理员账号
-    需要超级管理员权限
-    """
+    
     try:
         data = request.get_json()
 
-        # 验证必填字段
         required_fields = ['account', 'password', 'username', 'phone']
         validation_errors = validate_user_data(data, required_fields=required_fields)
         if validation_errors:
             return ResponseService.error(f'数据验证失败: {", ".join(validation_errors)}', status_code=400)
 
-        # 检查账号是否已存在
         if User.query.filter_by(account=data['account']).first():
             return ResponseService.error('账号已存在', status_code=400)
 
         if Admin.query.filter_by(account=data['account']).first():
             return ResponseService.error('管理员账号已存在', status_code=400)
 
-        # 检查手机号是否已存在
         if User.query.filter_by(phone=data['phone']).first() or Admin.query.filter_by(phone=data['phone']).first():
             return ResponseService.error('手机号已被使用', status_code=400)
 
         print(f"【创建管理员请求】操作者: {current_user.account}, 新管理员账号: {data['account']}")
 
-        # 创建管理员
         admin_data = {
             'account': data['account'],
             'username': data['username'],
@@ -340,19 +299,14 @@ def create_admin(current_user):
 @admin_required
 @handle_api_exception
 def get_user_statistics(current_user):
-    """
-    获取用户统计信息
-    需要管理员权限
-    """
+    
     try:
         print(f"【用户统计查询】操作者: {current_user.account}")
 
-        # 统计普通用户
         total_users = User.query.count()
         active_users = User.query.filter_by(is_deleted=0).count()
         deleted_users = User.query.filter_by(is_deleted=1).count()
 
-        # 按角色统计
         from sqlalchemy import func
         role_stats = db.session.query(
             User.role,
@@ -361,7 +315,6 @@ def get_user_statistics(current_user):
 
         role_distribution = {role: count for role, count in role_stats}
 
-        # 统计管理员
         total_admins = Admin.query.count()
         admin_stats = db.session.query(
             Admin.role,
@@ -370,7 +323,6 @@ def get_user_statistics(current_user):
 
         admin_distribution = {role: count for role, count in admin_stats}
 
-        # 最近注册用户
         recent_users = User.query.filter_by(is_deleted=0).order_by(
             User.created_at.desc()
         ).limit(10).all()

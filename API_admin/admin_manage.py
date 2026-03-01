@@ -1,4 +1,3 @@
-# API_admin 管理员管理接口
 from flask import request
 from components.response_service import ResponseService
 from components.models import Admin
@@ -9,17 +8,13 @@ from API_admin import bp_admin
 @bp_admin.route('/list', methods=['GET'])
 @admin_required
 def list_admins(current_user=None, **kwargs):
-    """
-    获取管理员列表
-    需要管理员权限
-    """
+    
     try:
         keyword = request.args.get('keyword', '').strip()
         role = request.args.get('role', '').strip()
 
         query = Admin.query
         if keyword:
-            # 支持账号/姓名/邮箱/手机号模糊查询
             like_kw = f"%{keyword}%"
             query = query.filter(
                 (Admin.account.like(like_kw)) |

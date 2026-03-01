@@ -1,5 +1,3 @@
-# API_user 用户端认证接口
-# 用户个人信息相关的认证操作
 
 from flask import request
 from components import token_required, db, LocalImageStorage
@@ -11,11 +9,7 @@ from ..common.utils import UserDataProcessor, UserValidator
 @user_bp.route('/user/avatar', methods=['POST'])
 @token_required
 def upload_avatar(current_user):
-    """
-    用户头像上传接口
-    支持用户和管理员上传头像
-    自动删除旧头像
-    """
+    
     try:
         print(f"【头像上传请求】用户: {current_user.account}")
         avatar_file = request.files.get('avatar')
@@ -23,7 +17,6 @@ def upload_avatar(current_user):
         if not avatar_file:
             return ResponseService.error('缺少头像文件', status_code=400)
 
-        # 确定当前用户类型和记录
         target_user = None
         target_user_type = None
 
@@ -38,20 +31,17 @@ def upload_avatar(current_user):
         if not target_user:
             return ResponseService.error('用户信息不存在', status_code=404)
 
-        # 删除旧头像
         if target_user.avatar:
             old_filename = target_user.avatar.split('/')[-1]
             LocalImageStorage().delete_image(old_filename)
             print(f"【上传新头像】删除旧头像：{old_filename}")
 
-        # 保存新头像
         image_storage = LocalImageStorage()
         save_result = image_storage.save_image(avatar_file)
 
         if save_result['status'] != 'success':
             return ResponseService.error(f'图片上传失败：{save_result["message"]}', status_code=400)
 
-        # 更新头像URL
         target_user.avatar = save_result['url']
         db.session.commit()
 
@@ -73,13 +63,10 @@ def upload_avatar(current_user):
 @user_bp.route('/user/avatar', methods=['DELETE'])
 @token_required
 def delete_avatar(current_user):
-    """
-    删除用户头像接口
-    """
+    
     try:
         print(f"【头像删除请求】用户: {current_user.account}")
 
-        # 确定当前用户类型和记录
         target_user = None
 
         target_user = User.query.filter_by(account=current_user.account).first()
@@ -89,7 +76,6 @@ def delete_avatar(current_user):
         if not target_user:
             return ResponseService.error('用户信息不存在', status_code=404)
 
-        # 删除头像文件和数据库记录
         if target_user.avatar:
             filename = target_user.avatar.split('/')[-1]
             LocalImageStorage().delete_image(filename)

@@ -1,4 +1,3 @@
-# 讨论评论专门接口 - 活动讨论和评论管理
 
 from flask import Blueprint, request
 from components import db, token_required
@@ -7,17 +6,13 @@ from components.response_service import ResponseService
 from datetime import datetime
 from sqlalchemy import text
 
-# 创建讨论评论模块蓝图
 discussion_bp = Blueprint('discussion', __name__, url_prefix='/api/activities/discussion')
 
 
 @discussion_bp.route('/activities/<int:activity_id>/discussions', methods=['POST'])
 @token_required
 def create_discussion(current_user, activity_id):
-    """
-    创建活动讨论
-    需要认证：是
-    """
+    
     try:
         data = request.get_json()
         if not data:
@@ -29,18 +24,15 @@ def create_discussion(current_user, activity_id):
         if not content:
             return ResponseService.error('讨论内容不能为空', status_code=400)
 
-        # 验证活动是否存在
         activity = Activity.query.get(activity_id)
         if not activity:
             return ResponseService.error('活动不存在', status_code=404)
 
-        # 创建讨论
         discussion = ActivityDiscuss(
             activity_id=activity_id,
             content=content,
             image_urls=image_urls if image_urls else None
         )
-        # 设置发布者信息
         discussion.set_author_info(current_user)
 
         db.session.add(discussion)
@@ -68,30 +60,23 @@ def create_discussion(current_user, activity_id):
 
 @discussion_bp.route('/activities/<int:activity_id>/discussions', methods=['GET'])
 def get_activity_discussions(activity_id):
-    """
-    获取活动讨论列表（无需登录）
-    """
+    
     try:
-        # 验证活动是否存在
         activity = Activity.query.get(activity_id)
         if not activity:
             return ResponseService.error('活动不存在', status_code=404)
 
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
-        sort_by = request.args.get('sort_by', 'latest')  # latest/latest_comment/hottest
+        sort_by = request.args.get('sort_by', 'latest')
 
-        # 分页查询讨论
         query = ActivityDiscuss.query.filter_by(activity_id=activity_id)
 
-        # 排序
         if sort_by == 'latest':
             query = query.order_by(ActivityDiscuss.create_time.desc())
         elif sort_by == 'latest_comment':
-            # 按最新评论时间排序（简化版，这里按讨论更新时间）
             query = query.order_by(ActivityDiscuss.update_time.desc())
         elif sort_by == 'hottest':
-            # 按评论数量排序（需要关联查询）
             query = query.order_by(text("(SELECT COUNT(*) FROM activity_discuss_comment WHERE discuss_id = activity_discuss.id) DESC"))
 
         pagination = query.paginate(page=page, per_page=size)
@@ -100,10 +85,8 @@ def get_activity_discussions(activity_id):
 
         discussions_list = []
         for discussion in discussions:
-            # 获取讨论的留言数量
             comment_count = ActivityDiscussComment.query.filter_by(discuss_id=discussion.id).count()
 
-            # 获取最新评论时间
             latest_comment = ActivityDiscussComment.query.filter_by(discuss_id=discussion.id).order_by(
                 ActivityDiscussComment.create_time.desc()
             ).first()
@@ -136,23 +119,18 @@ def get_activity_discussions(activity_id):
 
 @discussion_bp.route('/discussions/<int:discussion_id>', methods=['GET'])
 def get_discussion_detail(discussion_id):
-    """
-    获取讨论详情（无需登录）
-    """
+    
     try:
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 获取活动的详细信息
         activity = Activity.query.get(discussion.activity_id)
 
-        # 获取讨论的留言列表
         comments = ActivityDiscussComment.query.filter_by(discuss_id=discussion_id).order_by(
             ActivityDiscussComment.create_time.asc()
         ).all()
 
-        # 构建嵌套评论结构
         comments_dict = {}
         root_comments = []
 
@@ -186,7 +164,7 @@ def get_discussion_detail(discussion_id):
             'create_time': discussion.create_time.isoformat().replace('+00:00', 'Z'),
             'update_time': discussion.update_time.isoformat().replace('+00:00', 'Z'),
             'comment_count': len(comments),
-            'comments': root_comments  # 嵌套结构的评论
+            'comments': root_comments
         }
 
         return ResponseService.success(data=discussion_data, message='讨论详情查询成功')
@@ -198,16 +176,12 @@ def get_discussion_detail(discussion_id):
 @discussion_bp.route('/discussions/<int:discussion_id>', methods=['PUT'])
 @token_required
 def update_discussion(current_user, discussion_id):
-    """
-    更新讨论（需要认证）
-    需要认证：是
-    """
+    
     try:
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 检查权限（只有作者可以修改）
         if discussion.author_user_id != current_user.id:
             return ResponseService.error('无权限修改此讨论', status_code=403)
 
@@ -215,7 +189,6 @@ def update_discussion(current_user, discussion_id):
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
 
-        # 更新内容
         if 'content' in data:
             new_content = data['content'].strip()
             if not new_content:
@@ -250,10 +223,7 @@ def update_discussion(current_user, discussion_id):
 @discussion_bp.route('/discussions/<int:discussion_id>', methods=['DELETE'])
 @token_required
 def delete_discussion(current_user, discussion_id):
-    """
-    删除讨论（需要认证）
-    需要认证：是
-    """
+    
     try:
         print(f"【删除讨论请求】讨论ID: {discussion_id}, 用户: {current_user.account}")
 
@@ -261,14 +231,11 @@ def delete_discussion(current_user, discussion_id):
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 验证是否为讨论作者
         if discussion.author_user_id != current_user.id:
             return ResponseService.error('无权删除此讨论', status_code=403)
 
-        # 统计即将删除的留言数量
         comment_count = ActivityDiscussComment.query.filter_by(discuss_id=discussion_id).count()
 
-        # 删除讨论（级联删除所有相关留言）
         db.session.delete(discussion)
         db.session.commit()
 
@@ -291,10 +258,7 @@ def delete_discussion(current_user, discussion_id):
 @discussion_bp.route('/discussions/<int:discussion_id>/comments', methods=['POST'])
 @token_required
 def create_comment(current_user, discussion_id):
-    """
-    创建讨论留言
-    需要认证：是
-    """
+    
     try:
         print(f"【创建讨论留言请求】讨论ID: {discussion_id}, 用户: {current_user.account}")
 
@@ -303,29 +267,25 @@ def create_comment(current_user, discussion_id):
             return ResponseService.error('请求数据不能为空', status_code=400)
 
         content = data.get('content', '').strip()
-        parent_comment_id = data.get('parent_comment_id')  # 可选，用于回复留言
+        parent_comment_id = data.get('parent_comment_id')
 
         if not content:
             return ResponseService.error('留言内容不能为空', status_code=400)
 
-        # 验证讨论是否存在
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 如果是回复留言，验证父留言是否存在
         if parent_comment_id:
             parent_comment = ActivityDiscussComment.query.get(parent_comment_id)
             if not parent_comment or parent_comment.discuss_id != discussion_id:
                 return ResponseService.error('父留言不存在或不属于该讨论', status_code=404)
 
-        # 创建留言
         comment = ActivityDiscussComment(
             discuss_id=discussion_id,
             content=content,
             parent_comment_id=parent_comment_id if parent_comment_id else None
         )
-        # 设置发布者信息
         comment.set_author_info(current_user)
 
         db.session.add(comment)
@@ -353,38 +313,31 @@ def create_comment(current_user, discussion_id):
 
 @discussion_bp.route('/discussions/<int:discussion_id>/comments', methods=['GET'])
 def get_discussion_comments(discussion_id):
-    """
-    获取讨论留言列表（无需登录）
-    """
+    
     try:
         print(f"【讨论留言列表查询】讨论ID: {discussion_id}")
 
-        # 验证讨论是否存在
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
-        sort_by = request.args.get('sort_by', 'oldest')  # oldest/latest
+        sort_by = request.args.get('sort_by', 'oldest')
 
-        # 获取所有留言
         query = ActivityDiscussComment.query.filter_by(discuss_id=discussion_id)
 
-        # 排序
         if sort_by == 'latest':
             query = query.order_by(ActivityDiscussComment.create_time.desc())
-        else:  # oldest
+        else:
             query = query.order_by(ActivityDiscussComment.create_time.asc())
 
-        # 分页查询
         pagination = query.paginate(page=page, per_page=size)
         comments = pagination.items
         total = pagination.total
 
         comments_list = []
         for comment in comments:
-            # 获取回复数量
             reply_count = ActivityDiscussComment.query.filter_by(
                 parent_comment_id=comment.id
             ).count()
@@ -416,16 +369,12 @@ def get_discussion_comments(discussion_id):
 @discussion_bp.route('/comments/<int:comment_id>', methods=['PUT'])
 @token_required
 def update_comment(current_user, comment_id):
-    """
-    更新讨论留言
-    需要认证：是
-    """
+    
     try:
         comment = ActivityDiscussComment.query.get(comment_id)
         if not comment:
             return ResponseService.error('留言不存在', status_code=404)
 
-        # 检查权限（只有作者可以修改）
         if comment.author_user_id != current_user.id:
             return ResponseService.error('无权限修改此留言', status_code=403)
 
@@ -433,7 +382,6 @@ def update_comment(current_user, comment_id):
         if not data:
             return ResponseService.error('请求数据不能为空', status_code=400)
 
-        # 更新内容
         if 'content' in data:
             new_content = data['content'].strip()
             if not new_content:
@@ -465,10 +413,7 @@ def update_comment(current_user, comment_id):
 @discussion_bp.route('/comments/<int:comment_id>', methods=['DELETE'])
 @token_required
 def delete_comment(current_user, comment_id):
-    """
-    删除讨论留言（层级删除逻辑）
-    需要认证：是
-    """
+    
     try:
         print(f"【删除讨论留言请求】留言ID: {comment_id}, 用户: {current_user.account}")
 
@@ -476,17 +421,14 @@ def delete_comment(current_user, comment_id):
         if not comment:
             return ResponseService.error('留言不存在', status_code=404)
 
-        # 验证是否为留言作者
         if comment.author_user_id != current_user.id:
             return ResponseService.error('无权删除此留言', status_code=403)
 
-        # 层级删除逻辑：将子留言的parent_comment_id设为NULL
         child_comments = ActivityDiscussComment.query.filter_by(parent_comment_id=comment_id).all()
         for child_comment in child_comments:
             child_comment.parent_comment_id = None
             print(f"【子留言处理】子留言ID: {child_comment.id} 的parent_comment_id设为NULL")
 
-        # 删除目标留言
         db.session.delete(comment)
         db.session.commit()
 
@@ -508,23 +450,18 @@ def delete_comment(current_user, comment_id):
 
 @discussion_bp.route('/discussions/<int:discussion_id>/comments/nested', methods=['GET'])
 def get_nested_comments(discussion_id):
-    """
-    获取嵌套结构的讨论留言（无需登录）
-    """
+    
     try:
         print(f"【嵌套留言查询】讨论ID: {discussion_id}")
 
-        # 验证讨论是否存在
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 获取所有留言，按时间正序排列（便于构建嵌套结构）
         comments = ActivityDiscussComment.query.filter_by(
             discuss_id=discussion_id
         ).order_by(ActivityDiscussComment.create_time.asc()).all()
 
-        # 构建嵌套结构
         comments_dict = {}
         root_comments = []
 
@@ -560,11 +497,8 @@ def get_nested_comments(discussion_id):
 
 @discussion_bp.route('/activities/<int:activity_id>/discussions/search', methods=['GET'])
 def search_discussions(activity_id):
-    """
-    搜索活动讨论（无需登录）
-    """
+    
     try:
-        # 验证活动是否存在
         activity = Activity.query.get(activity_id)
         if not activity:
             return ResponseService.error('活动不存在', status_code=404)
@@ -576,7 +510,6 @@ def search_discussions(activity_id):
         page = int(request.args.get('page', 1))
         size = int(request.args.get('size', 20))
 
-        # 搜索讨论
         query = ActivityDiscuss.query.filter(
             ActivityDiscuss.activity_id == activity_id,
             ActivityDiscuss.content.like(f'%{keyword}%')
@@ -588,7 +521,6 @@ def search_discussions(activity_id):
 
         discussions_list = []
         for discussion in discussions:
-            # 获取讨论的留言数量
             comment_count = ActivityDiscussComment.query.filter_by(discuss_id=discussion.id).count()
 
             item = {
@@ -619,16 +551,12 @@ def search_discussions(activity_id):
 @discussion_bp.route('/discussions/<int:discussion_id>/pin', methods=['PUT'])
 @token_required
 def pin_discussion(current_user, discussion_id):
-    """
-    置顶/取消置顶讨论（管理员操作）
-    需要认证：是
-    """
+    
     try:
         discussion = ActivityDiscuss.query.get(discussion_id)
         if not discussion:
             return ResponseService.error('讨论不存在', status_code=404)
 
-        # 验证活动权限
         activity = Activity.query.get(discussion.activity_id)
         if not activity or activity.organizer_user_id != current_user.id:
             return ResponseService.error('无权限置顶此讨论', status_code=403)
@@ -636,8 +564,6 @@ def pin_discussion(current_user, discussion_id):
         data = request.get_json()
         is_pinned = data.get('is_pinned', True)
 
-        # 这里可以添加置顶字段的逻辑
-        # 当前数据库模型可能没有置顶字段，这里提供接口框架
 
         pin_info = {
             'discussion_id': discussion_id,
@@ -655,14 +581,10 @@ def pin_discussion(current_user, discussion_id):
 @discussion_bp.route('/discussions/statistics', methods=['GET'])
 @token_required
 def get_discussion_statistics(current_user):
-    """
-    获取讨论统计（管理员操作）
-    需要认证：是
-    """
+    
     try:
         from sqlalchemy import text
 
-        # 获取用户创建的活动
         user_activities = Activity.query.filter_by(organizer_user_id=current_user.id).all()
         activity_ids = [activity.id for activity in user_activities]
 
@@ -674,37 +596,11 @@ def get_discussion_statistics(current_user):
                 'activities': []
             }, message='讨论统计查询成功')
 
-        # 讨论统计
-        discussion_stats = db.session.execute(text("""
-            SELECT
-                COUNT(*) as total_discussions,
-                COUNT(DISTINCT activity_id) as activities_with_discussions
-            FROM activity_discuss
-            WHERE activity_id IN :activity_ids
-        """), {"activity_ids": tuple(activity_ids)}).fetchone()
+        discussion_stats = db.session.execute(text(), {"activity_ids": tuple(activity_ids)}).fetchone()
 
-        # 评论统计
-        comment_stats = db.session.execute(text("""
-            SELECT COUNT(*) as total_comments
-            FROM activity_discuss_comment adc
-            JOIN activity_discuss ad ON adc.discuss_id = ad.id
-            WHERE ad.activity_id IN :activity_ids
-        """), {"activity_ids": tuple(activity_ids)}).fetchone()
+        comment_stats = db.session.execute(text(), {"activity_ids": tuple(activity_ids)}).fetchone()
 
-        # 各活动讨论统计
-        activity_stats = db.session.execute(text("""
-            SELECT
-                a.id,
-                a.title,
-                COUNT(DISTINCT ad.id) as discussion_count,
-                COUNT(adc.id) as comment_count
-            FROM activities a
-            LEFT JOIN activity_discuss ad ON a.id = ad.activity_id
-            LEFT JOIN activity_discuss_comment adc ON ad.id = adc.discuss_id
-            WHERE a.id IN :activity_ids
-            GROUP BY a.id, a.title
-            ORDER BY discussion_count DESC, comment_count DESC
-        """), {"activity_ids": tuple(activity_ids)}).fetchall()
+        activity_stats = db.session.execute(text(), {"activity_ids": tuple(activity_ids)}).fetchall()
 
         activities_data = []
         for stat in activity_stats:
