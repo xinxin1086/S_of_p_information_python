@@ -2,15 +2,19 @@
 
 from flask import Blueprint
 
+# 从统一的 routes.py 导入所有蓝图
+from .routes import (
+    post_bp,          # 帖子路由
+    floor_bp,         # 楼层路由
+    reply_bp,         # 回复路由
+    user_bp,          # 用户操作路由
+    admin_bp,         # 管理员路由
+    bp_forum_public   # 公开访问路由
+)
+
+
 def register_forum_blueprints(app):
     """注册论坛模块蓝图"""
-    from .post import post_bp
-    from .floor import floor_bp
-    from .reply import reply_bp
-    from .user import user_bp
-    from .admin import admin_bp
-    from .post.public import bp_forum_public
-
     # 注册所有蓝图
     app.register_blueprint(post_bp)
     app.register_blueprint(floor_bp)

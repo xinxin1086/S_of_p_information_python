@@ -1,4 +1,5 @@
 # API_activities 模块初始化文件
+# 所有路由和工具类已整合到 routes.py 文件中
 
 from flask import Blueprint
 
@@ -12,23 +13,26 @@ def register_api_activities_blueprints(app):
     Args:
         app: Flask应用实例
     """
-    # 导入各子模块蓝图
-    from .user import user_ops_bp
-    from .admin import admin_manage_bp
-    from .root import root_bp
-    from .booking import booking_bp
-    from .discussion import discussion_bp
-    from .public import bp_activities_public
+    # 从 routes.py 导入所有蓝图
+    from .routes import (
+        root_bp,
+        user_ops_bp,
+        admin_manage_bp,
+        booking_bp,
+        discussion_bp,
+        bp_activities_public
+    )
 
-    # 注册子模块蓝图到Flask应用
+    # 注册所有蓝图到Flask应用
+    app.register_blueprint(root_bp)
     app.register_blueprint(user_ops_bp)
     app.register_blueprint(admin_manage_bp)
-    app.register_blueprint(root_bp)
     app.register_blueprint(booking_bp)
     app.register_blueprint(discussion_bp)
-    app.register_blueprint(bp_activities_public)  # 注册公开访问模块
+    app.register_blueprint(bp_activities_public)
 
     print("【API_activities模块】所有蓝图注册完成")
+    print("  - 根路由模块: /api/activities (活动创建)")
     print("  - 用户操作模块: /api/activities/user/*")
     print("  - 管理员模块: /api/activities/admin/*")
     print("  - 预约模块: /api/activities/booking/*")
@@ -37,8 +41,15 @@ def register_api_activities_blueprints(app):
 
 # 路由映射信息（用于文档和测试）
 ROUTES_MAPPING = {
+    'root': {
+        'module': 'routes (原 root.py)',
+        'description': '公开活动创建接口',
+        'routes': [
+            'POST   /api/activities                  - 创建活动'
+        ]
+    },
     'user_ops': {
-        'module': 'user.user_ops',
+        'module': 'routes (原 user/user_ops.py)',
         'description': '用户端活动操作（预约、评分、讨论）',
         'routes': [
             'POST   /api/activities/user/activities/{id}/booking              - 用户预约活动',
@@ -55,7 +66,7 @@ ROUTES_MAPPING = {
         ]
     },
     'admin_manage': {
-        'module': 'admin.activity_manage',
+        'module': 'routes (原 admin/activity_manage.py)',
         'description': '管理员活动管理（CRUD、审核预约）',
         'routes': [
             'POST   /api/activities/admin/activities                          - 管理员创建活动',
@@ -71,7 +82,7 @@ ROUTES_MAPPING = {
         ]
     },
     'booking': {
-        'module': 'booking.booking',
+        'module': 'routes (原 booking/booking.py)',
         'description': '预约专门接口（独立拆分）',
         'routes': [
             'POST   /api/activities/booking/activities/{id}/book              - 创建预约',
@@ -88,7 +99,7 @@ ROUTES_MAPPING = {
         ]
     },
     'discussion': {
-        'module': 'discussion.discuss',
+        'module': 'routes (原 discussion/discuss.py)',
         'description': '讨论评论专门接口',
         'routes': [
             'POST   /api/activities/discussion/activities/{id}/discussions    - 创建讨论',
@@ -107,12 +118,12 @@ ROUTES_MAPPING = {
         ]
     },
     'public': {
-        'module': 'public.activity',
+        'module': 'routes (原 public/activity.py)',
         'description': '活动公开访问接口（无需认证）',
         'routes': [
             'GET    /api/public/activities/activities                        - 获取活动列表',
-            'GET    /api/public/activities/activities/{id}                  - 获取活动详情',
-            'GET    /api/public/activities/activities/statistics            - 获取活动统计'
+            'GET    /api/public/activities/activities/{id}                   - 获取活动详情',
+            'GET    /api/public/activities/activities/statistics             - 获取活动统计'
         ]
     }
 }
